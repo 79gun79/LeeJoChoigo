@@ -11,53 +11,44 @@
   font-family: 'Pretendard', sans-serif;
   font-weight: 700; /* Bold */
   font-size: 32px;
-  line-height: 1.2;
 }
 .h2 {
   font-family: 'Pretendard', sans-serif;
   font-weight: 700; /* Bold */
   font-size: 28px;
-  line-height: 1.2;
 }
 .h3 {
   font-family: 'Pretendard', sans-serif;
   font-weight: 500; /* Medium */
   font-size: 24px;
-  line-height: 1.2;
 }
 .h4 {
   font-family: 'Pretendard', sans-serif;
   font-weight: 500; /* Medium */
   font-size: 20px;
-  line-height: 1.2;
 }
 .t1 {
   font-family: 'Pretendard', sans-serif;
   font-weight: 400; /* Regular */
   font-size: 18px;
-  line-height: 1.5;
 }
 .t2 {
   font-family: 'Pretendard', sans-serif;
   font-weight: 400; /* Regular */
   font-size: 16px;
-  line-height: 1.5;
 }
 .t3 {
   font-family: 'Pretendard', sans-serif;
   font-weight: 600; /* SemiBold */
   font-size: 14px;
-  line-height: 1.5;
 }
 .t4 {
   font-family: 'Pretendard', sans-serif;
   font-weight: 400; /* Regular */
   font-size: 12px;
-  line-height: 1.5;
 }
 .t5 {
   font-family: 'Pretendard', sans-serif;
   font-weight: 400; /* Regular */
   font-size: 10px;
-  line-height: 1.5;
 }
