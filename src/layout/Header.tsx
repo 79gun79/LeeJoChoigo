@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Sidebar from './Sidebar
+import Sidebar from './Sidebar';
 import { Menu } from 'lucide-react';
 
 export default function Header() {
