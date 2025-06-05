@@ -12,7 +12,7 @@ export default function EmailVerificationModal({
 }: EmailVerificationModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // ✅ 바깥 클릭 감지
+  // 바깥 클릭 감지
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -27,7 +27,7 @@ export default function EmailVerificationModal({
     };
   }, [isOpen, onClose]);
 
-  // ✅ ESC 키 감지
+  // ESC 키 감지
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
