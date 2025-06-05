@@ -1,7 +1,5 @@
-import sidebarBack from '../../assets/images/icon-sidebar-back.png';
+import { ChevronLeft, House, LogOut } from 'lucide-react';
 import userDefault from '../../assets/images/icon-user-default.png';
-import sidebarMypage from '../../assets/images/icon-sidebar-mypage.png';
-import sidebarLogout from '../../assets/images/icon-sidebar-logout.png';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -25,7 +23,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       >
         <div className="flex items-center gap-2 border-b p-4">
           <button onClick={onClose} className="text-xl">
-            <img src={sidebarBack} alt="사이드바 닫기" />
+            <ChevronLeft />
           </button>
           <span>LOGO</span>
         </div>
@@ -45,15 +43,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="flex border border-[#CCCCCC] text-sm">
           <button className="flex flex-1 items-center justify-center gap-1 border-r border-[#CCCCCC] py-2">
             마이페이지
-            <img
-              src={sidebarMypage}
-              alt="마이페이지 가기"
-              className="h-4 w-4"
-            />
+            <House className="h-4 w-4" />
           </button>
           <button className="flex flex-1 items-center justify-center gap-1 py-2">
             로그아웃
-            <img src={sidebarLogout} alt="로그아웃" className="h-4 w-4" />
+            <LogOut className="h-4 w-4" />
           </button>
         </div>
 

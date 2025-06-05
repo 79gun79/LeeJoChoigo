@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Sidebar from '../Sidebar/Sidebar';
-import hamburger from '../../assets/images/icon-hamburger.png';
+import { Menu } from 'lucide-react';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -13,7 +13,7 @@ export default function Header() {
             className="text-2xl md:hidden"
             onClick={() => setSidebarOpen(true)}
           >
-            <img src={hamburger} alt="사이드바 열기" />
+            <Menu />
           </button>
           <span>LOGO</span>
         </div>
