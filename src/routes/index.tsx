@@ -1,5 +1,5 @@
 // router.tsx
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router';
+import { createBrowserRouter,  RouterProvider } from 'react-router';
 import MainLayout from '../components/Layout/MainLayout';
 import AuthLayout from '../components/Layout/AuthLayout';
 
@@ -9,6 +9,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    hydrateFallbackElement: <></>,
     children: [
       {
         index: true,
