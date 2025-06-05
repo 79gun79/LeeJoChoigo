@@ -1,0 +1,54 @@
+@font-face {
+  font-family: 'Pretendard Variable';
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url('../../../packages/pretendard/dist/web/variable/woff2/PretendardVariable.woff2')
+    format('woff2-variations');
+}
+
+.h1 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700; /* Bold */
+  font-size: 32px;
+}
+.h2 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700; /* Bold */
+  font-size: 28px;
+}
+.h3 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 500; /* Medium */
+  font-size: 24px;
+}
+.h4 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 500; /* Medium */
+  font-size: 20px;
+}
+.t1 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400; /* Regular */
+  font-size: 18px;
+}
+.t2 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400; /* Regular */
+  font-size: 16px;
+}
+.t3 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600; /* SemiBold */
+  font-size: 14px;
+}
+.t4 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400; /* Regular */
+  font-size: 12px;
+}
+.t5 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400; /* Regular */
+  font-size: 10px;
+}
