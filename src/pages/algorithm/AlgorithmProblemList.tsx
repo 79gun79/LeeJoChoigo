@@ -36,7 +36,6 @@ export default function AlgorithmProblemList() {
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               <AlgorithmListCard />
               <AlgorithmListCard />
-              <ListCard image="asd" />
             </div>
           </div>
         </div>
