@@ -19,7 +19,7 @@ export default function Signup() {
       {/* ✅ 오른쪽 폼 영역 */}
       <div className="bg-bg-white relative z-10 flex min-h-screen w-full items-center justify-center rounded-l-[20px] shadow-lg md:ml-auto md:w-2/3">
         <div className="flex w-full max-w-md flex-col items-center px-4">
-          <div className="text-main h4 md:h3 mb-[26px] text-center !font-bold">
+          <div className="text-main h4 mb-[26px] text-center !font-bold">
             Create Your Account
           </div>
 
