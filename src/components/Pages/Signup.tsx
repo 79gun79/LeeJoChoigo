@@ -26,7 +26,7 @@ export default function Signup() {
           <div className="relative mb-[16px] w-full md:mb-[20px]">
             <User className="text-gray3 absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2" />
             <input
-              className="t5 border-gray3 placeholder:t5 h-[32px] w-full rounded-[4px] border bg-white pl-10 md:h-[40px] md:text-[14px]"
+              className="t5 border-gray3 placeholder:t5 h-[32px] w-full rounded-[4px] border bg-white pl-10 md:h-[40px]"
               placeholder="이름을 입력하세요"
             />
           </div>
@@ -36,7 +36,7 @@ export default function Signup() {
             <Check className="text-green-info absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2" />
             <input
               type="email"
-              className="t5 border-gray3 placeholder:t5 h-[32px] w-full rounded-[4px] border bg-white pl-10 md:h-[40px] md:text-[14px]"
+              className="t5 border-gray3 placeholder:t5 h-[32px] w-full rounded-[4px] border bg-white pl-10 md:h-[40px]"
               placeholder="이메일 주소를 입력하세요"
             />
           </div>
