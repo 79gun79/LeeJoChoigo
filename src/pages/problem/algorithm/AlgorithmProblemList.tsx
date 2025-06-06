@@ -1,9 +1,9 @@
-import AlgorithmListCard from '../../components/list/AlgorithmListCard';
-import SearchBox from '../../components/search/SearchBox';
-import TagSearch from '../../components/search/SearchTag';
-import PageName from '../../components/ui/PageName';
-import SearchListTop from '../../components/search/SearchListTop';
-import TagItem from '../../components/ui/TagItem';
+import AlgorithmListCard from '../../../components/list/AlgorithmListCard';
+import SearchBox from '../../../components/search/SearchBox';
+import TagSearch from '../../../components/search/SearchTag';
+import PageName from '../../../components/ui/PageName';
+import SearchListTop from '../../../components/search/SearchListTop';
+import TagItem from '../../../components/ui/TagItem';
 
 export default function AlgorithmProblemList() {
   return (
