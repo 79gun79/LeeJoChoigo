@@ -48,7 +48,7 @@ export default function EmailVerificationModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div
         ref={modalRef}
-        className="relative flex w-[280px] flex-col items-center rounded-[4px] bg-white p-6 drop-shadow-md"
+        className="relative flex w-[280px] flex-col items-center rounded-[4px] bg-white p-6 drop-shadow-md md:w-[420px]"
       >
         <button className="text-gray4 absolute top-3 right-3" onClick={onClose}>
           <X className="h-5 w-5 cursor-pointer" />
@@ -56,9 +56,9 @@ export default function EmailVerificationModal({
         <div className="h4 text-main mb-4 w-full text-center !font-bold">
           이메일 인증
         </div>
-        <Mail className="text-main mb-[16px] h-16 w-16" />
+        <Mail className="text-main mb-[16px] h-16 w-16 md:mb-[20px]" />
 
-        <p className="t4 mb-4 w-full text-left leading-none">
+        <p className="t4 mb-4 w-full text-left leading-none md:mb-[40px]">
           이메일로 인증 링크가 발송 되었습니다. <br />
           인증 링크를 눌러 계정을 활성화 해주세요
         </p>
