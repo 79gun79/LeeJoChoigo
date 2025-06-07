@@ -1,7 +1,7 @@
 // router.tsx
 import { createBrowserRouter, RouterProvider } from 'react-router';
-import Signup from '../components/Pages/Signup';
-import Login from '../components/Pages/Login';
+import Signup from '../pages/Signup';
+import Login from '../pages/Login';
 import MainLayout from '../layout/MainLayout';
 import AuthLayout from '../layout/AuthLayout';
 
