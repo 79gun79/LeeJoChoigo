@@ -1,10 +1,10 @@
 import { Plus } from 'lucide-react';
-import ListCard from '../../components/list/ListCard';
-import SearchBox from '../../components/search/SearchBox';
-import SearchListTop from '../../components/search/SearchListTop';
-import TagSearch from '../../components/search/SearchTag';
-import PageName from '../../components/ui/PageName';
-import TagItem from '../../components/ui/TagItem';
+import ListCard from '../../../components/list/ListCard';
+import SearchBox from '../../../components/search/SearchBox';
+import SearchListTop from '../../../components/search/SearchListTop';
+import TagSearch from '../../../components/search/SearchTag';
+import PageName from '../../../components/ui/PageName';
+import TagItem from '../../../components/ui/TagItem';
 
 export default function AlgorithmSolutionList() {
   return (
