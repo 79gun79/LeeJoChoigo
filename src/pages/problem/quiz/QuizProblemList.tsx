@@ -1,12 +1,9 @@
-import AlgorithmListCard from '../../../components/list/AlgorithmListCard';
+import { Plus } from 'lucide-react';
 import QuizListCard from '../../../components/list/QuizListCard';
 import SearchBox from '../../../components/search/SearchBox';
 import SearchListTop from '../../../components/search/SearchListTop';
-import TagSearch from '../../../components/search/SearchTag';
 import CheckItem from '../../../components/ui/CheckItem';
-import CheckList from '../../../components/ui/CheckItem';
 import PageName from '../../../components/ui/PageName';
-import TagItem from '../../../components/ui/TagItem';
 
 export default function QuizProblemList() {
   return (
