@@ -4,7 +4,6 @@ import TagSearch from '../../components/search/SearchTag';
 import PageName from '../../components/ui/PageName';
 import SearchListTop from '../../components/search/SearchListTop';
 import TagItem from '../../components/ui/TagItem';
-import ListCard from '../../components/list/ListCard';
 
 export default function AlgorithmProblemList() {
   return (
@@ -20,14 +19,10 @@ export default function AlgorithmProblemList() {
         <div>
           <div className="mb-2">
             <p className="mb-1.5 text-sm md:text-base">선택한 유형</p>
-            <ul className="flex flex-wrap gap-2.5">
-              <li>
-                <TagItem></TagItem>
-              </li>
-              <li>
-                <TagItem></TagItem>
-              </li>
-            </ul>
+            <div className="flex flex-wrap gap-2.5">
+              <TagItem></TagItem>
+              <TagItem></TagItem>
+            </div>
           </div>
           <div>
             <div className="mb-1">

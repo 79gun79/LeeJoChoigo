@@ -8,9 +8,11 @@ export default function Avartar() {
             src="https://www.studiopeople.kr/common/img/default_profile.png"
           />
         </div>
-        <span className="text-[10px] text-[#464646] md:text-xs lg:text-sm">
-          사용자이름
-        </span>
+        <div>
+          <span className="text-[10px] text-[#464646] md:text-xs lg:text-sm">
+            사용자이름
+          </span>
+        </div>
       </div>
     </>
   );
