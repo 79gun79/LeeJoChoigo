@@ -1,12 +1,9 @@
-import AlgorithmListCard from '../../../components/list/AlgorithmListCard';
+import { Plus } from 'lucide-react';
 import QuizListCard from '../../../components/list/QuizListCard';
 import SearchBox from '../../../components/search/SearchBox';
 import SearchListTop from '../../../components/search/SearchListTop';
-import TagSearch from '../../../components/search/SearchTag';
 import CheckItem from '../../../components/ui/CheckItem';
-import CheckList from '../../../components/ui/CheckItem';
 import PageName from '../../../components/ui/PageName';
-import TagItem from '../../../components/ui/TagItem';
 
 export default function QuizProblemList() {
   return (
@@ -41,6 +38,9 @@ export default function QuizProblemList() {
               <QuizListCard image="asd" />
             </div>
           </div>
+          <button className="fixed right-0 bottom-14 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-main)] text-white shadow-md md:right-2 md:h-13 md:w-13 lg:right-6 lg:h-15 lg:w-15">
+            <Plus className="h-5 w-5 lg:h-7 lg:w-7" />
+          </button>
         </div>
       </div>
     </>
