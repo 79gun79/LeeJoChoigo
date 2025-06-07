@@ -6,7 +6,9 @@
   src: url('../../../packages/pretendard/dist/web/variable/woff2/PretendardVariable.woff2')
     format('woff2-variations');
 }
-
+body {
+  font-family: 'Pretendard', sans-serif;
+}
 .h1 {
   font-family: 'Pretendard', sans-serif;
   font-weight: 700; /* Bold */

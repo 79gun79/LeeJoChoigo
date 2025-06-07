@@ -24,24 +24,3 @@
 button {
   cursor: pointer;
 }
-
-@layer utilities {
-  .bg-main {
-    @apply bg-[#184D59];
-  }
-  .text-main {
-    @apply text-[#184D59];
-  }
-  .border-main {
-    @apply border-[#184D59];
-  }
-  .bg-sub1 {
-    @apply bg-[#1BBFBF];
-  }
-  .text-sub1 {
-    @apply text-[#1BBFBF];
-  }
-  .border-sub1 {
-    @apply border-[#1BBFBF];
-  }
-}

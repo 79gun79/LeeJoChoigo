@@ -33,7 +33,7 @@ export default function AlgorithmListCard({
             내용게시글 내용게시글 내용게시글 내용
           </p>
           <div className="flex items-end">
-            <span className="text-[10px] text-[#aaaaaa] md:text-xs lg:text-sm">
+            <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
               2025.06.06
             </span>
             <div className="ml-auto flex shrink-0 gap-3">
@@ -48,7 +48,7 @@ export default function AlgorithmListCard({
           <p className="text-xs md:text-sm lg:text-base">알고리즘문제 유형</p>
           {solve && (
             <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
-              <Check className="w-4 text-[#5DA92E] md:w-5 lg:w-6" />
+              <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />
               풀이됨
             </p>
           )}

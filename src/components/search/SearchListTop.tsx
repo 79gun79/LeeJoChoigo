@@ -5,7 +5,7 @@ export default function SearchListTop() {
     <>
       <div className="flex items-center text-sm md:text-base">
         <p>
-          검색어 : <span className="text-sub1">검색 키워드</span>
+          검색어 : <span className="text-[var(--color-sub1)]">검색 키워드</span>
         </p>
         <div className="ml-auto">
           <div className="relative">

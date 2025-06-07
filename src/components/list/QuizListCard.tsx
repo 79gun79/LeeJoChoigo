@@ -49,15 +49,15 @@ export default function QuizListCard({
             )}
           </div>
           <ul className="mb-2.5 flex gap-3">
-            <li className="rounded-sm bg-[#e3e3e3] px-2 py-0.5 text-[10px] text-[#464646] md:text-xs lg:text-sm">
+            <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
               태그명
             </li>
-            <li className="rounded-sm bg-[#e3e3e3] px-2 py-0.5 text-[10px] text-[#464646] md:text-xs lg:text-sm">
+            <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
               태그명
             </li>
           </ul>
           <div className="flex items-end">
-            <span className="text-[10px] text-[#aaaaaa] md:text-xs lg:text-sm">
+            <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
               2025.06.06
             </span>
             <div className="ml-auto flex shrink-0 gap-3">
@@ -72,7 +72,7 @@ export default function QuizListCard({
           <Avartar />
           {solve && (
             <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
-              <Check className="w-4 text-[#5DA92E] md:w-5 lg:w-6" />
+              <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />
               풀이됨
             </p>
           )}
