@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Check, Eye, EyeOff, Lock, Mail } from 'lucide-react';
-import LoginButton from '../atoms/LoginButton';
-import wallpaper from '../../assets/images/nubelson-fernandes-UcYBL5V0xWQ-unsplash.jpg';
+import LoginButton from '../components/atoms/LoginButton';
+import wallpaper from '../assets/images/nubelson-fernandes-UcYBL5V0xWQ-unsplash.jpg';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
