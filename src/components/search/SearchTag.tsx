@@ -1,5 +1,6 @@
 import { Search, TextSearch } from 'lucide-react';
 import { useState } from 'react';
+import CheckItem from '../ui/CheckItem';
 
 export default function TagSearch() {
   const [open, setOpen] = useState(false);
@@ -27,65 +28,12 @@ export default function TagSearch() {
             <p className="mb-2.5 text-right text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
               최대 다섯개 선택가능합니다
             </p>
-            <ul className="mb-4 flex flex-wrap gap-2.5">
-              <li>
-                <input
-                  type="checkbox"
-                  name="tag"
-                  id="tag1"
-                  className="peer absolute appearance-none opacity-0"
-                />
-                <label
-                  htmlFor="tag1"
-                  className="cursor-pointer rounded-sm bg-[#dddddd] px-2 py-1 text-xs text-[var(--color-gray4)] peer-checked:bg-[#1BBFBF] peer-checked:text-white md:px-2.5 md:py-1.5 md:text-sm"
-                >
-                  태그명
-                </label>
-              </li>
-
-              <li>
-                <input
-                  type="checkbox"
-                  name="tag"
-                  id="tag2"
-                  className="peer absolute appearance-none opacity-0"
-                />
-                <label
-                  htmlFor="tag2"
-                  className="cursor-pointer rounded-sm bg-[#dddddd] px-2 py-1 text-xs text-[var(--color-gray4)] peer-checked:bg-[#1BBFBF] peer-checked:text-white md:px-2.5 md:py-1.5 md:text-sm"
-                >
-                  태그명
-                </label>
-              </li>
-              <li>
-                <input
-                  type="checkbox"
-                  name="tag"
-                  id="tag3"
-                  className="peer absolute appearance-none opacity-0"
-                />
-                <label
-                  htmlFor="tag3"
-                  className="cursor-pointer rounded-sm bg-[#dddddd] px-2 py-1 text-xs text-[var(--color-gray4)] peer-checked:bg-[#1BBFBF] peer-checked:text-white md:px-2.5 md:py-1.5 md:text-sm"
-                >
-                  태그명
-                </label>
-              </li>
-              <li>
-                <input
-                  type="checkbox"
-                  name="tag"
-                  id="tag4"
-                  className="peer absolute appearance-none opacity-0"
-                />
-                <label
-                  htmlFor="tag4"
-                  className="cursor-pointer rounded-sm bg-[#dddddd] px-2 py-1 text-xs text-[var(--color-gray4)] peer-checked:bg-[#1BBFBF] peer-checked:text-white md:px-2.5 md:py-1.5 md:text-sm"
-                >
-                  태그명
-                </label>
-              </li>
-            </ul>
+            <div className="mb-4 flex flex-wrap gap-2.5">
+              <CheckItem id="1" title="태그명" />
+              <CheckItem id="2" title="태그명" />
+              <CheckItem id="3" title="태그명" />
+              <CheckItem id="4" title="태그명" />
+            </div>
             <button className="w-full cursor-pointer rounded-sm bg-[var(--color-main)] p-2.5 text-center text-xs text-white md:text-sm lg:text-base">
               검색
             </button>
