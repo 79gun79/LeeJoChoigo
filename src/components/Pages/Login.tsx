@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { Check, Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+import { Check, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import LoginButton from '../atoms/LoginButton';
-import EmailVerificationModal from '../modals/EmailVertificationModal';
 import wallpaper from '../../assets/images/nubelson-fernandes-UcYBL5V0xWQ-unsplash.jpg';
 
 export default function Login() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -19,7 +17,7 @@ export default function Login() {
       {/* ✅ 오른쪽 폼 영역 */}
       <div className="bg-bg-white relative z-10 flex min-h-screen w-full items-center justify-center rounded-l-[20px] shadow-lg md:ml-auto md:w-2/3">
         <div className="flex w-full max-w-md flex-col items-center px-4">
-          <div className="text-main h4 mb-[26px] text-center !font-bold">
+          <div className="text-main h4 mb-[30px] text-center !font-bold">
             Login Your Account
           </div>
 
@@ -53,17 +51,9 @@ export default function Login() {
             />
           </div>
 
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-main t3 mb-[30px] h-[32px] w-full cursor-pointer rounded-[4px] text-white transition hover:shadow-lg active:bg-black md:h-[40px]"
-          >
+          <button className="bg-main t3 mb-[30px] h-[32px] w-full cursor-pointer rounded-[4px] text-white transition hover:shadow-lg active:bg-black md:h-[40px]">
             로그인하기
           </button>
-
-          <EmailVerificationModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          />
 
           <div className="t5 mb-[30px] w-full text-left">
             계정이 없으신가요?{' '}
