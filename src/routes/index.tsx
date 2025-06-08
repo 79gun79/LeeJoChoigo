@@ -5,7 +5,7 @@ import Login from '../pages/Login';
 import MainLayout from '../layout/MainLayout';
 import AuthLayout from '../layout/AuthLayout';
 
-export const router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
