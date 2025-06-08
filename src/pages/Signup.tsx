@@ -5,7 +5,6 @@ import EmailVerificationModal from '../components/modals/EmailVertificationModal
 
 import wallpaper from '../assets/images/nubelson-fernandes-UcYBL5V0xWQ-unsplash.jpg';
 
-
 export default function Signup() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);

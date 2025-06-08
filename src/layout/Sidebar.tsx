@@ -1,5 +1,7 @@
 import { ChevronLeft, House, LogOut } from 'lucide-react';
-import userDefault from '../../assets/images/icon-user-default.png';
+import userDefault from '../assets/images/icon-user-default.png';
+import { useState } from 'react';
+import IsLoginModal from '../components/modals/IsLoginModal';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -7,6 +9,15 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const [isLoginOpen, setLoginOpen] = useState(false);
+  const isLoginModalHandler = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    onClose();
+    e.preventDefault();
+    setLoginOpen(true);
+  };
+
   return (
     <>
       <div
@@ -55,7 +66,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="mb-4 text-lg">HOME</div>
 
           <div>
-            <div className="mb-4 text-lg">문제 게시판</div>
+            <div onClick={isLoginModalHandler} className="mb-4 text-lg">
+              문제 게시판
+            </div>
             <div className="mb-4 pl-4 text-[16px]">
               <div className="mb-4">- 알고리즘 문제</div>
               <div>- 개발직군 문제</div>
@@ -73,6 +86,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="text-lg">질문 게시판</div>
         </div>
       </aside>
+      <IsLoginModal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)} />
     </>
   );
 }
