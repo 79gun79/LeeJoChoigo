@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import Sidebar from './Sidebar';
 import { Menu } from 'lucide-react';
+import IsLoginModal from '../components/modals/IsLoginModal';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoginOpen, setLoginOpen] = useState(false);
+
+  const isLoginModalHandler = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+    setLoginOpen(true);
+  };
 
   return (
     <>
@@ -19,7 +28,9 @@ export default function Header() {
         </div>
 
         <nav className="hidden gap-6 text-[18px] font-medium md:flex">
-          <a href="#">문제게시판</a>
+          <a href="#" onClick={isLoginModalHandler}>
+            문제게시판
+          </a>
           <a href="#">풀이게시판</a>
           <a href="#">질문게시판</a>
         </nav>
@@ -34,6 +45,7 @@ export default function Header() {
         </div>
       </header>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <IsLoginModal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)} />
     </>
   );
 }
