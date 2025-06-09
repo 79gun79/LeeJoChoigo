@@ -21,7 +21,7 @@ export default function QuizSolveBox({
       {showRes ? (
         <div
           className={twMerge(
-            'flex h-10 cursor-pointer items-center justify-center bg-white px-[10px] py-[10px] shadow-md md:min-w-[330px]',
+            'flex h-10 items-center justify-center bg-white px-[10px] py-[10px] shadow-md md:min-w-[330px]',
             selected
               ? isAnswer
                 ? 'bg-green-info/50'
@@ -38,9 +38,7 @@ export default function QuizSolveBox({
             {id}
           </div>
           <label
-            className={twMerge(
-              'text-main t4 w-full cursor-pointer px-[10px] md:text-sm',
-            )}
+            className={twMerge('text-main t4 w-full px-[10px] md:text-sm')}
           >
             {value}
           </label>
