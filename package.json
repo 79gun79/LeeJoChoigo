@@ -13,8 +13,11 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.49.9",
     "@tailwindcss/vite": "^4.1.8",
+    "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
+    "@toast-ui/react-editor": "^3.2.3",
     "axios": "^1.9.0",
     "lucide-react": "^0.513.0",
+    "prismjs": "^1.30.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.6.2",
