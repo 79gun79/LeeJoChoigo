@@ -1,9 +1,10 @@
 import { Outlet } from 'react-router';
+import Header from './Header';
 
 export default function MainLayout() {
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       <main>
         <Outlet />
       </main>
