@@ -41,7 +41,7 @@ export default function JobDetailedPage() {
         </div>
 
         {/* 문제 설명 컴포넌트 */}
-        <div className="flex flex-col gap-[10px]">
+        <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
           <p className="t3">문제 모음</p>
           {quizSolveData.map((v, i) => (
             <QuizSolveComponent
