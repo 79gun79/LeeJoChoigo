@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
-import DetailText from '../../components/detail/DetailText';
-import PageName from '../../components/ui/PageName';
-import Button from '../../components/ui/Button';
-import { quizData } from '../../data/quizDummyData';
-import QuizSolveComponent from '../../components/detail/QuizSolveComponent';
+import DetailText from '../../../components/detail/DetailText';
+import PageName from '../../../components/ui/PageName';
+import Button from '../../../components/ui/Button';
+import { quizData } from '../../../data/quizDummyData';
+import QuizSolveComponent from '../../../components/detail/QuizSolveComponent';
 
 export default function JobDetailedPage() {
   const [answerConfirm, setAnswerConfirm] = useState(false);
