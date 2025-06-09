@@ -4,7 +4,7 @@ import {
   type ToastPosition,
   type ToastTransitionProps,
 } from 'react-toastify';
-import Button from '../components/ui/Button';
+import Button from './Button';
 
 const confirmStyle: {
   position: ToastPosition;
