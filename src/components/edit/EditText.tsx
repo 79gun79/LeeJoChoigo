@@ -67,7 +67,7 @@ export default function EditText({
                     blob: Blob,
                     callback: (url: string, altText: string) => void,
                   ) => {
-                    const fileExt = blob.type.split('/')[1]; // 예: 'jpeg', 'png'
+                    const fileExt = blob.type.split('/')[1];
                     const today = new Date();
                     const yyyymmdd = today
                       .toISOString()
