@@ -1,13 +1,13 @@
 import { Outlet } from 'react-router';
 import Header from './Header';
-import QuizCreateEdit from '../pages/solution/quiz/QuizCreateEdit';
+import JobDetailedPage from '../pages/job/JobDetailedPage';
 
 export default function MainLayout() {
   return (
     <>
       <Header />
       <main>
-        <QuizCreateEdit />
+        <JobDetailedPage />
         <Outlet />
       </main>
     </>
