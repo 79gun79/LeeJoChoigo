@@ -27,6 +27,22 @@ export default function Signup() {
     setPassword(e.target.value);
   };
 
+  const isValidName = (name: string) => {
+    const nameRegex = /^[가-힣a-zA-Z0-9]{2,16}$/;
+    return nameRegex.test(name);
+  };
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValidPassword = (password: string) => {
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,20}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleSignUp = async () => {
     try {
       const { error } = await supabase.auth.signUp({
@@ -41,6 +57,9 @@ export default function Signup() {
       });
 
       if (error) {
+        if (error.code === 'user_already_exists') {
+          alert('이미 등록된 이메일입니다.');
+        }
         console.error('[회원가입] 실패', error);
         return;
       }
@@ -72,27 +91,53 @@ export default function Signup() {
           </div>
 
           <form action={handleSignUp} className="w-full">
-            <div className="relative mb-[16px] md:mb-[20px]">
+            <div className="relative mb-[6px]">
               <User className="text-gray3 absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2" />
+              {isValidName(name) && (
+                <Check className="text-green-info absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2" />
+              )}
               <input
                 className="t5 border-gray3 placeholder:t5 h-[32px] w-full rounded-[4px] border bg-white pl-10 md:h-[40px]"
                 placeholder="이름을 입력하세요"
                 onChange={handleNameInput}
+                value={name}
               />
             </div>
+            {!isValidName(name) ? (
+              <div className="t5 mb-[10px] text-red-500 md:mb-[14px]">
+                이름은 공백과 특수문자를 제외한 2자 이상 16자 이하로
+                작성해주세요.
+              </div>
+            ) : (
+              <div className="t5 mb-[10px] text-green-600 md:mb-[14px]">
+                올바른 형식입니다.
+              </div>
+            )}
 
-            <div className="relative mb-[16px] md:mb-[20px]">
+            <div className="relative mb-[6px]">
               <Mail className="text-gray3 absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2" />
-              <Check className="text-green-info absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2" />
+              {isValidEmail(email) && (
+                <Check className="text-green-info absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2" />
+              )}
               <input
                 type="email"
                 className="t5 border-gray3 placeholder:t5 h-[32px] w-full rounded-[4px] border bg-white pl-10 md:h-[40px]"
                 placeholder="이메일 주소를 입력하세요"
                 onChange={handleEmailInput}
+                value={email}
               />
             </div>
+            {!isValidEmail(email) ? (
+              <div className="t5 mb-[10px] text-red-500 md:mb-[14px]">
+                이메일은 @와 도메인을 포함시켜 작성해주세요.
+              </div>
+            ) : (
+              <div className="t5 mb-[10px] text-green-600 md:mb-[14px]">
+                올바른 형식입니다.
+              </div>
+            )}
 
-            <div className="relative mb-[20px] md:mb-[32px]">
+            <div className="relative mb-[6px]">
               <Lock className="text-gray3 absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2" />
               {showPassword ? (
                 <EyeOff
@@ -110,12 +155,28 @@ export default function Signup() {
                 className="t5 border-gray3 placeholder:t5 h-[32px] w-full rounded-[4px] border bg-white pl-10 md:h-[40px]"
                 placeholder="비밀번호를 입력하세요"
                 onChange={handlePasswordInput}
+                value={password}
               />
             </div>
+            {!isValidPassword(password) ? (
+              <div className="t5 mb-[10px] text-red-500 md:mb-[14px]">
+                비밀번호는 8자 이상 20자 이하로 영문 대소문자, 숫자, 특수문자가
+                모두 들어가도록 작성해주세요.
+              </div>
+            ) : (
+              <div className="t5 mb-[14px] text-green-600 md:mb-[26px]">
+                올바른 형식입니다.
+              </div>
+            )}
 
             <button
               type="submit"
-              className="bg-main t3 mb-[30px] h-[32px] w-full cursor-pointer rounded-[4px] text-white transition hover:shadow-lg active:bg-black md:h-[40px]"
+              disabled={
+                !isValidName(name) ||
+                !isValidEmail(email) ||
+                !isValidPassword(password)
+              }
+              className="bg-main t3 mb-[30px] h-[32px] w-full rounded-[4px] text-white transition hover:shadow-lg active:bg-black disabled:cursor-not-allowed disabled:bg-gray-400 md:h-[40px]"
             >
               가입하기
             </button>
