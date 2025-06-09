@@ -4,12 +4,14 @@ import Signup from '../pages/Signup';
 import Login from '../pages/Login';
 import MainLayout from '../layout/MainLayout';
 import AuthLayout from '../layout/AuthLayout';
+import { fetchUserData } from '../loader/auth.loader';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
     hydrateFallbackElement: <></>,
+    loader: fetchUserData,
     children: [
       {
         // index: true,
@@ -52,13 +54,15 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <AuthLayout />,
+    Component: AuthLayout,
     children: [{ index: true, element: <Login /> }],
+    // loader: requireNoAuth,
   },
   {
     path: '/signup',
-    element: <AuthLayout />,
+    Component: AuthLayout,
     children: [{ index: true, element: <Signup /> }],
+    // loader: requireNoAuth,
   },
   {
     // path: '*',
