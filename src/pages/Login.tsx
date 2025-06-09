@@ -5,7 +5,6 @@ import wallpaper from '../assets/images/nubelson-fernandes-UcYBL5V0xWQ-unsplash.
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
 import { notify } from '../utils/customAlert';
-import { Flip, ToastContainer } from 'react-toastify';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -132,19 +131,6 @@ export default function Login() {
           <LoginButton />
         </div>
       </div>
-      <ToastContainer
-        position="top-center"
-        autoClose={1800}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Flip}
-      />
     </div>
   );
 }
