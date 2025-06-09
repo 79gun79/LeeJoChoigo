@@ -4,6 +4,8 @@ import LoginButton from '../components/atoms/LoginButton';
 import wallpaper from '../assets/images/nubelson-fernandes-UcYBL5V0xWQ-unsplash.jpg';
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
+import { notify } from '../utils/customAlert';
+import { Flip, ToastContainer } from 'react-toastify';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,6 +21,11 @@ export default function Login() {
     setPassword(e.target.value);
   };
 
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleLogin = async () => {
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -27,12 +34,22 @@ export default function Login() {
       });
 
       if (error) {
-        console.error('[로그인] 실패', error);
+        if (error.code === 'validation_failed') {
+          notify('이메일 또는 비밀번호를 입력해주세요.', 'warning');
+        } else if (error.code === 'invalid_credentials') {
+          notify('유효하지 않은 이메일 또는 비밀번호입니다', 'error');
+        } else if (error.code === 'email_address_invalid') {
+          notify('지원하지 않는 이메일 형식입니다.', 'warning');
+        } else {
+          notify('로그인이 실패했습니다.', 'error');
+        }
+        console.error('[로그인] 실패', error.code);
         return;
       }
 
       navigate('/');
     } catch (e) {
+      notify('예상치 못한 오류가 발생했습니다.', 'error');
       console.error('[로그인] 예상치 못한 오류', e);
     }
   };
@@ -55,12 +72,16 @@ export default function Login() {
           <form className="w-full" action={handleLogin}>
             <div className="relative mb-[16px] md:mb-[20px]">
               <Mail className="text-gray3 absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2" />
-              <Check className="text-green-info absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2" />
+              {isValidEmail(email) && (
+                <Check className="text-green-info absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2" />
+              )}
+
               <input
                 type="email"
                 className="t5 border-gray3 placeholder:t5 h-[32px] w-full rounded-[4px] border bg-white pl-10 md:h-[40px]"
                 placeholder="이메일 주소를 입력하세요"
                 onChange={handleEmailInput}
+                value={email}
               />
             </div>
 
@@ -82,6 +103,7 @@ export default function Login() {
                 className="t5 border-gray3 placeholder:t5 h-[32px] w-full rounded-[4px] border bg-white pl-10 md:h-[40px]"
                 placeholder="비밀번호를 입력하세요"
                 onChange={handlePasswordInput}
+                value={password}
               />
             </div>
 
@@ -91,11 +113,27 @@ export default function Login() {
             >
               로그인하기
             </button>
+            <ToastContainer
+              position="top-center"
+              autoClose={1800}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick={false}
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+              transition={Flip}
+            />
           </form>
 
           <div className="t5 mb-[30px] w-full text-left">
             계정이 없으신가요?{' '}
-            <button className="text-sub1 cursor-pointer font-bold" onClick={() => navigate("/signup")}>
+            <button
+              className="text-sub1 cursor-pointer font-bold"
+              onClick={() => navigate('/signup')}
+            >
               회원가입
             </button>
           </div>
