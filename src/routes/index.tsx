@@ -4,7 +4,7 @@ import Signup from '../pages/Signup';
 import Login from '../pages/Login';
 import MainLayout from '../layout/MainLayout';
 import AuthLayout from '../layout/AuthLayout';
-import { fetchUserData } from '../loader/auth.loader';
+import { fetchUserData, requireNoAuth } from '../loader/auth.loader';
 import NotFound from '../pages/NotFound';
 import AlgorithmProblemList from '../pages/problem/algorithm/AlgorithmProblemList';
 import QuizProblemList from '../pages/problem/quiz/QuizProblemList';
@@ -81,13 +81,13 @@ const router = createBrowserRouter([
     path: '/login',
     Component: AuthLayout,
     children: [{ index: true, element: <Login /> }],
-    // loader: requireNoAuth,
+    loader: requireNoAuth,
   },
   {
     path: '/signup',
     Component: AuthLayout,
     children: [{ index: true, element: <Signup /> }],
-    // loader: requireNoAuth,
+    loader: requireNoAuth,
   },
   {
     path: '*',
