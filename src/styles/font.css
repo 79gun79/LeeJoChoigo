@@ -1,0 +1,58 @@
+@font-face {
+  font-family: 'Pretendard Variable';
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url('../../../packages/pretendard/dist/web/variable/woff2/PretendardVariable.woff2')
+    format('woff2-variations');
+}
+body {
+  font-family: 'Pretendard', sans-serif;
+}
+
+@layer components {
+  .h1 {
+    font-family: 'Pretendard', sans-serif;
+    @apply text-[32px] font-bold md:text-[36px];
+  }
+
+  .h2 {
+    font-family: 'Pretendard', sans-serif;
+    @apply text-[28px] font-bold md:text-[32px];
+  }
+
+  .h3 {
+    font-family: 'Pretendard', sans-serif;
+    @apply text-[24px] font-medium md:text-[28px];
+  }
+
+  .h4 {
+    font-family: 'Pretendard', sans-serif;
+    @apply text-[20px] font-medium md:text-[24px];
+  }
+
+  .t1 {
+    font-family: 'Pretendard', sans-serif;
+    @apply text-[18px] font-normal md:text-[22px];
+  }
+
+  .t2 {
+    font-family: 'Pretendard', sans-serif;
+    @apply text-[16px] font-normal md:text-[22px];
+  }
+
+  .t3 {
+    font-family: 'Pretendard', sans-serif;
+    @apply text-[14px] font-semibold md:text-[18px];
+  }
+
+  .t4 {
+    font-family: 'Pretendard', sans-serif;
+    @apply text-[12px] font-normal md:text-[16px];
+  }
+
+  .t5 {
+    font-family: 'Pretendard', sans-serif;
+    @apply text-[10px] font-normal md:text-[14px];
+  }
+}
