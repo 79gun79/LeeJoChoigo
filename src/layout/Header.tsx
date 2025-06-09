@@ -2,16 +2,29 @@ import { useState } from 'react';
 import Sidebar from './Sidebar';
 import { Menu } from 'lucide-react';
 import IsLoginModal from '../components/modals/IsLoginModal';
+import { useAuthStore } from '../stores/authStore';
+import supabase from '../utils/supabase';
+import { useNavigate } from 'react-router';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoginOpen, setLoginOpen] = useState(false);
+  const isLogin = useAuthStore((state) => state.isLogin);
+  const setLogout = useAuthStore((state) => state.setLogout);
+  const navigate = useNavigate();
 
   const isLoginModalHandler = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) => {
-    e.preventDefault();
-    setLoginOpen(true);
+    if (!isLogin) {
+      e.preventDefault();
+      setLoginOpen(true);
+    }
+  };
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (!error) setLogout();
   };
 
   return (
@@ -35,14 +48,33 @@ export default function Header() {
           <a href="#">질문게시판</a>
         </nav>
 
-        <div className="flex items-center gap-2">
-          <button className="rounded-[4px] border border-[#060606] px-3 py-1 text-sm">
-            로그인
-          </button>
-          <button className="rounded-[4px] border border-[#184D59] bg-[#184D59] px-3 py-1 text-sm text-white">
-            가입
-          </button>
-        </div>
+        {isLogin && (
+          <div className="flex items-center">
+            <button
+              className="rounded-[4px] border border-[#060606] px-3 py-1 text-sm"
+              onClick={handleLogout}
+            >
+              로그아웃
+            </button>
+          </div>
+        )}
+
+        {!isLogin && (
+          <div className="flex items-center gap-2">
+            <button
+              className="rounded-[4px] border border-[#060606] px-3 py-1 text-sm"
+              onClick={() => navigate('/login')}
+            >
+              로그인
+            </button>
+            <button
+              className="rounded-[4px] border border-[#184D59] bg-[#184D59] px-3 py-1 text-sm text-white"
+              onClick={() => navigate('/signup')}
+            >
+              가입
+            </button>
+          </div>
+        )}
       </header>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <IsLoginModal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)} />
