@@ -38,4 +38,13 @@ button {
   .button-lg.gray {
     @apply hover:bg-gray1 bg-[var(--color-bg-white)] text-[var(--color-gray4)];
   }
+  .button-quiz {
+    @apply bg-bg-white hover:bg-gray1 text-gray3 flex h-7 w-16 cursor-pointer rounded-sm p-[6px] text-xs;
+  }
+  .button-quiz.delete {
+    @apply bg-red-caution/50 text-red-caution w-7;
+  }
+  .button-quiz.plus {
+    @apply bg-sub1 text-white;
+  }
 }

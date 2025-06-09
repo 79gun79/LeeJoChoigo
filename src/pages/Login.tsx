@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Check, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import LoginButton from '../components/atoms/LoginButton';
@@ -71,6 +70,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-
   );
 }
