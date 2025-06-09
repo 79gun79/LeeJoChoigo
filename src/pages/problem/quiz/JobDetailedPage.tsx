@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import DetailText from '../../components/detail/DetailText';
-import PageName from '../../components/ui/PageName';
-import Button from '../../components/ui/Button';
+import DetailText from '../../../components/detail/DetailText';
+import PageName from '../../../components/ui/PageName';
+import Button from '../../../components/ui/Button';
 
 export default function JobDetailedPage() {
   const [answerConfirm, setAnswerConfirm] = useState(false);
