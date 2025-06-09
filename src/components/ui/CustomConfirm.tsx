@@ -34,7 +34,7 @@ const confirmStyle: {
   transition: Flip,
 };
 
-export const customConfirm = (message: string): Promise<boolean> => {
+export default function CustomConfirm (message: string): Promise<boolean> {
   return new Promise((resolve) => {
     toast(
       ({ closeToast }) => (
