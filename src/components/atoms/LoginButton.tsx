@@ -17,7 +17,7 @@ export default function LoginButton() {
     <div className="flex w-[20px] justify-center">
       <div className="space-y-[20px] md:flex md:space-y-0 md:space-x-[10px]">
         <button
-          className="t3 relative flex h-[40px] w-[200px] cursor-pointer items-center rounded-[4px] bg-white text-[#7c838a] drop-shadow-sm md:text-[14px]"
+          className="t3 flex h-[40px] w-[200px] cursor-pointer items-center rounded-[4px] bg-white pr-3 text-[#7c838a] drop-shadow-sm md:text-[14px]"
           onClick={handleGoogleLogin}
         >
           <img
@@ -28,7 +28,7 @@ export default function LoginButton() {
           <span className="ml-2 flex-1">Log in with Google</span>
         </button>
         <button
-          className="t3 relative flex h-[40px] w-[200px] cursor-pointer items-center rounded-[4px] bg-white text-[#7c838a] drop-shadow-sm md:text-[14px]"
+          className="t3 relative flex h-[40px] w-[200px] cursor-pointer items-center rounded-[4px] bg-white pr-3 text-[#7c838a] drop-shadow-sm md:text-[14px]"
           onClick={handleGithubLogin}
         >
           <img
