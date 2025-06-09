@@ -113,19 +113,6 @@ export default function Login() {
             >
               로그인하기
             </button>
-            <ToastContainer
-              position="top-center"
-              autoClose={1800}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick={false}
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-              transition={Flip}
-            />
           </form>
 
           <div className="t5 mb-[30px] w-full text-left">
@@ -145,6 +132,19 @@ export default function Login() {
           <LoginButton />
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={1800}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Flip}
+      />
     </div>
   );
 }

@@ -184,19 +184,6 @@ export default function Signup() {
             >
               가입하기
             </button>
-            <ToastContainer
-              position="top-center"
-              autoClose={1800}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick={false}
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-              transition={Flip}
-            />
           </form>
 
           <EmailVerificationModal
@@ -221,6 +208,19 @@ export default function Signup() {
           <LoginButton />
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={1800}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Flip}
+      />
     </div>
   );
 }
