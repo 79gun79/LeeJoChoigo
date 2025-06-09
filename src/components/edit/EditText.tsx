@@ -10,6 +10,7 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import { useRef } from 'react';
+import supabase from '../../utils/supabase';
 
 export default function EditText({
   tags,
@@ -61,6 +62,38 @@ export default function EditText({
                 initialEditType="markdown"
                 useCommandShortcut={true}
                 plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+                hooks={{
+                  addImageBlobHook: async (
+                    blob: Blob,
+                    callback: (url: string, altText: string) => void,
+                  ) => {
+                    const fileExt = blob.type.split('/')[1]; // 예: 'jpeg', 'png'
+                    const today = new Date();
+                    const yyyymmdd = today
+                      .toISOString()
+                      .slice(0, 10)
+                      .replace(/-/g, '');
+                    const fileName = `${yyyymmdd}/${Date.now()}.${fileExt}`;
+
+                    const { error } = await supabase.storage
+                      .from('post-images')
+                      .upload(fileName, blob);
+
+                    if (error) {
+                      console.error('이미지 업로드 실패:', error.message);
+                      return;
+                    }
+
+                    const { data } = supabase.storage
+                      .from('post-images')
+                      .getPublicUrl(fileName);
+
+                    const imageUrl = data?.publicUrl;
+                    if (imageUrl) {
+                      callback(imageUrl, 'image');
+                    }
+                  },
+                }}
               />
             </div>
 
