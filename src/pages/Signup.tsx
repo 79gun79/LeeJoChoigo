@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Check, Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import LoginButton from '../components/atoms/LoginButton';
 import EmailVerificationModal from '../components/modals/EmailVertificationModal';
-
 import wallpaper from '../assets/images/nubelson-fernandes-UcYBL5V0xWQ-unsplash.jpg';
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';

@@ -1,7 +1,26 @@
 // import { StickyNote } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import QuizComponent from '../detail/QuizComponent';
 import CheckItem from '../ui/CheckItem';
+import { useRef, useState } from 'react';
 
 export default function EditText({ problems }: { problems?: boolean }) {
+  const [quizList, setQuizList] = useState<number[]>([]);
+  const currentPos = useRef<HTMLDivElement | null>(null);
+
+  const addQuiz = () => {
+    setTimeout(() => {
+      currentPos.current?.scrollIntoView({
+        block: 'start',
+        behavior: 'smooth',
+      });
+    }, 100);
+    setQuizList((v) => [...v, Date.now()]);
+  };
+
+  const deleteQuiz = (quizId: number) => {
+    setQuizList((v) => v.filter((id) => id !== quizId));
+  };
   return (
     <>
       <div className="lg:grid lg:grid-cols-2 lg:gap-12">
@@ -49,9 +68,31 @@ export default function EditText({ problems }: { problems?: boolean }) {
                   </div>
                 </div>
               </div>
-              <div className="mb-2">
-                <p className="mb-1.5 text-sm md:text-base">퀴즈생성</p>
-              </div>
+            </div>
+            <div className="mb-2 flex flex-col gap-[10px]">
+              <p className="text-sm md:text-base">퀴즈생성</p>
+              {quizList.map((v, i) => (
+                <div
+                  key={v}
+                  ref={i === quizList.length - 1 ? currentPos : null}
+                >
+                  <QuizComponent
+                    key={v}
+                    id={v}
+                    index={i}
+                    onDelete={deleteQuiz}
+                  />
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addQuiz}
+                disabled={quizList.length >= 10 ? true : false}
+                className="bg-gray3 t3 flex h-[40px] w-full cursor-pointer items-center justify-center rounded-[4px] text-white transition hover:shadow-lg active:bg-black disabled:hidden"
+              >
+                <Plus size={24} />
+                <span className="ml-[3px]">문제 추가</span>
+              </button>
             </div>
           </div>
         </form>
