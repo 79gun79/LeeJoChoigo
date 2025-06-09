@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router';
 import Header from './Header';
-import QuizCreateEdit from '../pages/solution/quiz/QuizCreateEdit';
 
 export default function MainLayout() {
   return (
@@ -8,7 +7,6 @@ export default function MainLayout() {
       <Header />
       <main>
         <Outlet />
-        <QuizCreateEdit />
       </main>
     </>
   );

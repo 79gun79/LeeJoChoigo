@@ -15,7 +15,6 @@ export default function EditText({ problems }: { problems?: boolean }) {
         behavior: 'smooth',
       });
     }, 100);
-    // if (quizList.length >= 10) return;
     setQuizList((v) => [...v, Date.now()]);
   };
 
@@ -77,10 +76,16 @@ export default function EditText({ problems }: { problems?: boolean }) {
                   key={v}
                   ref={i === quizList.length - 1 ? currentPos : null}
                 >
-                  <QuizComponent id={v} index={i} onDelete={deleteQuiz} />
+                  <QuizComponent
+                    key={v}
+                    id={v}
+                    index={i}
+                    onDelete={deleteQuiz}
+                  />
                 </div>
               ))}
               <button
+                type="button"
                 onClick={addQuiz}
                 disabled={quizList.length >= 10 ? true : false}
                 className="bg-gray3 t3 flex h-[40px] w-full cursor-pointer items-center justify-center rounded-[4px] text-white transition hover:shadow-lg active:bg-black disabled:hidden"
