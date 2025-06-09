@@ -27,15 +27,15 @@ button {
 
 @layer utilities {
   .edit-input {
-    @apply w-full rounded-sm border border-[#ccc] px-2.5 py-2 text-xs md:text-sm lg:text-base;
+    @apply w-full rounded-sm border border-[#ccc] px-2.5 py-2 text-xs disabled:bg-[var(--color-gray1)] disabled:text-[var(--color-gray3)] md:text-sm lg:text-base;
   }
   .button-sm {
     @apply flex items-center gap-1 rounded-sm bg-[var(--color-main)] px-2 py-1 text-[10px] text-white md:text-xs lg:text-sm;
   }
   .button-lg {
-    @apply w-full cursor-pointer rounded-sm bg-[var(--color-main)] p-2.5 text-center text-xs text-white md:text-sm lg:text-base;
+    @apply hover:bg-sub1 w-full cursor-pointer rounded-sm bg-[var(--color-main)] p-2.5 text-center text-xs text-white md:text-sm lg:text-base;
   }
   .button-lg.gray {
-    @apply bg-[var(--color-bg-white)] text-[var(--color-gray4)];
+    @apply hover:bg-gray1 bg-[var(--color-bg-white)] text-[var(--color-gray4)];
   }
 }
