@@ -5,7 +5,7 @@ import SearchListTop from '../../components/search/SearchListTop';
 import TagSearch from '../../components/search/SearchTag';
 import PageName from '../../components/ui/PageName';
 import TagItem from '../../components/ui/TagItem';
-import type { ChannelType } from '../../types/channel';
+import type { ChannelType } from '../../types';
 import { useLoaderData } from 'react-router';
 
 export default function QuestionList() {

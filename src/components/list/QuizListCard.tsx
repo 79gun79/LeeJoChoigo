@@ -1,11 +1,15 @@
 import { Check, Heart } from 'lucide-react';
 import Avartar from '../ui/Avartar';
+import type { PostType } from '../../types';
+import { format } from 'date-fns';
 
 // 임시로 지정한 props 입니다
 export default function QuizListCard({
+  data,
   image, //게시글에 사진 여부 확인
   solve, //문제 풀이여부 확인
 }: {
+  data: PostType;
   image?: string;
   solve?: boolean;
 }) {
@@ -30,13 +34,10 @@ export default function QuizListCard({
           <div className="flex gap-2.5">
             <div className="w-full">
               <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
-                게시글 제목
+                {data.title}
               </p>
               <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-                게시글 내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-                내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-                내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-                내용게시글 내용게시글 내용게시글 내용게시글 내용게시글 내용
+                {data.content}
               </p>
             </div>
             {image && (
@@ -58,7 +59,7 @@ export default function QuizListCard({
           </ul>
           <div className="flex items-end">
             <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
-              2025.06.06
+              {format(new Date(data.created_at), 'yyyy-MM-dd')}
             </span>
             <div className="ml-auto flex shrink-0 gap-3">
               <div className="flex items-center gap-1">
