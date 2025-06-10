@@ -51,7 +51,8 @@ export default function AlgorithmSolutionList() {
               <ListCard image="sda" solve={true} />
               <ListCard solve={true} />
               <ListCard solve={false} /> */}
-              {posts && posts.map((post) => <ListCard key={post.id} />)}
+              {posts &&
+                posts.map((post) => <ListCard key={post.id} data={post} />)}
               {posts && posts.length === 0 && (
                 <div className="col-span-2 py-12 text-center">
                   <h3 className="t1 mb-2 font-medium text-black">

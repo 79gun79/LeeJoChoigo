@@ -6,11 +6,9 @@ import { format } from 'date-fns';
 // 임시로 지정한 props 입니다
 export default function QuizListCard({
   data,
-  image, //게시글에 사진 여부 확인
   solve, //문제 풀이여부 확인
 }: {
   data: PostType;
-  image?: string;
   solve?: boolean;
 }) {
   return (
@@ -32,7 +30,7 @@ export default function QuizListCard({
       <div className="w-full rounded-sm border border-[#ccc]">
         <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
           <div className="flex gap-2.5">
-            <div className="w-full">
+            <div className="w-[calc(100%-110px)] md:w-[calc(100%-130px)] lg:w-[calc(100%-150px)]">
               <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
                 {data.title}
               </p>
@@ -40,12 +38,9 @@ export default function QuizListCard({
                 {data.content}
               </p>
             </div>
-            {image && (
+            {data.image && (
               <div className="ml-auto h-[65px] w-[85px] shrink-0 overflow-hidden md:h-[75px] md:w-[105px] lg:h-[85px] lg:w-[125px]">
-                <img
-                  src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  className="h-full w-full object-cover"
-                />
+                <img src={data.image} className="h-full w-full object-cover" />
               </div>
             )}
           </div>

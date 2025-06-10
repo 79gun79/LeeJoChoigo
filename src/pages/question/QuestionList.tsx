@@ -5,13 +5,28 @@ import SearchListTop from '../../components/search/SearchListTop';
 import TagSearch from '../../components/search/SearchTag';
 import PageName from '../../components/ui/PageName';
 // import TagItem from '../../components/ui/TagItem';
-import type { ChannelType } from '../../types';
+import type { ChannelType, PostsType } from '../../types';
 import { useLoaderData } from 'react-router';
 import { useNavigate } from 'react-router';
+import { getChannelPosts } from '../../components/api/postApi';
+import { useEffect, useState } from 'react';
 
 export default function QuestionList() {
   const channel = useLoaderData<ChannelType>();
   const navigate = useNavigate();
+
+  const [posts, setPosts] = useState<PostsType>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const channelPosts = await getChannelPosts(channel.id);
+        setPosts(channelPosts);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchData();
+  }, [channel.id]);
 
   const handleClick = () => {
     navigate('/questions/write');
@@ -39,10 +54,19 @@ export default function QuestionList() {
               <SearchListTop />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <ListCard image="sda" />
+              {/* <ListCard image="sda" />
               <ListCard image="sda" solve={true} />
               <ListCard solve={true} />
-              <ListCard solve={false} />
+              <ListCard solve={false} /> */}
+              {posts &&
+                posts.map((post) => <ListCard key={post.id} data={post} />)}
+              {posts && posts.length === 0 && (
+                <div className="col-span-2 py-12 text-center">
+                  <h3 className="t1 mb-2 font-medium text-black">
+                    포스트가 없습니다.
+                  </h3>
+                </div>
+              )}
             </div>
             <button
               onClick={handleClick}
