@@ -1,7 +1,25 @@
 import { StickyNote } from 'lucide-react';
 import TagItem from '../ui/TagItem';
+import type { EditTextProps } from './EditText.types';
 
-export default function EditText({ problems }: { problems?: boolean }) {
+import { Editor } from '@toast-ui/react-editor';
+import '@toast-ui/editor/dist/toastui-editor.css';
+
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
+// @ts-expect-error: prismjs has no type declarations
+import Prism from 'prismjs';
+import 'prismjs/themes/prism.css';
+import { useRef } from 'react';
+import supabase from '../../utils/supabase';
+
+export default function EditText({
+  tags,
+  onAddTag,
+  onRemoveTag,
+  problems,
+}: EditTextProps) {
+  const editorRef = useRef<Editor>(null);
+
   return (
     <>
       <div className="lg:grid lg:grid-cols-2 lg:gap-12">
@@ -20,6 +38,7 @@ export default function EditText({ problems }: { problems?: boolean }) {
               className="edit-input mb-5"
               type="text"
               placeholder="제목을 입력하세요"
+              name="title"
             />
             <div className="mb-2.5 flex items-end">
               <p className="text-sm md:text-base lg:text-lg">내용</p>
@@ -34,18 +53,74 @@ export default function EditText({ problems }: { problems?: boolean }) {
                 </button>
               </div>
             </div>
+
             <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
-              에디터영역
+              <Editor
+                ref={editorRef}
+                initialValue="내용을 입력하센"
+                previewStyle="tab"
+                initialEditType="markdown"
+                useCommandShortcut={true}
+                plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+                hooks={{
+                  addImageBlobHook: async (
+                    blob: Blob,
+                    callback: (url: string, altText: string) => void,
+                  ) => {
+                    const fileExt = blob.type.split('/')[1];
+                    const today = new Date();
+                    const yyyymmdd = today
+                      .toISOString()
+                      .slice(0, 10)
+                      .replace(/-/g, '');
+                    const fileName = `${yyyymmdd}/${Date.now()}.${fileExt}`;
+
+                    const { error } = await supabase.storage
+                      .from('post-images')
+                      .upload(fileName, blob);
+
+                    if (error) {
+                      console.error('이미지 업로드 실패:', error.message);
+                      return;
+                    }
+
+                    const { data } = supabase.storage
+                      .from('post-images')
+                      .getPublicUrl(fileName);
+
+                    const imageUrl = data?.publicUrl;
+                    if (imageUrl) {
+                      callback(imageUrl, 'image');
+                    }
+                  },
+                }}
+              />
             </div>
+
             <p className="mb-2.5 text-sm md:text-base lg:text-lg">태그</p>
             <input
               className="edit-input mb-2.5"
               type="text"
               placeholder="태그를 입력하세요"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const value = e.currentTarget.value.trim();
+                  if (value) {
+                    onAddTag(value);
+                    e.currentTarget.value = '';
+                  }
+                }
+              }}
             />
             <div className="flex flex-wrap gap-2.5">
-              <TagItem />
-              <TagItem />
+              {tags.map((tag) => (
+                <TagItem
+                  key={tag}
+                  label={tag}
+                  onDelete={() => onRemoveTag(tag)}
+                />
+              ))}
             </div>
           </div>
         </form>
