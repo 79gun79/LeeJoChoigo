@@ -6,7 +6,15 @@ import TagSearch from '../../components/search/SearchTag';
 import PageName from '../../components/ui/PageName';
 import TagItem from '../../components/ui/TagItem';
 
+import supabase from '../../utils/supabase';
+import { useNavigate } from 'react-router';
+
 export default function QuestionList() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/questions/write');
+  };
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -39,7 +47,10 @@ export default function QuestionList() {
               <ListCard solve={true} />
               <ListCard solve={false} />
             </div>
-            <button className="fixed right-0 bottom-14 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-main)] text-white shadow-md md:right-2 md:h-13 md:w-13 lg:right-6 lg:h-15 lg:w-15">
+            <button
+              onClick={handleClick}
+              className="fixed right-0 bottom-14 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-main)] text-white shadow-md md:right-2 md:h-13 md:w-13 lg:right-6 lg:h-15 lg:w-15"
+            >
               <Plus className="h-5 w-5 lg:h-7 lg:w-7" />
             </button>
           </div>

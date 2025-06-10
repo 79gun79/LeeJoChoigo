@@ -1,6 +1,6 @@
 import { StickyNote } from 'lucide-react';
 import TagItem from '../ui/TagItem';
-import type { EditTextProps } from './EditText.types';
+import type { EditTextProps, EditTextHandle } from './EditText.types';
 
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -9,17 +9,26 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 // @ts-expect-error: prismjs has no type declarations
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
-import { useRef } from 'react';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 import supabase from '../../utils/supabase';
 
-export default function EditText({
-  tags,
-  onAddTag,
-  onRemoveTag,
-  problems,
-}: EditTextProps) {
+const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
+  { tags, onAddTag, onRemoveTag, problems },
+  ref,
+) {
   const editorRef = useRef<Editor>(null);
+  const titleRef = useRef<HTMLInputElement>(null);
 
+  useImperativeHandle(ref, () => ({
+    getPostData: () => {
+      const title = titleRef.current?.value.trim() || '';
+      const content = editorRef.current?.getInstance().getMarkdown() || '';
+      const match = content.match(/!\[.*?\]\((.*?)\)/g);
+      const imageUrl = match?.[0]?.match(/\((.*?)\)/)?.[1] || null;
+      const imageFileName = imageUrl?.split('/').pop() || null;
+      return { title, content, imageUrl, imageFileName, tags };
+    },
+  }));
   return (
     <>
       <div className="lg:grid lg:grid-cols-2 lg:gap-12">
@@ -39,6 +48,7 @@ export default function EditText({
               type="text"
               placeholder="제목을 입력하세요"
               name="title"
+              ref={titleRef}
             />
             <div className="mb-2.5 flex items-end">
               <p className="text-sm md:text-base lg:text-lg">내용</p>
@@ -57,7 +67,7 @@ export default function EditText({
             <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
               <Editor
                 ref={editorRef}
-                initialValue="내용을 입력하센"
+                initialValue="내용을 입력하세요."
                 previewStyle="tab"
                 initialEditType="markdown"
                 useCommandShortcut={true}
@@ -127,4 +137,5 @@ export default function EditText({
       </div>
     </>
   );
-}
+});
+export default EditText;
