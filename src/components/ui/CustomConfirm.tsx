@@ -34,7 +34,7 @@ const confirmStyle: {
   transition: Flip,
 };
 
-export default function CustomConfirm (message: string): Promise<boolean> {
+export default function CustomConfirm(message: string): Promise<boolean> {
   return new Promise((resolve) => {
     toast(
       ({ closeToast }) => (
@@ -49,7 +49,7 @@ export default function CustomConfirm (message: string): Promise<boolean> {
                 resolve(true);
                 closeToast();
               }}
-              variant='sub'
+              variant="sub"
               className={'rounded-xl text-white hover:bg-green-500'}
             >
               확인
@@ -69,4 +69,4 @@ export default function CustomConfirm (message: string): Promise<boolean> {
       { ...confirmStyle, autoClose: false },
     );
   });
-};
+}

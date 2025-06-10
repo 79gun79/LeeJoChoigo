@@ -1,6 +1,6 @@
-import { redirect } from "react-router";
-import supabase from "../utils/supabase";
-import { useAuthStore } from "../stores/authStore";
+import { redirect } from 'react-router';
+import supabase from '../utils/supabase';
+import { useAuthStore } from '../stores/authStore';
 
 export const fetchUserData = async () => {
   const {
@@ -20,7 +20,7 @@ export const requireAuth = async () => {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    return redirect("/login");
+    return redirect('/login');
   }
 };
 
@@ -31,6 +31,6 @@ export const requireNoAuth = async () => {
   } = await supabase.auth.getSession();
 
   if (session) {
-    return redirect("/");
+    return redirect('/');
   }
 };
