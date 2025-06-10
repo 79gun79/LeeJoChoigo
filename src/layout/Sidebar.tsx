@@ -125,7 +125,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 variants={itemVariants}
               >
                 <button onClick={onClose}>
-                  <ChevronLeft />
+                  <ChevronLeft className="ml-2" />
                 </button>
               </motion.div>
 
@@ -141,10 +141,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                       className="h-10 w-10 rounded-full bg-white object-cover"
                     />
                     <div>
-                      <div className="text-sm font-medium">
+                      <div className="t3 font-medium">
                         {userInfo.name || '사용자'}
                       </div>
-                      <div className="text-xs">{userInfo.email || ''}</div>
+                      <div className="t5">{userInfo.email || ''}</div>
                     </div>
                   </>
                 ) : (
@@ -177,10 +177,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     </button>
                   </motion.div>
 
-                  <motion.hr
-                    className="text-gray3 mx-auto w-3/4"
-                    variants={itemVariants}
-                  />
+                  <motion.hr className="text-gray3" variants={itemVariants} />
                 </>
               )}
               <motion.div variants={itemVariants}>

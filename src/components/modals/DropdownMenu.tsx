@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 interface DropdownItem {
   name: string;
   path: string;
+  classname?: string;
 }
 interface DropdownMenuProps {
   items: DropdownItem[];

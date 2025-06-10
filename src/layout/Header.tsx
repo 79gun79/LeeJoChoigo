@@ -95,7 +95,6 @@ export default function Header() {
               <DropdownMenu
                 items={[
                   { name: '마이페이지', path: '/profile/myPage' },
-                  { name: '설정', path: '/setting' },
                   { name: '로그아웃', path: '/logout' },
                 ]}
                 isOpen={dropdownOpen}
@@ -108,7 +107,7 @@ export default function Header() {
         )}
 
         {!isLogin && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <button
               className="t5 rounded-[4px] border border-[#060606] px-3 py-1"
               onClick={() =>
