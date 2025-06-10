@@ -1,6 +1,6 @@
 import { ChevronLeft, House, LogOut } from 'lucide-react';
 import userDefault from '../assets/images/icon-user-default.png';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import IsLoginModal from '../components/modals/IsLoginModal';
 import { NavLink, useNavigate } from 'react-router';
 import Navigation from '../components/atoms/Navigation';
@@ -42,6 +42,33 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [isLoginOpen, setLoginOpen] = useState(false);
   const setLogout = useAuthStore((state) => state.setLogout);
   const isLogin = useAuthStore((state) => state.isLogin);
+
+  // 사용자 정보 상태 추가
+  const [userInfo, setUserInfo] = useState<{
+    name?: string;
+    email?: string;
+    avatar_url?: string | null;
+  }>({});
+
+  useEffect(() => {
+    // 로그인 상태일 때 supabase에서 유저 정보 가져오기
+    const fetchUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUserInfo({
+          name: user.user_metadata?.name || '사용자',
+          email: user.email,
+          avatar_url: user.user_metadata?.avatar_url || null,
+        });
+      } else {
+        setUserInfo({});
+      }
+    };
+    if (isLogin) fetchUser();
+    else setUserInfo({});
+  }, [isLogin]);
 
   const isLoginModalHandler = (
     e: React.MouseEvent<HTMLElement, MouseEvent>,
@@ -106,41 +133,56 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 className="bg-main flex items-center gap-3 px-2 py-4 text-white"
                 variants={itemVariants}
               >
-                <img
-                  src={userDefault}
-                  alt="사용자 이미지"
-                  className="h-10 w-10 rounded-full bg-white"
-                />
-                <div>
-                  <div className="text-sm font-medium">사용자</div>
-                  <div className="text-xs">user@gmail.com</div>
-                </div>
+                {isLogin ? (
+                  <>
+                    <img
+                      src={userInfo.avatar_url || userDefault}
+                      alt="사용자 이미지"
+                      className="h-10 w-10 rounded-full bg-white object-cover"
+                    />
+                    <div>
+                      <div className="text-sm font-medium">
+                        {userInfo.name || '사용자'}
+                      </div>
+                      <div className="text-xs">{userInfo.email || ''}</div>
+                    </div>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => navigate('/login')}
+                    className="t3 px-4"
+                  >
+                    로그인<span className="ml-2">LOGO</span>
+                  </button>
+                )}
               </motion.div>
+              {isLogin && (
+                <>
+                  <motion.div className="t4 flex" variants={itemVariants}>
+                    <NavLink
+                      to="/profile/myPage"
+                      className={({ isActive }) =>
+                        `${isActive ? 'text-main' : ''} flex flex-1 items-center justify-center gap-1 py-2`
+                      }
+                    >
+                      MyPage
+                      <House className="h-4 w-4" />
+                    </NavLink>
+                    <button
+                      onClick={handleLogout}
+                      className="flex flex-1 items-center justify-center gap-1 py-2"
+                    >
+                      로그아웃
+                      <LogOut className="h-4 w-4" />
+                    </button>
+                  </motion.div>
 
-              <motion.div className="t4 flex" variants={itemVariants}>
-                <NavLink
-                  to="/profile/myPage"
-                  className={({ isActive }) =>
-                    `${isActive ? 'text-main' : ''} flex flex-1 items-center justify-center gap-1 py-2`
-                  }
-                >
-                  MyPage
-                  <House className="h-4 w-4" />
-                </NavLink>
-                <button
-                  onClick={handleLogout}
-                  className="flex flex-1 items-center justify-center gap-1 py-2"
-                >
-                  로그아웃
-                  <LogOut className="h-4 w-4" />
-                </button>
-              </motion.div>
-
-              <motion.hr
-                className="text-gray3 mx-auto w-3/4"
-                variants={itemVariants}
-              />
-
+                  <motion.hr
+                    className="text-gray3 mx-auto w-3/4"
+                    variants={itemVariants}
+                  />
+                </>
+              )}
               <motion.div variants={itemVariants}>
                 <Navigation
                   direction="vertical"
