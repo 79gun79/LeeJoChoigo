@@ -7,10 +7,12 @@ import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
 import Navigation from '../components/atoms/Navigation';
 import userDefault from '../assets/images/icon-user-default.png';
+import DropdownMenu from '../components/modals/DropdownMenu';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoginOpen, setLoginOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const isLogin = useAuthStore((state) => state.isLogin);
   const setLogout = useAuthStore((state) => state.setLogout);
   const navigate = useNavigate();
@@ -24,12 +26,17 @@ export default function Header() {
     }
   };
 
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (!error) {
-      setLogout();
-      navigate('/');
+  const handleDropdownClick = async (path: string) => {
+    if (path === '/logout') {
+      const { error } = await supabase.auth.signOut();
+      if (!error) {
+        setLogout();
+        navigate('/');
+      }
+    } else {
+      navigate(path);
     }
+    setDropdownOpen(false);
   };
 
   return (
@@ -50,13 +57,27 @@ export default function Header() {
         <Navigation onProtectedRoute={isLoginModalHandler} />
 
         {isLogin && (
-          <div className="flex items-center gap-4">
+          <div className="relative flex items-center gap-4">
             <Bell />
             <img
               src={userDefault}
               alt="userDefaultProfile"
-              className="h-6 lg:h-8"
+              className="h-6 cursor-pointer lg:h-8"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
             />
+            {dropdownOpen && (
+              <DropdownMenu
+                items={[
+                  { name: '마이페이지', path: '/profile/myPage' },
+                  { name: '설정', path: '/setting' },
+                  { name: '로그아웃', path: '/logout' },
+                ]}
+                isOpen={dropdownOpen}
+                onItemClick={handleDropdownClick}
+                onClose={() => setDropdownOpen(false)}
+                className="absolute top-full right-0"
+              />
+            )}
           </div>
         )}
 

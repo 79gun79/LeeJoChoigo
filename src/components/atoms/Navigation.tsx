@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CheckCircle, FileText, HelpCircle } from 'lucide-react';
 import { NavLink } from 'react-router';
-import DropdownMenu from './DropdownMenu';
+import DropdownMenu from '../modals/DropdownMenu';
 
 interface MenuItem {
   name: string;
@@ -46,7 +46,6 @@ export default function Navigation({
   className = '',
 }: NavigationProps) {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-
   const layout =
     direction === 'vertical'
       ? 'h5 flex-col flex gap-4 items-start pt-10 ml-4'
@@ -94,7 +93,13 @@ export default function Navigation({
               {item.subItems && <span className="t5 ml-1"></span>}
             </NavLink>
             {/* 서브 메뉴 */}
-            {item.subItems && isOpen && <DropdownMenu items={item.subItems} />}
+            {item.subItems && isOpen && (
+              <DropdownMenu
+                isOpen={isOpen}
+                onClose={() => setOpenMenu(null)}
+                items={item.subItems}
+              />
+            )}
           </div>
         );
       })}

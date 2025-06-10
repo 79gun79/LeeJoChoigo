@@ -1,14 +1,17 @@
 import { NavLink, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 interface DropdownItem {
   name: string;
   path: string;
 }
-
 interface DropdownMenuProps {
   items: DropdownItem[];
+  onItemClick?: (path: string) => void;
   className?: string;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 const dropdownVariants = {
@@ -35,13 +38,32 @@ const itemVariants = {
 export default function DropdownMenu({
   items,
   className = '',
+  onItemClick,
+  isOpen,
+  onClose,
 }: DropdownMenuProps) {
   const navigate = useNavigate();
+  const modalRef = useRef<HTMLDivElement>(null);
+  // 바깥 클릭 감지
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    }
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
       <motion.div
-        className={`absolute right-0 z-50 mt-2 flex flex-col rounded-md border bg-white whitespace-nowrap drop-shadow-md ${className}`}
+        ref={modalRef}
+        className={`absolute z-50 mt-2 flex flex-col rounded-md border bg-white whitespace-nowrap drop-shadow-md ${className}`}
         initial="hidden"
         animate="visible"
         exit="exit"
@@ -63,7 +85,11 @@ export default function DropdownMenu({
               }
               onClick={(e) => {
                 e.preventDefault();
-                navigate(item.path);
+                if (onItemClick) {
+                  onItemClick(item.path);
+                } else {
+                  navigate(item.path);
+                }
               }}
             >
               {item.name}

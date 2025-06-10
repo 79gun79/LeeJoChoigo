@@ -2,10 +2,11 @@ import { ChevronLeft, House, LogOut } from 'lucide-react';
 import userDefault from '../assets/images/icon-user-default.png';
 import { useState } from 'react';
 import IsLoginModal from '../components/modals/IsLoginModal';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import Navigation from '../components/atoms/Navigation';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { useAuthStore } from '../stores/authStore';
+import supabase from '../utils/supabase';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -37,7 +38,9 @@ const itemVariants: Variants = {
 };
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const navigate = useNavigate();
   const [isLoginOpen, setLoginOpen] = useState(false);
+  const setLogout = useAuthStore((state) => state.setLogout);
   const isLogin = useAuthStore((state) => state.isLogin);
 
   const isLoginModalHandler = (
@@ -49,7 +52,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       setLoginOpen(true);
     }
   };
-
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (!error) {
+      setLogout();
+      onClose();
+      navigate('/');
+    }
+  };
   return (
     <>
       {/* 오버레이 */}
@@ -87,7 +97,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 className="my-3 flex items-center gap-2"
                 variants={itemVariants}
               >
-                <button onClick={onClose} className="text-xl">
+                <button onClick={onClose}>
                   <ChevronLeft />
                 </button>
               </motion.div>
@@ -110,12 +120,17 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               <motion.div className="t4 flex" variants={itemVariants}>
                 <NavLink
                   to="/profile/myPage"
-                  className="flex flex-1 items-center justify-center gap-1 py-2"
+                  className={({ isActive }) =>
+                    `${isActive ? 'text-main' : ''} flex flex-1 items-center justify-center gap-1 py-2`
+                  }
                 >
                   MyPage
                   <House className="h-4 w-4" />
                 </NavLink>
-                <button className="flex flex-1 items-center justify-center gap-1 py-2">
+                <button
+                  onClick={handleLogout}
+                  className="flex flex-1 items-center justify-center gap-1 py-2"
+                >
                   로그아웃
                   <LogOut className="h-4 w-4" />
                 </button>
