@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import Sidebar from './Sidebar';
-import { Menu } from 'lucide-react';
+import { Bell, Menu } from 'lucide-react';
 import IsLoginModal from '../components/modals/IsLoginModal';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
 import Navigation from '../components/atoms/Navigation';
+import userDefault from '../assets/images/icon-user-default.png';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex h-[55px] w-full items-center justify-between border-b border-[#cccccc] px-4 md:h-[60px] md:justify-around md:px-0">
+      <header className="flex h-[55px] w-full items-center justify-between overflow-visible border-b border-[#cccccc] px-4 md:h-[60px] md:justify-around md:px-0">
         <div className="flex items-center gap-2">
           <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
             <Menu className="w-[22px]" />
@@ -49,13 +50,13 @@ export default function Header() {
         <Navigation onProtectedRoute={isLoginModalHandler} />
 
         {isLogin && (
-          <div className="flex items-center">
-            <button
-              className="t5 rounded-[4px] border border-[#060606] px-3 py-1"
-              onClick={handleLogout}
-            >
-              로그아웃
-            </button>
+          <div className="flex items-center gap-4">
+            <Bell />
+            <img
+              src={userDefault}
+              alt="userDefaultProfile"
+              className="h-6 lg:h-8"
+            />
           </div>
         )}
 
