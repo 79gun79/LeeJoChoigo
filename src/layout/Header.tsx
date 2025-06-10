@@ -68,7 +68,7 @@ export default function Header() {
   return (
     <>
       <header className="flex h-[55px] w-full items-center justify-between overflow-visible border-b border-[#cccccc] px-4 md:h-[60px] md:justify-around md:px-0">
-        <div className="flex items-center gap-2">
+        <div className="flex gap-3">
           <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
             <Menu className="w-[22px]" />
           </button>

@@ -21,11 +21,6 @@
   --color-green-info: #5da92e;
 }
 
-html,
-body {
-  overflow-y: scroll;
-}
-
 button {
   cursor: pointer;
 }
