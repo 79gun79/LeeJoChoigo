@@ -5,6 +5,7 @@ import EmailVerificationModal from '../components/modals/EmailVertificationModal
 import wallpaper from '../assets/images/nubelson-fernandes-UcYBL5V0xWQ-unsplash.jpg';
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
+import { notify } from '../utils/customAlert';
 
 export default function Signup() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,14 +58,17 @@ export default function Signup() {
 
       if (error) {
         if (error.code === 'user_already_exists') {
-          alert('이미 등록된 이메일입니다.');
+          notify('이미 등록된 이메일입니다.', 'error');
+        } else if (error.code === 'email_address_invalid') {
+          notify('지원하지 않는 이메일 형식입니다.', 'warning');
         }
-        console.error('[회원가입] 실패', error);
+        console.error('[회원가입] 실패', error.code);
         return;
       }
 
       setIsModalOpen(true);
     } catch (e) {
+      notify('예상치 못한 오류가 발생했습니다.', 'error');
       console.error('[회원가입] 예상치 못한 오류', e);
     }
   };

@@ -1,7 +1,7 @@
-import type { Session } from "@supabase/supabase-js";
-import { create } from "zustand";
-import { devtools } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
+import type { Session } from '@supabase/supabase-js';
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
 
 type AuthStore = {
   isLogin: boolean;
@@ -25,6 +25,6 @@ export const useAuthStore = create<AuthStore>()(
           state.isLogin = false;
           state.session = null;
         }),
-    }))
-  )
+    })),
+  ),
 );

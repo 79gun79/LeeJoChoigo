@@ -2,46 +2,48 @@ import { useState } from 'react';
 import QuizChooseBox from '../atoms/QuizChooseBox';
 import { ChevronDown, ChevronRight, Plus, Trash2, X } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
+import type { QuizItem } from '../../types/quizList';
 
-type QuizComponentProps = {
-  id: number;
+type JobQuizProps = {
   index: number;
-  onDelete: (id: number) => void;
+  item: QuizItem;
+  onDelete: (index: number) => void;
+  onChange: (index: number, value: QuizItem) => void;
 };
 
 export default function QuizComponent({
-  id,
   index,
+  item,
   onDelete,
-}: QuizComponentProps) {
-  const initialOptions = [
-    { id: 'A', selected: false, value: '' },
-    { id: 'B', selected: true, value: '' },
-    { id: 'C', selected: false, value: '' },
-    { id: 'D', selected: false, value: '' },
-  ];
-
-  const [description, setDescription] = useState('');
-  const [options, setOptions] = useState(initialOptions);
+  onChange,
+}: JobQuizProps) {
+  const { description, quiz } = item;
   const [isShow, setShow] = useState(false);
 
-  const updateValue = (id: string, newVal: string) => {
-    setOptions((opts) =>
-      opts.map((opt) => (opt.id === id ? { ...opt, value: newVal } : opt)),
-    );
+  const updateDescription = (newVal: string) => {
+    onChange(index, { ...item, description: newVal });
+  };
+
+  const updateQuiz = (id: string, newVal: string) => {
+    const update = quiz.map((v) => (v.id === id ? { ...v, value: newVal } : v));
+    onChange(index, { ...item, quiz: update });
   };
 
   const toggleSelect = (id: string) => {
-    setOptions((opts) =>
-      opts.map((opt) =>
-        opt.id === id ? { ...opt, selected: !opt.selected } : opt,
-      ),
+    const update = quiz.map((v) =>
+      v.id === id ? { ...v, selected: !v.selected } : v,
     );
+    onChange(index, { ...item, quiz: update });
   };
 
-  const resetOptions = () => {
-    setDescription('');
-    setOptions(initialOptions);
+  const resetQuiz = () => {
+    const reset = [
+      { id: 'A', selected: false, value: '' },
+      { id: 'B', selected: false, value: '' },
+      { id: 'C', selected: false, value: '' },
+      { id: 'D', selected: false, value: '' },
+    ];
+    onChange(index, { description: '', quiz: reset });
     setShow(false);
   };
   return (
@@ -81,28 +83,31 @@ export default function QuizComponent({
               className={twMerge('edit-input', 'h-15 resize-none')}
               placeholder="문제에 대한 설명을 작성하세요"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => updateDescription(e.target.value)}
             />
 
             <div className="grid grid-cols-1 gap-[14px] md:grid-cols-2 md:gap-[16px]">
-              {options.map((opt) => (
+              {quiz.map((v) => (
                 <QuizChooseBox
-                  key={opt.id}
-                  id={opt.id}
-                  selected={opt.selected}
-                  value={opt.value}
-                  onChangeValue={(val) => updateValue(opt.id, val)}
-                  onSelectToggle={() => toggleSelect(opt.id)}
+                  key={v.id}
+                  id={v.id}
+                  selected={v.selected}
+                  value={v.value}
+                  onChangeValue={(val) => updateQuiz(v.id, val)}
+                  onSelectToggle={() => toggleSelect(v.id)}
                 />
               ))}
             </div>
             <div className="mt-[10px] flex gap-[14px]">
-              <div onClick={resetOptions} className="button-quiz">
+              <div onClick={resetQuiz} className="button-quiz">
                 <X className="ml-[7px]" size={16} />
                 <span className="ml-[3px]">취소</span>
               </div>
               <div className="flex-grow"></div>
-              <div onClick={() => onDelete(id)} className="button-quiz delete">
+              <div
+                onClick={() => onDelete(index)}
+                className="button-quiz delete"
+              >
                 <Trash2 size={16} />
               </div>
               <div onClick={() => setShow(false)} className="button-quiz plus">
