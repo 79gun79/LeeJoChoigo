@@ -3,23 +3,38 @@ import { Plus } from 'lucide-react';
 import QuizComponent from '../detail/QuizComponent';
 import CheckItem from '../ui/CheckItem';
 import { useRef, useState } from 'react';
+import type { QuizItem } from '../../types/quizList';
 
 export default function EditText({ problems }: { problems?: boolean }) {
-  const [quizList, setQuizList] = useState<number[]>([]);
+  const [quizList, setQuizList] = useState<QuizItem[]>([]);
   const currentPos = useRef<HTMLDivElement | null>(null);
 
   const addQuiz = () => {
+    const newQuiz: QuizItem = {
+      description: '',
+      quiz: [
+        { id: 'A', selected: false, value: '' },
+        { id: 'B', selected: false, value: '' },
+        { id: 'C', selected: false, value: '' },
+        { id: 'D', selected: false, value: '' },
+      ],
+    };
+
+    setQuizList((v) => [...v, newQuiz]);
     setTimeout(() => {
       currentPos.current?.scrollIntoView({
         block: 'start',
         behavior: 'smooth',
       });
     }, 100);
-    setQuizList((v) => [...v, Date.now()]);
   };
 
-  const deleteQuiz = (quizId: number) => {
-    setQuizList((v) => v.filter((id) => id !== quizId));
+  const deleteQuiz = (index: number) => {
+    setQuizList((v) => v.filter((_, i) => i !== index));
+  };
+
+  const updateQuiz = (index: number, value: QuizItem) => {
+    setQuizList((v) => v.map((q, i) => (i === index ? value : q)));
   };
   return (
     <>
@@ -73,14 +88,14 @@ export default function EditText({ problems }: { problems?: boolean }) {
               <p className="text-sm md:text-base">퀴즈생성</p>
               {quizList.map((v, i) => (
                 <div
-                  key={v}
+                  key={i}
                   ref={i === quizList.length - 1 ? currentPos : null}
                 >
                   <QuizComponent
-                    key={v}
-                    id={v}
                     index={i}
+                    item={v}
                     onDelete={deleteQuiz}
+                    onChange={updateQuiz}
                   />
                 </div>
               ))}
