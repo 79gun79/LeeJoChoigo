@@ -1,5 +1,4 @@
 import { Heart, MessageSquare, Reply } from 'lucide-react';
-import displayCreateAt from '../../utils/displayCreateAt';
 
 type CommentType = {
   id: string;
