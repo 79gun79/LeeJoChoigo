@@ -2,12 +2,15 @@ import { useCallback, useState } from 'react';
 import DetailText from '../../../components/detail/DetailText';
 import PageName from '../../../components/ui/PageName';
 import Button from '../../../components/ui/Button';
-import { quizData } from '../../../data/quizDummyData';
 import QuizSolveComponent from '../../../components/detail/QuizSolveComponent';
+import { useLoaderData } from 'react-router';
+import type { PostDetail } from '../../../types';
+import type { QuizItem } from '../../../types/quizList';
 
 export default function JobDetailedPage() {
   const [answerConfirm, setAnswerConfirm] = useState(false);
-  const quizSolveData = quizData; // 문제 가져오기
+  const post = useLoaderData<PostDetail>();
+  const quizSolveData = (post.quiz_data || []) as QuizItem[]; // 문제 가져오기
 
   // 유저가 선택한 답
   const [userChoose, setUserChoose] = useState<string[][]>(
@@ -37,7 +40,7 @@ export default function JobDetailedPage() {
 
         {/* 문제 상세 설명 */}
         <div className="mb-[25px] md:mb-[35px]">
-          <DetailText />
+          <DetailText detail={post} />
         </div>
 
         {/* 문제 설명 컴포넌트 */}
@@ -48,7 +51,7 @@ export default function JobDetailedPage() {
               key={i}
               index={i}
               item={v}
-              selected={userChoose[i]}
+              choose={userChoose[i]}
               onSelect={(id) => selectHandler(i, id)}
               showRes={answerConfirm}
             />

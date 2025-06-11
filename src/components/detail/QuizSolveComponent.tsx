@@ -1,19 +1,19 @@
 import { Check, ChevronDown, ChevronRight, X } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import { useState } from 'react';
-import type { QuizProblem } from '../../types/quizList';
+import type { QuizItem } from '../../types/quizList';
 import QuizSolveBox from '../atoms/QuizSolveBox';
 
 export default function QuizSolveComponent({
   index,
   item,
-  selected,
+  choose,
   onSelect,
   showRes,
 }: {
   index: number;
-  item: QuizProblem;
-  selected: string[];
+  item: QuizItem;
+  choose: string[];
   onSelect: (optId: string) => void;
   showRes: boolean;
 }) {
@@ -26,10 +26,10 @@ export default function QuizSolveComponent({
   };
 
   const correctIds = quiz
-    .filter((v) => v.correct)
+    .filter((v) => v.selected)
     .map((v) => v.id)
     .sort();
-  const selectIds = selected.slice().sort();
+  const selectIds = choose.slice().sort();
   const isCorrect =
     correctIds.length === selectIds.length &&
     correctIds.every((v, i) => v === selectIds[i]);
@@ -83,9 +83,9 @@ export default function QuizSolveComponent({
                 <div key={v.id} onClick={() => clickHandler(v.id)}>
                   <QuizSolveBox
                     id={v.id}
-                    correct={v.correct}
+                    correct={v.selected}
                     value={v.value}
-                    selected={selected.includes(v.id)}
+                    selected={choose.includes(v.id)}
                     showRes={showRes}
                   />
                 </div>
