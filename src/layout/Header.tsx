@@ -13,6 +13,7 @@ export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { setLogInModal } = useModalStore();
+  const session = useAuthStore((state) => state.session);
   const isLogin = useAuthStore((state) => state.isLogin);
   const setLogout = useAuthStore((state) => state.setLogout);
   const navigate = useNavigate();
@@ -94,7 +95,7 @@ export default function Header() {
             {dropdownOpen && (
               <DropdownMenu
                 items={[
-                  { name: '마이페이지', path: '/profile/myPage' },
+                  { name: '마이페이지', path: `/profile/${session?.user.id}` },
                   { name: '로그아웃', path: '/logout' },
                 ]}
                 isOpen={dropdownOpen}

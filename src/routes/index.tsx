@@ -25,6 +25,7 @@ import {
   fetchChannel5,
 } from '../loader/channel.loader';
 import QuizSolutionList from '../pages/solution/quiz/QuizSolutionList';
+import { fetchProfile } from '../loader/profile.loader';
 
 const router = createBrowserRouter([
   {
@@ -91,8 +92,11 @@ const router = createBrowserRouter([
       {
         path: 'profile',
         children: [
-          // { index: true, element:  },
-          { path: ':userId', element: <Profile /> },
+          {
+            path: ':userId',
+            loader: fetchProfile,
+            Component: Profile,
+          },
         ],
       },
     ],
