@@ -133,6 +133,9 @@ export default function ProfileEdit({
           if (passwordEdit) {
             pwSubmit();
           } else {
+            await supabase.auth.updateUser({
+              data: { avatar_url: profileImg },
+            });
             notify('변경되었습니다.', 'success');
             saveProfile();
           }
@@ -190,7 +193,10 @@ export default function ProfileEdit({
           <form onSubmit={handleSubmit} className="relative h-full">
             {/* 이미지 */}
             <div className="relative h-[200px] w-full overflow-hidden lg:h-[250px]">
-              <img className="h-full w-full object-cover" src={bannerImg} />
+              <img
+                className="h-full w-full object-cover"
+                src={bannerImg || defaultBanner}
+              />
               <div className="absolute right-2 bottom-2">
                 <button
                   onClick={(e) => {
@@ -222,7 +228,7 @@ export default function ProfileEdit({
                       <button
                         onClick={(e) => {
                           e.preventDefault();
-                          setBannerImg(defaultBanner);
+                          setBannerImg('');
                         }}
                         className="text-red-caution"
                       >
@@ -240,7 +246,7 @@ export default function ProfileEdit({
                   <div className="h-[52px] w-[52px] overflow-hidden rounded-full border border-[#ccc] md:h-[60px] md:w-[60px] lg:h-[68px] lg:w-[68px]">
                     <img
                       className="h-full w-full object-cover"
-                      src={profileImg}
+                      src={profileImg || defaultProfile}
                     />
                   </div>
                   <div>
@@ -277,7 +283,7 @@ export default function ProfileEdit({
                           <button
                             onClick={(e) => {
                               e.preventDefault();
-                              setProfileImg(defaultProfile);
+                              setProfileImg('');
                             }}
                             className="text-red-caution"
                           >
