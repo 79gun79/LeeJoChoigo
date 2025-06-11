@@ -95,7 +95,7 @@ const router = createBrowserRouter([
           {
             path: ':userId',
             loader: fetchProfile,
-            Component: Profile,
+            element: <Profile />,
           },
         ],
       },
