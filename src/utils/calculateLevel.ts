@@ -1,7 +1,7 @@
 const BRONZE = '🐻 브론즈 ';
 const SILVER = '🪙 실버 ';
 const GOLD = '👑 골드 ';
-const PLATINUM = '🧌 플래티넘 ';
+const PLATINUM = '🍀 플래티넘 ';
 const DIAMOND = '💠 다이아몬드 ';
 const RUBY = '🐦‍🔥 루비 ';
 
