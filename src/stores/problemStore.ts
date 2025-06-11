@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import type { PostType } from '../types/post';
 import { fetchBjProblems } from '../utils/fetchBjProblems';
-import { devtools } from 'zustand/middleware';
 
 type PostStore = {
   problems: { page: number; posts: PostType[] }[];
