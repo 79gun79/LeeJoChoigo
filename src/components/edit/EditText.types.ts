@@ -14,3 +14,16 @@ export interface EditTextHandle {
     tags: string[];
   };
 }
+
+export interface CreateQuizProps {
+  problems?: boolean;
+}
+
+export interface CreateQuizHandle {
+  getPostData: () => {
+    title: string;
+    content: string;
+    imageUrl: string | null;
+    imageFileName: string | null;
+  };
+}

@@ -4,13 +4,15 @@ import SearchBox from '../../../components/search/SearchBox';
 import SearchListTop from '../../../components/search/SearchListTop';
 import CheckItem from '../../../components/ui/CheckItem';
 import PageName from '../../../components/ui/PageName';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import type { ChannelType, PostsType } from '../../../types';
 import { useEffect, useState } from 'react';
 import { getChannelPosts } from '../../../components/api/postApi';
 
 export default function QuizProblemList() {
   const channel = useLoaderData<ChannelType>();
+  const navigate = useNavigate();
+
   const [posts, setPosts] = useState<PostsType>([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +25,10 @@ export default function QuizProblemList() {
     };
     fetchData();
   }, [channel.id]);
+
+  const handleClick = () => {
+    navigate('/problems/write');
+  };
 
   return (
     <>
@@ -65,7 +71,10 @@ export default function QuizProblemList() {
               <QuizListCard image="asd" /> */}
             </div>
           </div>
-          <button className="bg-main fixed right-0 bottom-14 flex h-11 w-11 items-center justify-center rounded-full text-white shadow-md md:right-2 md:h-13 md:w-13 lg:right-6 lg:h-15 lg:w-15">
+          <button
+            onClick={handleClick}
+            className="bg-main fixed right-0 bottom-14 flex h-11 w-11 items-center justify-center rounded-full text-white shadow-md md:right-2 md:h-13 md:w-13 lg:right-6 lg:h-15 lg:w-15"
+          >
             <Plus className="h-5 w-5 lg:h-7 lg:w-7" />
           </button>
         </div>

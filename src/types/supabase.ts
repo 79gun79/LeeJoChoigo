@@ -356,6 +356,8 @@ export type Database = {
           image: string | null;
           image_public_id: string | null;
           is_yn: boolean;
+          quiz_data: Json[] | null;
+          solved_problem_id: number | null;
           tags: string[] | null;
           title: string | null;
           updated_at: string;
@@ -369,6 +371,8 @@ export type Database = {
           image?: string | null;
           image_public_id?: string | null;
           is_yn?: boolean;
+          quiz_data?: Json[] | null;
+          solved_problem_id?: number | null;
           tags?: string[] | null;
           title?: string | null;
           updated_at?: string;
@@ -382,6 +386,8 @@ export type Database = {
           image?: string | null;
           image_public_id?: string | null;
           is_yn?: boolean;
+          quiz_data?: Json[] | null;
+          solved_problem_id?: number | null;
           tags?: string[] | null;
           title?: string | null;
           updated_at?: string;
