@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DetailText from '../../../components/detail/DetailText';
 import PageName from '../../../components/ui/PageName';
 import Button from '../../../components/ui/Button';
@@ -10,6 +10,7 @@ import type { QuizItem } from '../../../types/quizList';
 export default function JobDetailedPage() {
   const [answerConfirm, setAnswerConfirm] = useState(false);
   const post = useLoaderData<PostDetail>();
+
   const quizSolveData = (post.quiz_data || []) as QuizItem[]; // 문제 가져오기
 
   // 유저가 선택한 답
@@ -29,6 +30,14 @@ export default function JobDetailedPage() {
       ),
     );
   }, []);
+
+  useEffect(() => {
+    if (answerConfirm) {
+      const solveList = JSON.parse(localStorage.getItem('solvedPosts') || '{}');
+      solveList[post.id] = true;
+      localStorage.setItem('solvedPosts', JSON.stringify(solveList));
+    }
+  }, [answerConfirm, post]);
 
   return (
     <>

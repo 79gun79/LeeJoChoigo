@@ -7,16 +7,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 
 // 임시로 지정한 props 입니다
-export default function QuizListCard({
-  data,
-  solve, //문제 풀이여부 확인
-}: {
-  data: PostType;
-  solve?: boolean;
-}) {
+export default function QuizListCard({ data }: { data: PostType }) {
   const [user, setUser] = useState<User>(null);
   const [isPending, setPending] = useState(false);
+  const [solved, setSolved] = useState(false);
+
   useEffect(() => {
+    const solvedList = JSON.parse(localStorage.getItem('solvedPosts') || '{}');
     const fetchData = async () => {
       setPending(true);
       try {
@@ -28,8 +25,9 @@ export default function QuizListCard({
         setPending(false);
       }
     };
+    setSolved(solvedList[data.id]);
     fetchData();
-  }, [data.author]);
+  }, [data]);
   return (
     <>
       {isPending ? (
@@ -89,7 +87,7 @@ export default function QuizListCard({
             </div>
             <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
               <Avartar user={user} />
-              {solve && (
+              {solved && (
                 <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
                   <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />
                   풀이됨

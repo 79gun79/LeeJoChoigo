@@ -68,7 +68,7 @@ export default function QuizProblemList() {
         <div>
           <div className="mb-2">
             <p className="mb-1.5 text-sm md:text-base">
-              카테고리 유형: <b>{category}</b>
+              카테고리 유형 : <b>{category}</b>
             </p>
             <div className="flex flex-wrap gap-2.5">
               <div className="mb-4 flex flex-wrap gap-2.5">
