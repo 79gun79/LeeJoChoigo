@@ -45,7 +45,10 @@ export default function IsLoginModal({ isOpen, onClose }: IsLoginModalProps) {
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="relative flex h-[190px] w-[280px] flex-col items-center justify-center gap-5 rounded-sm bg-white px-[30px] pt-[20px] pb-[25px] drop-shadow-md md:h-[280px] md:w-[420px] md:gap-10 md:px-[40px] md:pt-[30px] md:pb-[40px]">
+        <div
+          ref={modalRef}
+          className="relative flex h-[190px] w-[280px] flex-col items-center justify-center gap-5 rounded-sm bg-white px-[30px] pt-[20px] pb-[25px] drop-shadow-md md:h-[240px] md:w-[360px] md:gap-10 md:px-[40px] md:pt-[30px] md:pb-[40px]"
+        >
           <button
             onClick={onClose}
             className="text-gray4 absolute top-2 right-2 md:top-4 md:right-4"
@@ -55,12 +58,12 @@ export default function IsLoginModal({ isOpen, onClose }: IsLoginModalProps) {
           <div className="h4 md:h3 text-main w-full text-center font-bold">
             Oops!
           </div>
-          <p className="t3 w-full text-left !font-normal">
+          <p className="t4 w-full text-left !font-normal">
             로그인이 필요한 서비스입니다.
             <br />
             로그인 하시겠습니까?
           </p>
-          <div className="flex flex-row gap-5">
+          <div className="flex w-full flex-row justify-between">
             <ModalButton onClick={onClose}>아니오</ModalButton>
             <ModalButton
               onClick={() => navigate('/login')}

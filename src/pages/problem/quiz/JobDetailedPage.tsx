@@ -1,10 +1,31 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import DetailText from '../../../components/detail/DetailText';
 import PageName from '../../../components/ui/PageName';
 import Button from '../../../components/ui/Button';
+import { quizData } from '../../../data/quizDummyData';
+import QuizSolveComponent from '../../../components/detail/QuizSolveComponent';
 
 export default function JobDetailedPage() {
   const [answerConfirm, setAnswerConfirm] = useState(false);
+  const quizSolveData = quizData; // 문제 가져오기
+
+  // 유저가 선택한 답
+  const [userChoose, setUserChoose] = useState<string[][]>(
+    quizSolveData.map(() => []),
+  );
+
+  // 유저가 선택한 답 체크
+  const selectHandler = useCallback((index: number, selectId: string) => {
+    setUserChoose((choose) =>
+      choose.map((v, i) =>
+        i === index
+          ? v.includes(selectId)
+            ? v.filter((id) => id !== selectId)
+            : [...v, selectId]
+          : v,
+      ),
+    );
+  }, []);
 
   return (
     <>
@@ -20,6 +41,19 @@ export default function JobDetailedPage() {
         </div>
 
         {/* 문제 설명 컴포넌트 */}
+        <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
+          <p className="t3">문제 모음</p>
+          {quizSolveData.map((v, i) => (
+            <QuizSolveComponent
+              key={i}
+              index={i}
+              item={v}
+              selected={userChoose[i]}
+              onSelect={(id) => selectHandler(i, id)}
+              showRes={answerConfirm}
+            />
+          ))}
+        </div>
 
         {/* 정답 확인 버튼 */}
         <div className="flex justify-end md:justify-around">
