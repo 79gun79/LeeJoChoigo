@@ -40,6 +40,7 @@ const itemVariants: Variants = {
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const navigate = useNavigate();
   const [isLoginOpen, setLoginOpen] = useState(false);
+  const session = useAuthStore((state) => state.session);
   const setLogout = useAuthStore((state) => state.setLogout);
   const isLogin = useAuthStore((state) => state.isLogin);
 
@@ -160,7 +161,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <>
                   <motion.div className="t4 flex" variants={itemVariants}>
                     <NavLink
-                      to="/profile/myPage"
+                      to={`/profile/${session?.user.id}`}
                       className={({ isActive }) =>
                         `${isActive ? 'text-main' : ''} flex flex-1 items-center justify-center gap-1 py-2`
                       }
