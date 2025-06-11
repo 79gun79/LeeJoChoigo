@@ -4,3 +4,13 @@ export interface EditTextProps {
   onRemoveTag: (val: string) => void;
   problems?: boolean;
 }
+
+export interface EditTextHandle {
+  getPostData: () => {
+    title: string;
+    content: string;
+    imageUrl: string | null;
+    imageFileName: string | null;
+    tags: string[];
+  };
+}
