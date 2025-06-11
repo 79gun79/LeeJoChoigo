@@ -1,3 +1,5 @@
+import type { QuizItem } from '../../types/quizList';
+
 export interface EditTextProps {
   tags: string[];
   onAddTag: (val: string) => void;
@@ -16,7 +18,7 @@ export interface EditTextHandle {
 }
 
 export interface CreateQuizProps {
-  problems?: boolean;
+  quizValid: (valid: boolean) => void;
 }
 
 export interface CreateQuizHandle {
@@ -26,5 +28,6 @@ export interface CreateQuizHandle {
     imageUrl: string | null;
     imageFileName: string | null;
     tags: string[];
+    quizData: QuizItem[];
   };
 }

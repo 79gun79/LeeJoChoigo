@@ -2,7 +2,13 @@
 import { Plus } from 'lucide-react';
 import QuizComponent from '../detail/QuizComponent';
 import CheckItem from '../ui/CheckItem';
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import type { QuizItem } from '../../types/quizList';
 import type { CreateQuizHandle, CreateQuizProps } from './EditText.types';
 import { Editor } from '@toast-ui/react-editor';
@@ -11,9 +17,10 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import supabase from '../../utils/supabase';
+import { notify } from '../../utils/customAlert';
 
 export default forwardRef<CreateQuizHandle, CreateQuizProps>(
-  function CreateQuiz({ problems }, ref) {
+  function CreateQuiz({ quizValid }, ref) {
     const editorRef = useRef<Editor>(null);
     const titleRef = useRef<HTMLInputElement>(null);
     const [category, setCategory] = useState<string>('기타');
@@ -26,14 +33,21 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
         const imageUrl = match?.[0]?.match(/\((.*?)\)/)?.[1] || null;
         const imageFileName = imageUrl?.split('/').pop() || null;
         const tags = [category];
-        return { title, content, imageUrl, imageFileName, tags };
+        const quizData = quizList;
+        return { title, content, imageUrl, imageFileName, tags, quizData };
       },
     }));
 
     const [quizList, setQuizList] = useState<QuizItem[]>([]);
+    const [validList, setValidList] = useState<boolean[]>([]);
     const currentPos = useRef<HTMLDivElement | null>(null);
 
     const addQuiz = () => {
+      if (!allValid) {
+        notify('퀴즈가 완성되지 않았습니다!', 'warning');
+        return;
+      }
+
       const newQuiz: QuizItem = {
         description: '',
         quiz: [
@@ -60,18 +74,24 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
     const updateQuiz = (index: number, value: QuizItem) => {
       setQuizList((v) => v.map((q, i) => (i === index ? value : q)));
     };
+
+    const changeValid = (index: number, valid: boolean) => {
+      setValidList((v) => {
+        const copyValid = [...v];
+        copyValid[index] = valid;
+        return copyValid;
+      });
+    };
+
+    const allValid = validList.every((v) => v);
+    useEffect(() => {
+      quizValid?.(allValid);
+    }, [quizValid, allValid]);
+
     return (
       <>
         <div className="lg:grid lg:grid-cols-2 lg:gap-12">
-          {problems && (
-            <div className="h-full w-full lg:grid lg:grid-rows-[auto_1fr] lg:pb-9">
-              <p className="mb-2.5 text-sm md:text-base lg:text-lg">문제</p>
-              <div className="mb-7 h-[250px] overflow-auto rounded-sm bg-[var(--color-bg-white)] p-2.5 text-xs md:text-sm lg:h-full lg:text-base">
-                문제내용..
-              </div>
-            </div>
-          )}
-          <form className={`col-span-2 w-full ${problems && 'lg:col-span-1'}`}>
+          <form className="col-span-2 w-full">
             <div className="mb-[25px] md:mb-[35px]">
               <p className="mb-2.5 text-sm md:text-base lg:text-lg">제목</p>
               <input
@@ -86,7 +106,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
               <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
                 <Editor
                   ref={editorRef}
-                  initialValue="내용을 입력하세요."
+                  initialValue="내용을 입력하세요"
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}
@@ -163,6 +183,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
                       item={v}
                       onDelete={deleteQuiz}
                       onChange={updateQuiz}
+                      onValid={(valid) => changeValid(i, valid)}
                     />
                   </div>
                 ))}

@@ -2,18 +2,26 @@ import PageName from '../../../components/ui/PageName';
 import CreateQuiz from '../../../components/edit/CreateQuiz';
 import { useNavigate } from 'react-router';
 import supabase from '../../../utils/supabase';
-import type { EditTextHandle } from '../../../components/edit/EditText.types';
-import { useRef } from 'react';
+import type { CreateQuizHandle } from '../../../components/edit/EditText.types';
+import { useRef, useState } from 'react';
 import { notify } from '../../../utils/customAlert';
 
 export default function QuizCreateEdit() {
-  const editTextRef = useRef<EditTextHandle>(null);
+  const editTextRef = useRef<CreateQuizHandle>(null);
   const navigate = useNavigate();
+  const [quizValid, setQuizValid] = useState<boolean>(false);
 
   const handleSubmit = async () => {
     const postData = editTextRef.current?.getPostData();
     if (!postData) return;
-    const { title, content, imageUrl, imageFileName, tags } = postData;
+    const { title, content, imageUrl, imageFileName, tags, quizData } =
+      postData;
+
+    if (title === '') return notify('제목을 입력하세요!', 'info');
+    if (content === '') return notify('내용을 입력하세요!', 'info');
+    if (quizData.length === 0)
+      return notify('최소 1개의 퀴즈를 추가하셔야 합니다.', 'info');
+    if (!quizValid) return notify('퀴즈를 완성하세요!', 'warning');
 
     const { data: userData } = await supabase.auth.getUser();
     const authorId = userData.user?.id;
@@ -31,6 +39,7 @@ export default function QuizCreateEdit() {
         author: authorId,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
+        quiz_data: quizData,
       },
     ]);
 
@@ -48,7 +57,10 @@ export default function QuizCreateEdit() {
         <div className="mb-[25px] md:mb-[35px]">
           <PageName title="문제 만들기" />
         </div>
-        <CreateQuiz ref={editTextRef} />
+        <CreateQuiz
+          ref={editTextRef}
+          quizValid={(valid) => setQuizValid(valid)}
+        />
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
           <button
             onClick={() => navigate('/problems/job')}
