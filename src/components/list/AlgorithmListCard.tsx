@@ -2,6 +2,8 @@ import { Check, Heart } from 'lucide-react';
 import type { PostType } from '../../types/post';
 import { calculateLevel } from '../../utils/calculateLevel';
 import { useNavigate } from 'react-router';
+import { useAuthStore } from '../../stores/authStore';
+import { useModalStore } from '../../stores/modalStore';
 
 // 임시로 지정한 props 입니다
 export default function AlgorithmListCard({
@@ -11,12 +13,20 @@ export default function AlgorithmListCard({
   solve?: boolean;
   problem: PostType;
 }) {
+  const session = useAuthStore((state) => state.session);
+  const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
+
   let level = '레벨 없음';
   if (problem.solved_problem_level)
     level = calculateLevel(problem.solved_problem_level);
 
   const problemHandler = () => {
+    if (!session?.user.id) {
+      setLogInModal(true);
+      return;
+    }
+
     navigate(`/solutions/coding/write/${problem.solved_problem_id}`);
   };
 
