@@ -69,6 +69,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
 
     const deleteQuiz = (index: number) => {
       setQuizList((v) => v.filter((_, i) => i !== index));
+      setValidList((v) => v.filter((_, i) => i !== index));
     };
 
     const updateQuiz = (index: number, value: QuizItem) => {

@@ -67,9 +67,9 @@ export default function QuizListCard({
             </div>
             <ul className="mb-2.5 flex gap-3">
               {data.tags &&
-                data.tags.map((v) => (
+                data.tags.map((tag) => (
                   <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
-                    {v}
+                    {tag}
                   </li>
                 ))}
             </ul>

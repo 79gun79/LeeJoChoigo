@@ -137,7 +137,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   <>
                     <img
                       src={userInfo.avatar_url || userDefault}
-                      alt="사용자 이미지"
+                      alt="프로필"
                       className="h-10 w-10 rounded-full bg-white object-cover"
                     />
                     <div>

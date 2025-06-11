@@ -87,7 +87,7 @@ export default function Header() {
             <Bell />
             <img
               src={userInfo.avatar_url || userDefault}
-              alt="userProfile"
+              alt="프로필"
               className="h-7 cursor-pointer rounded-full lg:h-8"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             />
