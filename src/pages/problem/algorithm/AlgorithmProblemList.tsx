@@ -4,41 +4,41 @@ import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
 import SearchListTop from '../../../components/search/SearchListTop';
 import TagItem from '../../../components/ui/TagItem';
-import type { Problem } from '../../../types/solvedProblem';
-import { startTransition, useEffect, useRef, useState } from 'react';
-import { fetchBjProblems } from '../../../utils/fetchBjProblems';
-import type { PostType } from '../../../types/post';
+import { useEffect, useRef, } from 'react';
+import { useProblemStore } from '../../../stores/problemStore';
 
 export default function AlgorithmProblemList() {
-  const endListRef = useRef(null);
-  const [problems, setProblems] = useState<PostType[]>([]);
-
-  // 무한스크롤
-  // let debounceTimer = null;
-  // const onScroll = () => {
-  //   if (debounceTimer) clearTimeout(debounceTimer); // 너무 스크롤 이벤트 많이 발생하는 것 방지
-  //   debounceTimer = setTimeout(() => {
-  //     console.log('scroll');
-  //     const nearBottom =
-  //       window.innerHeight + window.scrollY + 100 >
-  //       document.documentElement.offsetHeight;
-  //     if (nearBottom) {
-  //       movieStore.getMovieMore(++page, type, keyword);
-  //     }
-  //   }, 200);
-  // };
+  const page = useRef(0);
+  const setProblemsByPage = useProblemStore((state) => state.setProblemsByPage);
+  const allProblems = useProblemStore((state) => state.problems);
+  const problems = allProblems.flatMap((p) => p.posts);
+  const endListRef = useRef<HTMLDivElement | null>(null);
+  const isFetched = useRef(false);
 
   useEffect(() => {
-    startTransition(async () => {
-      const data = await fetchBjProblems();
+    if (isFetched.current) return;
+    isFetched.current = true;
 
-      if (data) {
-        setProblems(data);
-      }
+    setProblemsByPage(page.current).then(() => {
+      const observer = new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          page.current += 1;
+          setProblemsByPage(page.current);
+        }
+      });
+
+      const current = endListRef.current;
+      if (current) observer.observe(current);
+
+      return () => {
+        if (current) observer.unobserve(current);
+      };
     });
   }, []);
 
-  console.log(problems[0]);
+  useEffect(() => {
+  }, []);
 
   return (
     <>
@@ -65,7 +65,7 @@ export default function AlgorithmProblemList() {
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {problems &&
                 problems.map((problem) => (
-                  <AlgorithmListCard problem={problem} />
+                  <AlgorithmListCard key={problem.id} problem={problem} />
                 ))}
 
               {/* <AlgorithmListCard />
