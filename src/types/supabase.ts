@@ -348,53 +348,53 @@ export type Database = {
       };
       post: {
         Row: {
-          author: string
-          channel: number
-          content: string | null
-          created_at: string
-          id: number
-          image: string | null
-          image_public_id: string | null
-          is_yn: boolean
-          quiz_data: Json[] | null
-          solved_problem_id: number | null
-          solved_problem_level: number | null
-          tags: string[] | null
-          title: string | null
-          updated_at: string
-        }
+          author: string;
+          channel: number;
+          content: string | null;
+          created_at: string;
+          id: number;
+          image: string | null;
+          image_public_id: string | null;
+          is_yn: boolean;
+          quiz_data: Json[] | null;
+          solved_problem_id: number | null;
+          solved_problem_level: number | null;
+          tags: string[] | null;
+          title: string | null;
+          updated_at: string;
+        };
         Insert: {
-          author: string
-          channel: number
-          content?: string | null
-          created_at?: string
-          id?: number
-          image?: string | null
-          image_public_id?: string | null
-          is_yn?: boolean
-          quiz_data?: Json[] | null
-          solved_problem_id?: number | null
-          solved_problem_level?: number | null
-          tags?: string[] | null
-          title?: string | null
-          updated_at?: string
-        }
+          author: string;
+          channel: number;
+          content?: string | null;
+          created_at?: string;
+          id?: number;
+          image?: string | null;
+          image_public_id?: string | null;
+          is_yn?: boolean;
+          quiz_data?: Json[] | null;
+          solved_problem_id?: number | null;
+          solved_problem_level?: number | null;
+          tags?: string[] | null;
+          title?: string | null;
+          updated_at?: string;
+        };
         Update: {
-          author?: string
-          channel?: number
-          content?: string | null
-          created_at?: string
-          id?: number
-          image?: string | null
-          image_public_id?: string | null
-          is_yn?: boolean
-          quiz_data?: Json[] | null
-          solved_problem_id?: number | null
-          solved_problem_level?: number | null
-          tags?: string[] | null
-          title?: string | null
-          updated_at?: string
-        }
+          author?: string;
+          channel?: number;
+          content?: string | null;
+          created_at?: string;
+          id?: number;
+          image?: string | null;
+          image_public_id?: string | null;
+          is_yn?: boolean;
+          quiz_data?: Json[] | null;
+          solved_problem_id?: number | null;
+          solved_problem_level?: number | null;
+          tags?: string[] | null;
+          title?: string | null;
+          updated_at?: string;
+        };
         Relationships: [
           {
             foreignKeyName: 'post_author_fkey';
