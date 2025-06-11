@@ -3,17 +3,16 @@ import ProfilePostCard from '../../components/list/ProfilePostCard';
 import { useState } from 'react';
 import ProfileCommentCard from '../../components/list/ProfileCommentCard';
 import ProfileEdit from './ProfileEdit';
-import { useFetcher, useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate, useParams } from 'react-router';
 import type { fetchProfile } from '../../loader/profile.loader';
 import { useAuthStore } from '../../stores/authStore';
 
 export type User = NonNullable<Awaited<ReturnType<typeof fetchProfile>>>;
 export default function Profile() {
   const session = useAuthStore((state) => state.session);
-  const fetcher = useFetcher<User>();
-  const loaderData = useLoaderData<User>();
-  const user = fetcher.data ?? loaderData;
-
+  const user = useLoaderData<User>();
+  const navigate = useNavigate();
+  const params = useParams();
   const authProfile = user.id === session?.user.id;
   const [isSelectActive, setIsSelectActive] = useState(false);
   const [isSetting, setIsSetting] = useState(false);
@@ -22,7 +21,7 @@ export default function Profile() {
   };
   const modalSaveHandle = () => {
     setIsSetting(false);
-    fetcher.load(`/profile/${user.id}`);
+    navigate(`/profile/${params.userId}`, { replace: true });
   };
   const posts = [
     {
