@@ -8,6 +8,7 @@ import Navigation from '../components/atoms/Navigation';
 import userDefault from '../assets/images/icon-user-default.png';
 import DropdownMenu from '../components/modals/DropdownMenu';
 import { useModalStore } from '../stores/modalStore';
+import logo from '../assets/images/dailyCote.png';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -77,7 +78,10 @@ export default function Header() {
             className="text-main cursor-pointer"
             onClick={() => navigate('/')}
           >
-            LOGO
+            <img
+              className="ml-[-8px] h-8 w-28 object-cover md:h-10 md:w-32"
+              src={logo}
+            />
           </button>
         </div>
 
