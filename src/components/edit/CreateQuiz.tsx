@@ -16,6 +16,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
   function CreateQuiz({ problems }, ref) {
     const editorRef = useRef<Editor>(null);
     const titleRef = useRef<HTMLInputElement>(null);
+    const [category, setCategory] = useState<string>('기타');
 
     useImperativeHandle(ref, () => ({
       getPostData: () => {
@@ -24,7 +25,8 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
         const match = content.match(/!\[.*?\]\((.*?)\)/g);
         const imageUrl = match?.[0]?.match(/\((.*?)\)/)?.[1] || null;
         const imageFileName = imageUrl?.split('/').pop() || null;
-        return { title, content, imageUrl, imageFileName };
+        const tags = [category];
+        return { title, content, imageUrl, imageFileName, tags };
       },
     }));
 
@@ -128,10 +130,23 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
                   <p className="mb-1.5 text-sm md:text-base">카테고리</p>
                   <div className="flex flex-wrap gap-2.5">
                     <div className="mb-4 flex flex-wrap gap-2.5">
-                      <CheckItem id="1" title="프론트엔드" />
-                      <CheckItem id="2" title="백엔드" />
-                      <CheckItem id="3" title="모바일 앱" />
-                      <CheckItem id="4" title="기타" />
+                      <CheckItem
+                        id="1"
+                        title="프론트엔드"
+                        onChange={setCategory}
+                      />
+                      <CheckItem id="2" title="백엔드" onChange={setCategory} />
+                      <CheckItem
+                        id="3"
+                        title="모바일 앱"
+                        onChange={setCategory}
+                      />
+                      <CheckItem
+                        id="4"
+                        title="기타"
+                        onChange={setCategory}
+                        checked={category === '기타'}
+                      />
                     </div>
                   </div>
                 </div>

@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import { Bell, Menu } from 'lucide-react';
-import IsLoginModal from '../components/modals/IsLoginModal';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
 import Navigation from '../components/atoms/Navigation';
 import userDefault from '../assets/images/icon-user-default.png';
 import DropdownMenu from '../components/modals/DropdownMenu';
+import { useModalStore } from '../stores/modalStore';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isLoginOpen, setLoginOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { setLogInModal } = useModalStore();
   const isLogin = useAuthStore((state) => state.isLogin);
   const setLogout = useAuthStore((state) => state.setLogout);
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export default function Header() {
   ) => {
     if (!isLogin) {
       e.preventDefault();
-      setLoginOpen(true);
+      setLogInModal(true);
     }
   };
 
@@ -126,7 +126,6 @@ export default function Header() {
         )}
       </header>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <IsLoginModal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)} />
     </>
   );
 }

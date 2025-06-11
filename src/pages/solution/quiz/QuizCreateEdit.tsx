@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import supabase from '../../../utils/supabase';
 import type { EditTextHandle } from '../../../components/edit/EditText.types';
 import { useRef } from 'react';
+import { notify } from '../../../utils/customAlert';
 
 export default function QuizCreateEdit() {
   const editTextRef = useRef<EditTextHandle>(null);
@@ -12,21 +13,17 @@ export default function QuizCreateEdit() {
   const handleSubmit = async () => {
     const postData = editTextRef.current?.getPostData();
     if (!postData) return;
-
-    const { title, content, imageUrl, imageFileName } = postData;
+    const { title, content, imageUrl, imageFileName, tags } = postData;
 
     const { data: userData } = await supabase.auth.getUser();
     const authorId = userData.user?.id;
-
-    if (!authorId) {
-      alert('로그인이 필요합니다.');
-      return;
-    }
+    if (!authorId) return;
 
     const { error } = await supabase.from('post').insert([
       {
         title,
         content,
+        tags,
         image: imageUrl,
         image_public_id: imageFileName,
         channel: 2,
@@ -39,9 +36,9 @@ export default function QuizCreateEdit() {
 
     if (error) {
       console.error('저장 실패', error);
-      alert('등록 실패');
+      notify('등록 실패!', 'warning');
     } else {
-      alert('등록 성공!');
+      notify('등록 성공!', 'success');
     }
     navigate('/problems/job');
   };
@@ -53,7 +50,12 @@ export default function QuizCreateEdit() {
         </div>
         <CreateQuiz ref={editTextRef} />
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
-          <button className="button-lg gray">취소</button>
+          <button
+            onClick={() => navigate('/problems/job')}
+            className="button-lg gray"
+          >
+            취소
+          </button>
           <button onClick={handleSubmit} className="button-lg">
             작성하기
           </button>

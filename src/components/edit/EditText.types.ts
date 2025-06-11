@@ -25,5 +25,6 @@ export interface CreateQuizHandle {
     content: string;
     imageUrl: string | null;
     imageFileName: string | null;
+    tags: string[];
   };
 }

@@ -8,9 +8,13 @@ import { useLoaderData, useNavigate } from 'react-router';
 import type { ChannelType, PostsType } from '../../../types';
 import { useEffect, useState } from 'react';
 import { getChannelPosts } from '../../../components/api/postApi';
+import { useAuthStore } from '../../../stores/authStore';
+import { useModalStore } from '../../../stores/modalStore';
 
 export default function QuizProblemList() {
   const channel = useLoaderData<ChannelType>();
+  const session = useAuthStore((state) => state.session);
+  const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
 
   const [posts, setPosts] = useState<PostsType>([]);
@@ -27,6 +31,10 @@ export default function QuizProblemList() {
   }, [channel.id]);
 
   const handleClick = () => {
+    if (!session?.user.id) {
+      setLogInModal(true);
+      return;
+    }
     navigate('/problems/write');
   };
 
@@ -65,10 +73,6 @@ export default function QuizProblemList() {
                   </h3>
                 </div>
               )}
-              {/* <QuizListCard solve={true} />
-              <QuizListCard image="asd" solve={true} />
-              <QuizListCard />
-              <QuizListCard image="asd" /> */}
             </div>
           </div>
           <button

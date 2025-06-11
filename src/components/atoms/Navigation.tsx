@@ -21,7 +21,7 @@ const menuItems: MenuItem[] = [
   {
     name: '문제게시판',
     path: '/problems',
-    requiresLogin: true,
+    // requiresLogin: true,
     Icon: FileText,
     subItems: [
       { name: '알고리즘문제', path: '/problems/coding' },
