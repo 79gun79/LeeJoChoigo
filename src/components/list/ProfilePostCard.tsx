@@ -1,10 +1,18 @@
 import { Heart, MessageSquare } from 'lucide-react';
 
-export default function ProfilePostCard({
-  image, //게시글에 사진 여부 확인
-}: {
-  image?: string;
-}) {
+type ProfilePostType = {
+  id: string;
+  created_at: string;
+  image: string;
+  title: {
+    title: string;
+    body: string;
+    tags: string[];
+  };
+  channel: string;
+};
+export default function ProfilePostCard({ data }: { data: ProfilePostType }) {
+  const { id, image, created_at, title, channel } = data;
   return (
     <>
       {/* 스켈레톤 */}
@@ -22,13 +30,10 @@ export default function ProfilePostCard({
           <div className="flex gap-2.5">
             <div className="w-full">
               <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
-                게시글 제목
+                {title.title}
               </p>
               <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-                게시글 내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-                내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-                내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-                내용게시글 내용게시글 내용게시글 내용게시글 내용게시글 내용
+                {title.body}
               </p>
             </div>
             {image && (
@@ -41,12 +46,12 @@ export default function ProfilePostCard({
             )}
           </div>
           <ul className="mb-2.5 flex gap-3">
-            <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
-              태그명
-            </li>
-            <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
-              태그명
-            </li>
+            {title.tags &&
+              title.tags.map((tag) => (
+                <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
+                  {tag}
+                </li>
+              ))}
           </ul>
           <div className="flex items-end">
             <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
