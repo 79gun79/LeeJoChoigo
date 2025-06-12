@@ -11,6 +11,12 @@ interface IsLoginModalProps {
 export default function IsLoginModal({ isOpen, onClose }: IsLoginModalProps) {
   const navigate = useNavigate();
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const handleConfirm = () => {
+    navigate('/login');
+    onClose();
+  };
+
   // 바깥 클릭 감지
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -44,7 +50,10 @@ export default function IsLoginModal({ isOpen, onClose }: IsLoginModalProps) {
   if (!isOpen) return null;
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div
+        onClick={onClose}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      >
         <div
           ref={modalRef}
           className="relative flex h-[190px] w-[280px] flex-col items-center justify-center gap-5 rounded-sm bg-white px-[30px] pt-[20px] pb-[25px] drop-shadow-md md:h-[240px] md:w-[360px] md:gap-10 md:px-[40px] md:pt-[30px] md:pb-[40px]"
@@ -66,7 +75,7 @@ export default function IsLoginModal({ isOpen, onClose }: IsLoginModalProps) {
           <div className="flex w-full flex-row justify-between">
             <ModalButton onClick={onClose}>아니오</ModalButton>
             <ModalButton
-              onClick={() => navigate('/login')}
+              onClick={handleConfirm}
               className="bg-sub1 hover:bg-main"
             >
               예

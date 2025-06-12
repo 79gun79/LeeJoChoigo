@@ -1,11 +1,19 @@
 import { Check, Heart } from 'lucide-react';
+import type { PostType } from '../../types/post';
+import { calculateLevel } from '../../utils/calculateLevel';
 
 // 임시로 지정한 props 입니다
 export default function AlgorithmListCard({
   solve, //문제 풀이여부 확인
+  problem,
 }: {
   solve?: boolean;
+  problem: PostType;
 }) {
+  let level = '레벨 없음';
+  if (problem.solved_problem_level)
+    level = calculateLevel(problem.solved_problem_level);
+
   return (
     <>
       {/* 스켈레톤 */}
@@ -24,17 +32,16 @@ export default function AlgorithmListCard({
       <div className="w-full rounded-sm border border-[#ccc]">
         <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
           <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
-            게시글 제목
+            {problem.title}
           </p>
-          <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-            게시글 내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-            내용게시글 내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-            내용게시글 내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-            내용게시글 내용게시글 내용게시글 내용
+          <p className="mb-2.5 line-clamp-1 text-xs md:text-sm lg:text-base h-[22px]">
+            {problem.tags && problem.tags.length > 0
+              ? problem.tags?.join(', ')
+              : `'${problem.title}' 문제입니다.`}
           </p>
           <div className="flex items-end">
             <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
-              2025.06.06
+              {/* 2025.06.06 */}
             </span>
             <div className="ml-auto flex shrink-0 gap-3">
               <div className="flex items-center gap-1">
@@ -45,7 +52,7 @@ export default function AlgorithmListCard({
           </div>
         </div>
         <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
-          <p className="text-xs md:text-sm lg:text-base">알고리즘문제 유형</p>
+          <p className="text-xs md:text-sm lg:text-base">{level}</p>
           {solve && (
             <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
               <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />

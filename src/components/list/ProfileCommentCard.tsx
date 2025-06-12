@@ -1,6 +1,13 @@
 import { Heart, MessageSquare, Reply } from 'lucide-react';
 
-export default function ProfileCommentCard() {
+type CommentType = {
+  id: string;
+  created_at: string;
+  comment: string;
+  post: string;
+};
+export default function ProfileCommentCard({ data }: { data: CommentType }) {
+  const { id, created_at, comment, post } = data;
   return (
     <>
       {/* 스켈레톤 */}
@@ -18,22 +25,19 @@ export default function ProfileCommentCard() {
           <div className="flex gap-2.5">
             <div className="w-full">
               <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
-                게시글 제목
+                {post}
               </p>
               <div className="flex w-full items-start gap-1.5">
                 <Reply className="h-4 w-4 shrink-0 rotate-180 md:mt-0.5 lg:h-5 lg:w-5" />
                 <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-                  게시글 내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-                  내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-                  내용게시글 내용게시글 내용게시글 내용게시글 내용게시글
-                  내용게시글 내용게시글 내용게시글 내용게시글 내용게시글 내용
+                  {comment}
                 </p>
               </div>
             </div>
           </div>
           <div className="flex items-end">
             <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
-              2025.06.06
+              {created_at}
             </span>
           </div>
         </div>

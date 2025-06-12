@@ -3,26 +3,44 @@ import SearchBox from '../../../components/search/SearchBox';
 import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
 import SearchListTop from '../../../components/search/SearchListTop';
-// import TagItem from '../../../components/ui/TagItem';
-import type { ChannelType, PostsType } from '../../../types';
+import { useEffect, useRef } from 'react';
+import { useProblemStore } from '../../../stores/problemStore';
 import { useLoaderData } from 'react-router';
-import { getChannelPosts } from '../../../components/api/postApi';
-import { useEffect, useState } from 'react';
+import type { ChannelType } from '../../../types';
 
 export default function AlgorithmProblemList() {
+  const page = useRef(0);
+  const setProblemsByPage = useProblemStore((state) => state.setProblemsByPage);
+  const allProblems = useProblemStore((state) => state.problems);
+  const problems = allProblems.flatMap((p) => p.posts);
+  const endListRef = useRef<HTMLDivElement | null>(null);
+  const isFetched = useRef(false);
   const channel = useLoaderData<ChannelType>();
-  const [posts, setPosts] = useState<PostsType>([]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const channelPosts = await getChannelPosts(channel.id);
-        setPosts(channelPosts);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchData();
-  }, [channel.id]);
+    if (isFetched.current) return;
+    isFetched.current = true;
+
+    setProblemsByPage(page.current).then(() => {
+      const observer = new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          page.current += 1;
+          setProblemsByPage(page.current);
+        }
+      });
+
+      const current = endListRef.current;
+      if (current) observer.observe(current);
+
+      return () => {
+        if (current) observer.unobserve(current);
+      };
+    });
+  }, []);
+
+  useEffect(() => {}, []);
+
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -46,16 +64,23 @@ export default function AlgorithmProblemList() {
               <SearchListTop />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {posts &&
-                posts.map((post) => <AlgorithmListCard key={post.id} />)}
-              {posts && posts.length === 0 && (
+              {problems &&
+                problems.map((problem) => (
+                  <AlgorithmListCard key={problem.id} problem={problem} />
+                ))}
+
+              {problems && problems.length === 0 && (
                 <div className="col-span-2 py-12 text-center">
                   <h3 className="t1 mb-2 font-medium text-black">
                     포스트가 없습니다.
                   </h3>
                 </div>
               )}
+
+              {/* <AlgorithmListCard />
+              <AlgorithmListCard /> */}
             </div>
+            <div ref={endListRef}></div>
           </div>
         </div>
       </div>
