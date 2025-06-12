@@ -2,8 +2,8 @@ import Avartar from '../ui/Avartar';
 import type { CommentType } from '../../types';
 import { format, formatDistanceToNow, differenceInHours } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { deleteComment } from '../../api/postApi';
 
-import { deleteComment } from '../../components/api/postApi';
 type Props = {
   data: CommentType;
   onDelete: () => void;
@@ -35,7 +35,7 @@ export default function CommentItem({ data, onDelete, isAuthor }: Props) {
     <>
       <div className="border-b border-[#ccc] py-2.5">
         <div className="mb-2.5 flex items-center">
-          <Avartar image={author.image} name={author.fullname} />
+          <Avartar user={author} />
           {isAuthor && (
             <button
               onClick={handleDelete}

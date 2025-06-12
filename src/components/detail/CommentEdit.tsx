@@ -1,8 +1,9 @@
 import Avartar from '../ui/Avartar';
 
 import { useState } from 'react';
-import { createComment } from '../api/postApi';
+
 import supabase from '../../utils/supabase';
+import { createComment } from '../../api/postApi';
 
 type Props = {
   postId: number;
