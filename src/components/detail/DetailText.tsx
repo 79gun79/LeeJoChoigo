@@ -41,8 +41,11 @@ export default function DetailText({ detail }: { detail: PostDetail }) {
         </div>
         <div className="flex gap-2">
           {detail.tags &&
-            detail.tags.map((tag) => (
-              <p className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
+            detail.tags.map((tag, i) => (
+              <p
+                key={i}
+                className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
+              >
                 {tag}
               </p>
             ))}

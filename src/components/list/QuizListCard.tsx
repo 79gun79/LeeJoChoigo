@@ -6,19 +6,19 @@ import { getUser } from '../../api/userApi';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 
-// 임시로 지정한 props 입니다
 export default function QuizListCard({ data }: { data: PostType }) {
   const [user, setUser] = useState<User>(null);
   const [isPending, setPending] = useState(false);
   const [solved, setSolved] = useState(false);
 
   useEffect(() => {
-    const solvedList = JSON.parse(localStorage.getItem('solvedPosts') || '{}');
     const fetchData = async () => {
       try {
         setPending(true);
         const userData = await getUser(data.author);
+        const curSolved = userData?.solved ?? [];
         setUser(userData);
+        setSolved(curSolved.includes(data.id));
       } catch (e) {
         console.error(e);
       } finally {
@@ -26,7 +26,6 @@ export default function QuizListCard({ data }: { data: PostType }) {
       }
     };
     fetchData();
-    setSolved(solvedList[data.id]);
   }, [data]);
   return (
     <>
@@ -67,8 +66,11 @@ export default function QuizListCard({ data }: { data: PostType }) {
               </div>
               <ul className="mb-2.5 flex gap-3">
                 {data.tags &&
-                  data.tags.map((tag) => (
-                    <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
+                  data.tags.map((tag, i) => (
+                    <li
+                      key={i}
+                      className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
+                    >
                       {tag}
                     </li>
                   ))}
