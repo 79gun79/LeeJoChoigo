@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import { Bell, Menu } from 'lucide-react';
-import IsLoginModal from '../components/modals/IsLoginModal';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
 import Navigation from '../components/atoms/Navigation';
 import userDefault from '../assets/images/icon-user-default.png';
 import DropdownMenu from '../components/modals/DropdownMenu';
+import { useModalStore } from '../stores/modalStore';
+import logo from '../assets/images/dailyCote.png';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isLoginOpen, setLoginOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { setLogInModal } = useModalStore();
   const session = useAuthStore((state) => state.session);
   const isLogin = useAuthStore((state) => state.isLogin);
   const setLogout = useAuthStore((state) => state.setLogout);
@@ -23,7 +24,7 @@ export default function Header() {
   ) => {
     if (!isLogin) {
       e.preventDefault();
-      setLoginOpen(true);
+      setLogInModal(true);
     }
   };
 
@@ -77,7 +78,10 @@ export default function Header() {
             className="text-main cursor-pointer"
             onClick={() => navigate('/')}
           >
-            LOGO
+            <img
+              className="ml-[-8px] h-8 w-28 object-cover md:h-10 md:w-32"
+              src={logo}
+            />
           </button>
         </div>
 
@@ -88,7 +92,7 @@ export default function Header() {
             <Bell />
             <img
               src={userInfo.avatar_url || userDefault}
-              alt="userProfile"
+              alt="프로필"
               className="h-7 cursor-pointer rounded-full lg:h-8"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             />
@@ -127,7 +131,6 @@ export default function Header() {
         )}
       </header>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <IsLoginModal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)} />
     </>
   );
 }

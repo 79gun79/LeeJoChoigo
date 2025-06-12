@@ -2,6 +2,7 @@ import { Check, Heart, MessageSquare } from 'lucide-react';
 import Avartar from '../ui/Avartar';
 import type { PostType } from '../../types';
 import { format } from 'date-fns';
+import { previewMarkdown } from '../../utils/markdown';
 
 // 임시로 지정한 props 입니다
 export default function ListCard({
@@ -35,7 +36,9 @@ export default function ListCard({
                 {data.title}
               </p>
               <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-                {data.content}
+                {data.content
+                  ? previewMarkdown(data.content).slice(0, 100)
+                  : ''}
               </p>
             </div>
             {data.image && (
