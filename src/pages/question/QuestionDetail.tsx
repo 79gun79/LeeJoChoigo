@@ -1,24 +1,18 @@
-import { useParams } from 'react-router';
+import { useLoaderData, useParams } from 'react-router';
 import CommentEdit from '../../components/detail/CommentEdit';
 import CommentItem from '../../components/detail/CommentItem';
-import QuestionDetailText from '../../components/detail/QuestionDetailText';
 import PageName from '../../components/ui/PageName';
 import { useEffect, useState } from 'react';
-
+import DetailText from '../../components/detail/DetailText';
 import type { CommentType, PostDetailType } from '../../types';
 import { useAuthStore } from '../../stores/authStore';
-import { getCommentDetail, getPostDetail } from '../../api/postApi';
+import { getCommentDetail } from '../../api/postApi';
 
 export default function QuestionDetail() {
   const { id } = useParams<{ id: string }>();
-  const [post, setPost] = useState<PostDetailType | null>(null);
+  const post = useLoaderData<PostDetailType>();
   const [comments, setComments] = useState<CommentType[] | null>(null);
   const session = useAuthStore((state) => state.session);
-
-  const fetchPost = async () => {
-    const res = await getPostDetail(Number(id));
-    setPost(res);
-  };
 
   const fetchComments = async () => {
     const res = await getCommentDetail(Number(id));
@@ -27,7 +21,6 @@ export default function QuestionDetail() {
 
   useEffect(() => {
     if (!id) return;
-    fetchPost();
     fetchComments();
   }, [id]);
 
@@ -37,7 +30,10 @@ export default function QuestionDetail() {
         <div className="mb-[25px] md:mb-[35px]">
           <PageName title="질문 게시판" />
         </div>
-        {post && <QuestionDetailText data={post} />}
+        {/* 문제 상세 설명 */}
+        <div className="mb-[25px] md:mb-[35px]">
+          <DetailText data={post} />
+        </div>
         <div className="mb-[25px] md:mb-[35px]">
           {post && (
             <p className="mb-2.5 text-xs md:text-sm lg:text-base">
@@ -53,7 +49,6 @@ export default function QuestionDetail() {
             <CommentEdit
               postId={post.id}
               onCommentAdd={async () => {
-                await fetchPost();
                 await fetchComments();
               }}
             />
@@ -68,7 +63,6 @@ export default function QuestionDetail() {
                 isAuthor={isAuthor}
                 onDelete={async () => {
                   await fetchComments();
-                  await fetchPost();
                 }}
               />
             );

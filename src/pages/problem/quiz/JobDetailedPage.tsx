@@ -4,7 +4,7 @@ import PageName from '../../../components/ui/PageName';
 import Button from '../../../components/ui/Button';
 import QuizSolveComponent from '../../../components/detail/QuizSolveComponent';
 import { useLoaderData, useNavigate } from 'react-router';
-import type { PostDetail } from '../../../types';
+import type { PostDetailType } from '../../../types';
 import type { QuizItem } from '../../../types/quizList';
 import supabase from '../../../utils/supabase';
 import { useAuthStore } from '../../../stores/authStore';
@@ -12,7 +12,7 @@ import { getUser } from '../../../api/userApi';
 
 export default function JobDetailedPage() {
   const [answerConfirm, setAnswerConfirm] = useState(false);
-  const post = useLoaderData<PostDetail>();
+  const post = useLoaderData<PostDetailType>();
   const navigate = useNavigate();
 
   const quizSolveData = (post.quiz_data || []) as QuizItem[]; // 문제 가져오기
@@ -73,7 +73,7 @@ export default function JobDetailedPage() {
 
         {/* 문제 상세 설명 */}
         <div className="mb-[25px] md:mb-[35px]">
-          <DetailText data={post} />
+          <DetailText data={post} hideComment={true} />
         </div>
 
         {/* 문제 설명 컴포넌트 */}

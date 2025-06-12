@@ -1,12 +1,13 @@
 import { Check, Heart } from 'lucide-react';
 import Avartar from '../ui/Avartar';
 import type { PostType, User } from '../../types';
-import { format } from 'date-fns';
 import { getUser } from '../../api/userApi';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore';
 import { useModalStore } from '../../stores/modalStore';
+import dateFormat from '../../utils/dateFormat';
+import { previewMarkdown } from '../../utils/markdown';
 
 export default function QuizListCard({ data }: { data: PostType }) {
   const session = useAuthStore((state) => state.session);
@@ -66,7 +67,9 @@ export default function QuizListCard({ data }: { data: PostType }) {
                     {data.title}
                   </p>
                   <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-                    {data.content}
+                    {data.content
+                      ? previewMarkdown(data.content).slice(0, 100)
+                      : ''}
                   </p>
                 </div>
                 {data.image && (
@@ -91,7 +94,7 @@ export default function QuizListCard({ data }: { data: PostType }) {
               </ul>
               <div className="flex items-end">
                 <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
-                  {format(new Date(data.created_at), 'yyyy-MM-dd')}
+                  {dateFormat(data.created_at)}
                 </span>
                 <div className="ml-auto flex shrink-0 gap-3">
                   <div className="flex items-center gap-1">

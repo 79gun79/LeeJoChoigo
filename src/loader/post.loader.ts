@@ -1,26 +1,35 @@
 import type { LoaderFunctionArgs } from 'react-router';
 import supabase from '../utils/supabase';
 
-export const fetchPostDetail = async ({ params }: LoaderFunctionArgs) => {
-  // 1번 채널: 문제게시판 - 알고리즘
+export const getPostDetail = async ({ params }: LoaderFunctionArgs) => {
   try {
-    const { data: post } = await supabase
+    const { data, error } = await supabase
       .from('post')
       .select(
         `
-    *,
-    user (
-      id,
-      fullname,
-      image
-    )
-  `,
+        *,
+        author:user (
+          id,
+          fullname,
+          image
+        ),
+        comment!left (
+          id,
+          is_yn
+        ),
+        like (
+          id,
+          user
+        )
+      `,
       )
       .eq('id', Number(params.id))
       .single();
 
-    return post;
+    if (error) throw error;
+    return data;
   } catch (e) {
     console.error(e);
+    return null;
   }
 };
