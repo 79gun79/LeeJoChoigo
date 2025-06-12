@@ -356,6 +356,9 @@ export type Database = {
           image: string | null;
           image_public_id: string | null;
           is_yn: boolean;
+          quiz_data: Json[] | null;
+          solved_problem_id: number | null;
+          solved_problem_level: number | null;
           tags: string[] | null;
           title: string | null;
           updated_at: string;
@@ -369,6 +372,9 @@ export type Database = {
           image?: string | null;
           image_public_id?: string | null;
           is_yn?: boolean;
+          quiz_data?: Json[] | null;
+          solved_problem_id?: number | null;
+          solved_problem_level?: number | null;
           tags?: string[] | null;
           title?: string | null;
           updated_at?: string;
@@ -382,6 +388,9 @@ export type Database = {
           image?: string | null;
           image_public_id?: string | null;
           is_yn?: boolean;
+          quiz_data?: Json[] | null;
+          solved_problem_id?: number | null;
+          solved_problem_level?: number | null;
           tags?: string[] | null;
           title?: string | null;
           updated_at?: string;
@@ -416,6 +425,7 @@ export type Database = {
           is_email_verified: boolean;
           is_online: boolean;
           role: string | null;
+          solved: number[] | null;
           updated_at: string | null;
         };
         Insert: {
@@ -430,6 +440,7 @@ export type Database = {
           is_email_verified?: boolean;
           is_online?: boolean;
           role?: string | null;
+          solved?: number[] | null;
           updated_at?: string | null;
         };
         Update: {
@@ -444,6 +455,7 @@ export type Database = {
           is_email_verified?: boolean;
           is_online?: boolean;
           role?: string | null;
+          solved?: number[] | null;
           updated_at?: string | null;
         };
         Relationships: [];

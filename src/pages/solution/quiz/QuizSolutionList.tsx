@@ -8,7 +8,7 @@ import PageName from '../../../components/ui/PageName';
 import type { ChannelType, PostsType } from '../../../types';
 import { useLoaderData } from 'react-router';
 import { useEffect, useState } from 'react';
-import { getChannelPosts } from '../../../components/api/postApi';
+import { getChannelPosts } from '../../../api/postApi';
 
 export default function QuizSolutionList() {
   const channel = useLoaderData<ChannelType>();

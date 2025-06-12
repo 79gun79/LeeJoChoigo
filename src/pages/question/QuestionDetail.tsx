@@ -1,12 +1,13 @@
 import { useParams } from 'react-router';
 import CommentEdit from '../../components/detail/CommentEdit';
 import CommentItem from '../../components/detail/CommentItem';
-import DetailText from '../../components/detail/DetailText';
+import QuestionDetailText from '../../components/detail/QuestionDetailText';
 import PageName from '../../components/ui/PageName';
 import { useEffect, useState } from 'react';
-import { getCommentDetail, getPostDetail } from '../../components/api/postApi';
+
 import type { CommentType, PostDetailType } from '../../types';
 import { useAuthStore } from '../../stores/authStore';
+import { getCommentDetail, getPostDetail } from '../../api/postApi';
 
 export default function QuestionDetail() {
   const { id } = useParams<{ id: string }>();
@@ -36,7 +37,7 @@ export default function QuestionDetail() {
         <div className="mb-[25px] md:mb-[35px]">
           <PageName title="질문 게시판" />
         </div>
-        {post && <DetailText data={post} />}
+        {post && <QuestionDetailText data={post} />}
         <div className="mb-[25px] md:mb-[35px]">
           {post && (
             <p className="mb-2.5 text-xs md:text-sm lg:text-base">

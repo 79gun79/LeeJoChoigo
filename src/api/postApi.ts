@@ -1,4 +1,4 @@
-import supabase from '../../utils/supabase';
+import supabase from '../utils/supabase';
 
 export const getChannelPosts = async (channelId: number) => {
   try {
@@ -6,6 +6,23 @@ export const getChannelPosts = async (channelId: number) => {
       .from('post')
       .select('*')
       .eq('channel', channelId);
+
+    return posts;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getChannelCategoryPosts = async (
+  channelId: number,
+  category: string,
+) => {
+  try {
+    const { data: posts } = await supabase
+      .from('post')
+      .select('*')
+      .eq('channel', channelId)
+      .contains('tags', [category]);
 
     return posts;
   } catch (e) {

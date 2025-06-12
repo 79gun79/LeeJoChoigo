@@ -1,13 +1,21 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DetailText from '../../../components/detail/DetailText';
 import PageName from '../../../components/ui/PageName';
 import Button from '../../../components/ui/Button';
-import { quizData } from '../../../data/quizDummyData';
 import QuizSolveComponent from '../../../components/detail/QuizSolveComponent';
+import { useLoaderData } from 'react-router';
+import type { PostDetail } from '../../../types';
+import type { QuizItem } from '../../../types/quizList';
+import supabase from '../../../utils/supabase';
+import { useAuthStore } from '../../../stores/authStore';
+import { getUser } from '../../../api/userApi';
 
 export default function JobDetailedPage() {
   const [answerConfirm, setAnswerConfirm] = useState(false);
-  const quizSolveData = quizData; // 문제 가져오기
+  const post = useLoaderData<PostDetail>();
+
+  const quizSolveData = (post.quiz_data || []) as QuizItem[]; // 문제 가져오기
+  const session = useAuthStore((state) => state.session);
 
   // 유저가 선택한 답
   const [userChoose, setUserChoose] = useState<string[][]>(
@@ -27,6 +35,28 @@ export default function JobDetailedPage() {
     );
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const userData = await getUser(session?.user.id as string);
+      const prevSolved = userData?.solved ?? [];
+      try {
+        if (!prevSolved.includes(post.id)) {
+          const { data } = await supabase
+            .from('user')
+            .update({ solved: [...prevSolved, post.id] })
+            .eq('id', userData?.id as string)
+            .select();
+          console.log(data);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    if (answerConfirm) {
+      fetchData();
+    }
+  }, [answerConfirm, session, post]);
+
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -37,7 +67,7 @@ export default function JobDetailedPage() {
 
         {/* 문제 상세 설명 */}
         <div className="mb-[25px] md:mb-[35px]">
-          <DetailText />
+          <DetailText detail={post} />
         </div>
 
         {/* 문제 설명 컴포넌트 */}
@@ -48,7 +78,7 @@ export default function JobDetailedPage() {
               key={i}
               index={i}
               item={v}
-              selected={userChoose[i]}
+              choose={userChoose[i]}
               onSelect={(id) => selectHandler(i, id)}
               showRes={answerConfirm}
             />

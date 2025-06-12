@@ -15,7 +15,7 @@ export default function ModalButton({
     <>
       <button
         className={twMerge(
-          'bg-gray3 t4 hover:bg-gray4 h-6 w-20 rounded-[4px] text-center text-white md:h-8 md:w-25',
+          'bg-gray3 t4 hover:bg-gray4 h-8 w-25 rounded-[10px] text-center text-white md:h-10 md:w-34',
           className,
         )}
         type={type}
