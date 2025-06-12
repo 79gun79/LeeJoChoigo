@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import IsLoginModal from '../components/modals/IsLoginModal';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
@@ -8,14 +8,16 @@ import { useNavigate } from 'react-router';
 import Navigation from '../components/atoms/Navigation';
 import userDefault from '../assets/images/icon-user-default.png';
 import DropdownMenu from '../components/modals/DropdownMenu';
+import AlarmLayout from './AlarmLayout';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoginOpen, setLoginOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
   const isLogin = useAuthStore((state) => state.isLogin);
   const setLogout = useAuthStore((state) => state.setLogout);
-  const navigate = useNavigate();
 
   const isLoginModalHandler = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -84,7 +86,9 @@ export default function Header() {
 
         {isLogin && (
           <div className="relative flex items-center gap-4">
-            <Bell />
+            {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
+            <AlarmLayout />
+
             <img
               src={userInfo.avatar_url || userDefault}
               alt="userProfile"
