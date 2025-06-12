@@ -6,7 +6,7 @@ import TagSearch from '../../components/search/SearchTag';
 import PageName from '../../components/ui/PageName';
 // import TagItem from '../../components/ui/TagItem';
 import type { ChannelType, PostsType } from '../../types';
-import { useLoaderData } from 'react-router';
+import { Link, useLoaderData } from 'react-router';
 import { useNavigate } from 'react-router';
 import { getChannelPosts } from '../../components/api/postApi';
 import { useEffect, useState } from 'react';
@@ -59,7 +59,11 @@ export default function QuestionList() {
               <ListCard solve={true} />
               <ListCard solve={false} /> */}
               {posts &&
-                posts.map((post) => <ListCard key={post.id} data={post} />)}
+                posts.map((post) => (
+                  <Link to={`/questions/${post.id}`} key={post.id}>
+                    <ListCard data={post} />
+                  </Link>
+                ))}
               {posts && posts.length === 0 && (
                 <div className="col-span-2 py-12 text-center">
                   <h3 className="t1 mb-2 font-medium text-black">

@@ -10,5 +10,10 @@ export type ChannelType = NonNullable<
 export type PostsType = Awaited<ReturnType<typeof getChannelPosts>>;
 export type PostType = ElementType<NonNullable<PostsType>>;
 
+export type PostDetailType = NonNullable<
+  Awaited<ReturnType<typeof getPostDetail>>
+>;
+export type CommentType = ElementType<NonNullable<CommentsType>>;
+
 export type Post = NonNullable<Awaited<ReturnType<typeof getPost>>>;
 export type User = Awaited<ReturnType<typeof getUser>>;
