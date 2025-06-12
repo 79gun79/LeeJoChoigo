@@ -11,28 +11,21 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import supabase from '../../utils/supabase';
-import { useProblemDescStore } from '../../stores/problemDescStore';
 
 const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
-  { tags, onAddTag, onRemoveTag, isLoading, problemId },
+  { tags, onAddTag, onRemoveTag, isLoading, problemId, problemDesc },
   ref,
 ) {
   const problemDescRef = useRef<Editor>(null);
   const editorRef = useRef<Editor>(null);
   const titleRef = useRef<HTMLInputElement>(null);
-  const { problemDesc } = useProblemDescStore();
 
   useEffect(() => {
-    if (
-      !isLoading &&
-      problemDescRef.current &&
-      problemId &&
-      problemDesc[problemId]
-    ) {
+    if (!isLoading && problemDescRef.current && problemId && problemDesc) {
       const instance = problemDescRef.current.getInstance();
       instance.setMarkdown(
         `### 아래 문제 요약은 부정확할 수 있습니다. \n### 정확한 문제는 '백준 문제 보러가기' 버튼을 클릭해 확인하세요.\n\n\n` +
-          problemDesc[problemId],
+          problemDesc,
       );
 
       instance.getCurrentModeEditor().moveCursorToStart();
@@ -65,12 +58,10 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
                 백준 문제 보러가기
               </button>
             </div>
-            <div className="mb-7 h-[250px] overflow-auto rounded-sm bg-[var(--color-bg-white)] p-2.5 text-xs md:text-sm lg:h-full lg:text-base">
+            <div className="mb-7 h-[250px] overflow-auto rounded-sm p-2.5 text-xs md:text-sm lg:h-full lg:text-base">
               <Editor
                 ref={problemDescRef}
-                initialValue={
-                  '### 백준 문제 보러가기를 클릭해 문제 확인 후 요약해보세요. \n\n제미나이의 문제 요약 기다리는중...'
-                }
+                initialValue={problemDesc}
                 height="100%"
                 previewStyle="tab"
                 initialEditType="markdown"
