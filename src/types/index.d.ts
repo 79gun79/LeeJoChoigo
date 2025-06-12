@@ -14,6 +14,8 @@ export type PostType = ElementType<NonNullable<PostsType>>;
 export type PostDetailType = NonNullable<
   Awaited<ReturnType<typeof getPostDetail>>
 >;
+export type CommentType = ElementType<NonNullable<CommentsType>>;
+
 export type PostDetail = NonNullable<
   Awaited<ReturnType<typeof fetchPostDetail>>
 >;
