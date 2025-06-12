@@ -80,12 +80,14 @@ export default function ListCard({ data }: { data: PostType }) {
                 )}
               </div>
               <ul className="mb-2.5 flex gap-3">
-                <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
-                  태그명
-                </li>
-                <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
-                  태그명
-                </li>
+                {data.tags?.map((tag) => (
+                  <li
+                    key={tag}
+                    className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
+                  >
+                    {tag}
+                  </li>
+                ))}
               </ul>
               <div className="flex items-end">
                 <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
@@ -94,17 +96,21 @@ export default function ListCard({ data }: { data: PostType }) {
                 <div className="ml-auto flex shrink-0 gap-3">
                   <div className="flex items-center gap-1">
                     <Heart className="w-3.5 md:w-4 lg:w-4.5" />
-                    <span className="text-[10px] md:text-xs lg:text-sm">5</span>
+                    <span className="text-[10px] md:text-xs lg:text-sm">
+                      {data.like?.length ?? 0}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1">
                     <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
-                    <span className="text-[10px] md:text-xs lg:text-sm">5</span>
+                    <span className="text-[10px] md:text-xs lg:text-sm">
+                      {data.comment?.length ?? 0}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
             <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
-              <Avartar />
+              <Avartar user={data.author} />
             </div>
           </div>
         </div>
