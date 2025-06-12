@@ -1,6 +1,9 @@
 import { Check, Heart } from 'lucide-react';
 import type { PostType } from '../../types/post';
 import { calculateLevel } from '../../utils/calculateLevel';
+import { useNavigate } from 'react-router';
+import { useAuthStore } from '../../stores/authStore';
+import { useModalStore } from '../../stores/modalStore';
 
 // 임시로 지정한 props 입니다
 export default function AlgorithmListCard({
@@ -10,9 +13,22 @@ export default function AlgorithmListCard({
   solve?: boolean;
   problem: PostType;
 }) {
+  const session = useAuthStore((state) => state.session);
+  const { setLogInModal } = useModalStore();
+  const navigate = useNavigate();
+
   let level = '레벨 없음';
   if (problem.solved_problem_level)
     level = calculateLevel(problem.solved_problem_level);
+
+  const problemHandler = () => {
+    if (!session?.user.id) {
+      setLogInModal(true);
+      return;
+    }
+
+    navigate(`/solutions/coding/write/${problem.solved_problem_id}`);
+  };
 
   return (
     <>
@@ -29,12 +45,15 @@ export default function AlgorithmListCard({
         </div>
       </div> */}
 
-      <div className="w-full rounded-sm border border-[#ccc]">
+      <div
+        className="w-full cursor-pointer rounded-sm border border-[#ccc] hover:shadow-md"
+        onClick={problemHandler}
+      >
         <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
           <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
             {problem.title}
           </p>
-          <p className="mb-2.5 line-clamp-1 text-xs md:text-sm lg:text-base h-[22px]">
+          <p className="mb-2.5 line-clamp-1 h-[22px] text-xs md:text-sm lg:text-base">
             {problem.tags && problem.tags.length > 0
               ? problem.tags?.join(', ')
               : `'${problem.title}' 문제입니다.`}

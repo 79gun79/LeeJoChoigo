@@ -23,3 +23,48 @@ export const fetchProfile = async ({ params }: LoaderFunctionArgs) => {
     console.error(e);
   }
 };
+
+export const fetchProfilePost = async (id: string) => {
+  try {
+    const { data: post } = await supabase
+      .from('post')
+      .select(
+        `
+        *,
+        like (
+         *
+        ),
+        comment (
+          *
+        )
+        `,
+      )
+      .eq('author', String(id))
+      .eq('is_yn', true)
+      .order('created_at', { ascending: false });
+
+    return post;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const fetchProfileComments = async (id: string) => {
+  try {
+    const { data: post } = await supabase
+      .from('comment')
+      .select(
+        `
+        *,
+        post (*)
+        `,
+      )
+      .eq('author', String(id))
+      .eq('is_yn', true)
+      .order('created_at', { ascending: false });
+
+    return post;
+  } catch (e) {
+    console.error(e);
+  }
+};

@@ -3,15 +3,20 @@ import DetailText from '../../../components/detail/DetailText';
 import PageName from '../../../components/ui/PageName';
 import Button from '../../../components/ui/Button';
 import QuizSolveComponent from '../../../components/detail/QuizSolveComponent';
-import { useLoaderData } from 'react-router';
-import type { PostDetail } from '../../../types';
+import { useLoaderData, useNavigate } from 'react-router';
+import type { PostDetailType } from '../../../types';
 import type { QuizItem } from '../../../types/quizList';
+import supabase from '../../../utils/supabase';
+import { useAuthStore } from '../../../stores/authStore';
+import { getUser } from '../../../api/userApi';
 
 export default function JobDetailedPage() {
   const [answerConfirm, setAnswerConfirm] = useState(false);
-  const post = useLoaderData<PostDetail>();
+  const post = useLoaderData<PostDetailType>();
+  const navigate = useNavigate();
 
   const quizSolveData = (post.quiz_data || []) as QuizItem[]; // 문제 가져오기
+  const session = useAuthStore((state) => state.session);
 
   // 유저가 선택한 답
   const [userChoose, setUserChoose] = useState<string[][]>(
@@ -31,13 +36,32 @@ export default function JobDetailedPage() {
     );
   }, []);
 
+  // 푼 상태 갱신
   useEffect(() => {
+    const fetchData = async () => {
+      const userData = await getUser(session?.user.id as string);
+      const prevSolved = userData?.solved ?? [];
+      try {
+        if (!prevSolved.includes(post.id)) {
+          const { data } = await supabase
+            .from('user')
+            .update({ solved: [...prevSolved, post.id] })
+            .eq('id', userData?.id as string)
+            .select();
+          console.log(data);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
     if (answerConfirm) {
-      const solveList = JSON.parse(localStorage.getItem('solvedPosts') || '{}');
-      solveList[post.id] = true;
-      localStorage.setItem('solvedPosts', JSON.stringify(solveList));
+      fetchData();
     }
-  }, [answerConfirm, post]);
+  }, [answerConfirm, session, post]);
+
+  const solutionHandler = () => {
+    navigate(`/solutions/job/write/${post.id}`);
+  };
 
   return (
     <>
@@ -49,7 +73,7 @@ export default function JobDetailedPage() {
 
         {/* 문제 상세 설명 */}
         <div className="mb-[25px] md:mb-[35px]">
-          <DetailText detail={post} />
+          <DetailText data={post} hideComment={true} />
         </div>
 
         {/* 문제 설명 컴포넌트 */}
@@ -75,7 +99,11 @@ export default function JobDetailedPage() {
             </Button>
           )}
 
-          {answerConfirm && <Button variant="sub">풀이 작성</Button>}
+          {answerConfirm && (
+            <Button onClick={solutionHandler} variant="sub">
+              풀이 작성
+            </Button>
+          )}
         </div>
       </div>
     </>
