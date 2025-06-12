@@ -70,7 +70,7 @@ const router = createBrowserRouter([
                 loader: fetchChannel3,
               }, // 목록
               { path: ':id', element: <AlgorithmSolutionDetail /> }, // 상세
-              { path: 'write', element: <AlgorithmSolutionEdit /> }, // 작성
+              { path: 'write/:id', element: <AlgorithmSolutionEdit /> }, // 작성
             ],
           },
           {
