@@ -2,7 +2,7 @@ import { Check, Heart } from 'lucide-react';
 import Avartar from '../ui/Avartar';
 import type { PostType, User } from '../../types';
 import { format } from 'date-fns';
-import { getUser } from '../api/userApi';
+import { getUser } from '../../api/userApi';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 
@@ -15,8 +15,8 @@ export default function QuizListCard({ data }: { data: PostType }) {
   useEffect(() => {
     const solvedList = JSON.parse(localStorage.getItem('solvedPosts') || '{}');
     const fetchData = async () => {
-      setPending(true);
       try {
+        setPending(true);
         const userData = await getUser(data.author);
         setUser(userData);
       } catch (e) {
@@ -25,8 +25,8 @@ export default function QuizListCard({ data }: { data: PostType }) {
         setPending(false);
       }
     };
-    setSolved(solvedList[data.id]);
     fetchData();
+    setSolved(solvedList[data.id]);
   }, [data]);
   return (
     <>

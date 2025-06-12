@@ -1,5 +1,5 @@
-import type { getChannelPosts, getPost } from '../components/api/postApi';
-import type { getUser } from '../components/api/userApi';
+import type { getChannelPosts, getPost } from '../api/postApi';
+import type { getUser } from '../api/userApi';
 import type { fetchChannel1 } from '../loader/channel.loader';
 import type { fetchPostDetail } from '../loader/post.loader';
 type ElementType<T> = T extends (infer U)[] ? U : T;

@@ -7,10 +7,7 @@ import PageName from '../../../components/ui/PageName';
 import { useLoaderData, useNavigate } from 'react-router';
 import type { ChannelType, PostsType } from '../../../types';
 import { useEffect, useState } from 'react';
-import {
-  getChannelCategoryPosts,
-  getChannelPosts,
-} from '../../../components/api/postApi';
+import { getChannelCategoryPosts, getChannelPosts } from '../../../api/postApi';
 import { useAuthStore } from '../../../stores/authStore';
 import { useModalStore } from '../../../stores/modalStore';
 import Loading from '../../../components/ui/Loading';
