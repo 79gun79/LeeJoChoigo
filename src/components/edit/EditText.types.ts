@@ -6,6 +6,8 @@ export interface EditTextProps {
   onRemoveTag: (val: string) => void;
   isLoading?: boolean;
   problemId?: string;
+  problemDesc?: string;
+  problemTitle?: string;
 }
 
 export interface EditTextHandle {
