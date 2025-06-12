@@ -26,6 +26,8 @@ import {
 } from '../loader/channel.loader';
 import QuizSolutionList from '../pages/solution/quiz/QuizSolutionList';
 import { fetchProfile } from '../loader/profile.loader';
+import { fetchPostDetail } from '../loader/post.loader';
+import HomePage from '../pages/HomePage';
 
 const router = createBrowserRouter([
   {
@@ -35,8 +37,8 @@ const router = createBrowserRouter([
     loader: fetchUserData,
     children: [
       {
-        // index: true,
-        // element: <Home />,
+        index: true,
+        element: <HomePage />,
       },
       {
         path: 'problems',
@@ -48,7 +50,11 @@ const router = createBrowserRouter([
             loader: fetchChannel1,
           },
           { path: 'job', element: <QuizProblemList />, loader: fetchChannel2 },
-          { path: 'job/:id', element: <JobDetailedPage /> },
+          {
+            path: 'job/:id',
+            element: <JobDetailedPage />,
+            loader: fetchPostDetail,
+          },
           { path: 'write', element: <QuizCreateEdit /> },
         ],
       },
