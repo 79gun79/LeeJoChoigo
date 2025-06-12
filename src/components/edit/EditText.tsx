@@ -36,7 +36,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
           <div className="h-full w-full lg:grid lg:grid-rows-[auto_1fr] lg:pb-9">
             <p className="mb-2.5 text-sm md:text-base lg:text-lg">문제</p>
             <div className="mb-7 h-[250px] overflow-auto rounded-sm bg-[var(--color-bg-white)] p-2.5 text-xs md:text-sm lg:h-full lg:text-base">
-              문제내용..
+              {problems}
             </div>
           </div>
         )}
