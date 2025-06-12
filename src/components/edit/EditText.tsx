@@ -34,6 +34,8 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
         `### 아래 문제 요약은 부정확할 수 있습니다. \n### 정확한 문제는 '백준 문제 보러가기' 버튼을 클릭해 확인하세요.\n\n\n` +
           problemDesc[problemId],
       );
+
+      instance.getCurrentModeEditor().moveCursorToStart();
     }
   }, [problemId, problemDesc, isLoading]);
 
