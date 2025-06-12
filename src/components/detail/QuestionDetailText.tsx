@@ -4,13 +4,12 @@ import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import 'github-markdown-css/github-markdown.css';
 import 'highlight.js/styles/github.css';
-import { format, formatDistanceToNow, differenceInHours } from 'date-fns';
-import { ko } from 'date-fns/locale';
 
-import type { PostDetailType } from '../../types';
+import type { CommentType, PostDetailType } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
 import supabase from '../../utils/supabase';
 import '../../styles/markdown.css';
+import dateFormat from '../../utils/dateFormat';
 export default function DetailText({
   data,
   problems,
@@ -18,17 +17,9 @@ export default function DetailText({
   data: PostDetailType;
   problems?: boolean;
 }) {
-  const createdDate = new Date(data.created_at);
-  const hourDiff = differenceInHours(new Date(), createdDate);
-
-  const [likedUsers, setLikedUsers] = useState(data.like || []);
+  const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
-
-  const displayTime =
-    hourDiff < 24
-      ? formatDistanceToNow(createdDate, { addSuffix: true, locale: ko })
-      : format(createdDate, 'yyyy-MM-dd');
 
   useEffect(() => {
     const checkIsLiked = async () => {
@@ -123,7 +114,7 @@ export default function DetailText({
             </div>
           </div>
           <p className="ml-auto text-right text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
-            {displayTime}
+            {dateFormat(data.created_at)}
           </p>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import Avartar from '../ui/Avartar';
 import type { CommentType } from '../../types';
-import { format, formatDistanceToNow, differenceInHours } from 'date-fns';
-import { ko } from 'date-fns/locale';
+
 import { deleteComment } from '../../api/postApi';
+import dateFormat from '../../utils/dateFormat';
 
 type Props = {
   data: CommentType;
@@ -12,13 +12,7 @@ type Props = {
 
 export default function CommentItem({ data, onDelete, isAuthor }: Props) {
   const { id, comment, created_at, updated_at, author } = data;
-  const date = updated_at ? new Date(updated_at) : new Date(created_at);
-  const hourDiff = differenceInHours(new Date(), date);
-
-  const displayTime =
-    hourDiff < 24
-      ? formatDistanceToNow(date, { addSuffix: true, locale: ko })
-      : format(date, 'yyyy-MM-dd');
+  const date = updated_at ? updated_at : created_at;
 
   const handleDelete = async () => {
     const confirmed = window.confirm('댓글을 삭제할까요?');
@@ -47,7 +41,7 @@ export default function CommentItem({ data, onDelete, isAuthor }: Props) {
         </div>
         <p className="mb-2.5 text-xs md:text-sm lg:text-base">{comment}</p>
         <p className="text-right text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
-          {displayTime}
+          {dateFormat(date)}
         </p>
       </div>
     </>
