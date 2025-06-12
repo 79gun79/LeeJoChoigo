@@ -40,6 +40,7 @@ export const fetchProfilePost = async (id: string) => {
         `,
       )
       .eq('author', String(id))
+      .eq('is_yn', true)
       .order('created_at', { ascending: false });
 
     return post;
@@ -59,6 +60,7 @@ export const fetchProfileComments = async (id: string) => {
         `,
       )
       .eq('author', String(id))
+      .eq('is_yn', true)
       .order('created_at', { ascending: false });
 
     return post;
