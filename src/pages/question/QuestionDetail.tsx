@@ -6,11 +6,13 @@ import PageName from '../../components/ui/PageName';
 import { useEffect, useState } from 'react';
 import { getCommentDetail, getPostDetail } from '../../components/api/postApi';
 import type { CommentType, PostDetailType } from '../../types';
+import { useAuthStore } from '../../stores/authStore';
 
 export default function QuestionDetail() {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<PostDetailType | null>(null);
   const [comments, setComments] = useState<CommentType[] | null>(null);
+  const session = useAuthStore((state) => state.session);
 
   const fetchPost = async () => {
     const res = await getPostDetail(Number(id));
@@ -38,7 +40,12 @@ export default function QuestionDetail() {
         <div className="mb-[25px] md:mb-[35px]">
           {post && (
             <p className="mb-2.5 text-xs md:text-sm lg:text-base">
-              {post.comment.length}개의 댓글
+              {
+                post.comment.filter(
+                  (c: { is_yn: boolean }) => c.is_yn !== false,
+                ).length
+              }
+              개의 댓글
             </p>
           )}
           {post && (
@@ -50,13 +57,21 @@ export default function QuestionDetail() {
               }}
             />
           )}
-          {comments?.map((comment) => (
-            <CommentItem
-              key={comment.id}
-              data={comment}
-              onDelete={fetchComments}
-            />
-          ))}
+          {comments?.map((comment) => {
+            const isAuthor = session?.user.id === comment.author?.id;
+
+            return (
+              <CommentItem
+                key={comment.id}
+                data={comment}
+                isAuthor={isAuthor}
+                onDelete={async () => {
+                  await fetchComments();
+                  await fetchPost();
+                }}
+              />
+            );
+          })}
         </div>
       </div>
     </>

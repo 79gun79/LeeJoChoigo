@@ -7,9 +7,10 @@ import { deleteComment } from '../../components/api/postApi';
 type Props = {
   data: CommentType;
   onDelete: () => void;
+  isAuthor: boolean;
 };
 
-export default function CommentItem({ data, onDelete }: Props) {
+export default function CommentItem({ data, onDelete, isAuthor }: Props) {
   const { id, comment, created_at, updated_at, author } = data;
   const date = updated_at ? new Date(updated_at) : new Date(created_at);
   const hourDiff = differenceInHours(new Date(), date);
@@ -35,7 +36,7 @@ export default function CommentItem({ data, onDelete }: Props) {
       <div className="border-b border-[#ccc] py-2.5">
         <div className="mb-2.5 flex items-center">
           <Avartar image={author.image} name={author.fullname} />
-          {!updated_at && (
+          {isAuthor && (
             <button
               onClick={handleDelete}
               className="ml-auto text-[10px] text-[#FF6363] md:text-xs lg:text-sm"

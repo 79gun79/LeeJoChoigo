@@ -48,8 +48,9 @@ export const getPostDetail = async (postId: number) => {
           fullname,
           image
         ),
-        comment (
-          id
+        comment!left (
+          id,
+          is_yn
         ),
         like (
           id,
@@ -82,6 +83,7 @@ export const createComment = async ({
       comment: content,
       post: postId,
       author: userId,
+      is_yn: true,
     },
   ]);
 
@@ -107,6 +109,7 @@ export const getCommentDetail = async (postId: number) => {
       `,
       )
       .eq('post', postId)
+      .eq('is_yn', true)
       .order('created_at', { ascending: true });
 
     if (error) throw error;
@@ -121,7 +124,7 @@ export const deleteComment = async (commentId: number) => {
   const { error } = await supabase
     .from('comment')
     .update({
-      comment: '삭제된 댓글입니다.',
+      is_yn: false,
       updated_at: new Date().toISOString(),
     })
     .eq('id', commentId);

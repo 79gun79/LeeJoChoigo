@@ -10,7 +10,7 @@ import { ko } from 'date-fns/locale';
 import type { PostDetailType } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
 import supabase from '../../utils/supabase';
-
+import '../../styles/markdown.css';
 export default function DetailText({
   data,
   problems,
@@ -178,7 +178,11 @@ export default function DetailText({
           <div className="flex items-center gap-1">
             <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
             <span className="text-[10px] md:text-xs lg:text-sm">
-              {data.comment.length}
+              {
+                data.comment.filter(
+                  (c: { is_yn: boolean }) => c.is_yn !== false,
+                ).length
+              }
             </span>
           </div>
         </div>

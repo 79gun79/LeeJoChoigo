@@ -1,7 +1,7 @@
 import Avartar from '../ui/Avartar';
 
 import { useState } from 'react';
-import { createComment } from '../api/postApi'; // API 경로 확인
+import { createComment } from '../api/postApi';
 import supabase from '../../utils/supabase';
 
 type Props = {
