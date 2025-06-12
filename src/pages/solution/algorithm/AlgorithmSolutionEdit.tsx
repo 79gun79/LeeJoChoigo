@@ -5,6 +5,7 @@ import type { EditTextHandle } from '../../../components/edit/EditText.types';
 import { useParams } from 'react-router';
 // import { fetchBjProblemById } from '../../../utils/fetchBjProblems';
 import { GoogleGenAI } from '@google/genai';
+import { useProblemDescStore } from '../../../stores/problemDescStore';
 
 const APIKEY = import.meta.env.VITE_API_GEMINI_KEY;
 
@@ -13,8 +14,11 @@ export default function AlgorithmSolutionEdit() {
   const editTextRef = useRef<EditTextHandle>(null);
   const params = useParams<string>().id;
   const [isLoading, startTransition] = useTransition();
-  const [problem, setProblem] = useState();
-  const [response, setResponse] = useState<string>();
+  const [responseLoading, setResponseLoading] = useState(true);
+  const [response, setResponse] = useState<string>('내용을 입력하세요.');
+  const { problemDesc, setProblemDesc } = useProblemDescStore();
+
+  const ai = new GoogleGenAI({ apiKey: APIKEY });
 
   const handleAddTag = (tag: string) => {
     if (!tags.includes(tag)) {
@@ -26,23 +30,35 @@ export default function AlgorithmSolutionEdit() {
     setTags((prev) => prev.filter((t) => t !== tag));
   };
 
-  const ai = new GoogleGenAI({ apiKey: APIKEY });
-
-  async function main() {
+  async function fetchProblemDesc() {
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
       contents: `백준 문제 ${params}번 문제내용과 입출력 형식만 알려줘. 모르는 문제면 모른다고 말해.`,
     });
-    setResponse(response.text);
+    return response.text;
   }
 
   useEffect(() => {
     startTransition(async () => {
-      // if (params) await fetchBjProblemById(parseInt(params, 10));
-      console.log(params);
-      await main();
+      if (!params) return;
+
+      if (problemDesc[params]) {
+        setResponseLoading(false);
+        return;
+      }
+
+      try {
+        console.log('제미나이에게 요청을 보냈습니다.')
+        const data = await fetchProblemDesc();
+        if (data) setProblemDesc(params, data);
+      } catch (e) {
+        console.error('문제 설명을 받아오는데 실패했습니다.', e);
+      } finally {
+        setResponseLoading(false);
+      }
+      // console.log(params);
     });
-  }, []);
+  }, [params]);
 
   return (
     <>
@@ -56,7 +72,8 @@ export default function AlgorithmSolutionEdit() {
           tags={tags}
           onAddTag={handleAddTag}
           onRemoveTag={handleRemoveTag}
-          problems={response}
+          isLoading={responseLoading}
+          problemId={params}
         />
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
           <button className="button-lg gray">취소</button>
