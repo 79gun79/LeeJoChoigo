@@ -13,7 +13,15 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import supabase from '../../utils/supabase';
 
 const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
-  { tags, onAddTag, onRemoveTag, isLoading, problemId, problemDesc },
+  {
+    tags,
+    onAddTag,
+    onRemoveTag,
+    isLoading,
+    problemId,
+    problemDesc,
+    problemTitle,
+  },
   ref,
 ) {
   const problemDescRef = useRef<Editor>(null);
@@ -52,7 +60,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
         {problemId && (
           <div className="h-full w-full lg:grid lg:grid-rows-[auto_1fr] lg:pb-9">
             <div className="mb-2.5 flex justify-between text-sm md:text-base lg:text-lg">
-              <p>문제</p>
+              <p>{problemTitle}</p>
               <button onClick={openPopup} className="button-sm">
                 <Globe className="h-[14px] w-[12px] shrink-0" />
                 백준 문제 보러가기

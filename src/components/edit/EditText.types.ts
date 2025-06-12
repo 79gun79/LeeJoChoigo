@@ -7,6 +7,7 @@ export interface EditTextProps {
   isLoading?: boolean;
   problemId?: string;
   problemDesc?: string;
+  problemTitle?: string;
 }
 
 export interface EditTextHandle {
