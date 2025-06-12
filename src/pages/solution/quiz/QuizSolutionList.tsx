@@ -1,4 +1,3 @@
-import { Plus } from 'lucide-react';
 import ListCard from '../../../components/list/ListCard';
 import SearchBox from '../../../components/search/SearchBox';
 import SearchListTop from '../../../components/search/SearchListTop';
@@ -47,10 +46,6 @@ export default function QuizSolutionList() {
               <SearchListTop />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {/* <ListCard image="sda" />
-              <ListCard image="sda" solve={true} />
-              <ListCard solve={true} />
-              <ListCard solve={false} /> */}
               {posts &&
                 posts.map((post) => <ListCard key={post.id} data={post} />)}
               {posts && posts.length === 0 && (
@@ -62,9 +57,9 @@ export default function QuizSolutionList() {
               )}
             </div>
           </div>
-          <button className="fixed right-0 bottom-14 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-main)] text-white shadow-md md:right-2 md:h-13 md:w-13 lg:right-6 lg:h-15 lg:w-15">
+          {/* <button className="fixed right-0 bottom-14 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-main)] text-white shadow-md md:right-2 md:h-13 md:w-13 lg:right-6 lg:h-15 lg:w-15">
             <Plus className="h-5 w-5 lg:h-7 lg:w-7" />
-          </button>
+          </button> */}
         </div>
       </div>
     </>

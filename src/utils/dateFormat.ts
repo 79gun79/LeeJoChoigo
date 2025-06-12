@@ -3,16 +3,19 @@ import { ko } from 'date-fns/locale';
 
 export default function dateFormat(create_at: string) {
   const now = new Date();
-  const diffDay = now.getTime() - new Date(create_at).getTime();
+  const createDate = new Date(create_at);
+  const diffDay = now.getTime() - createDate.getTime();
+
   const oneDayMs = 24 * 60 * 60 * 1000;
-  if (diffDay < 60 * 1) {
+  console.log(diffDay, oneDayMs);
+  if (diffDay < 60 * 1000) {
     return '방금 전';
   } else if (diffDay > oneDayMs) {
-    return format(create_at, 'yyyy-MM-dd');
+    return format(createDate, 'yyyy-MM-dd');
   } else {
-    return formatDistanceToNow(create_at, {
+    return formatDistanceToNow(createDate, {
       addSuffix: true,
       locale: ko,
-    }).split('약 ')[1];
+    }).replace('약 ', '');
   }
 }

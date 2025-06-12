@@ -3,7 +3,7 @@ import DetailText from '../../../components/detail/DetailText';
 import PageName from '../../../components/ui/PageName';
 import Button from '../../../components/ui/Button';
 import QuizSolveComponent from '../../../components/detail/QuizSolveComponent';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import type { PostDetail } from '../../../types';
 import type { QuizItem } from '../../../types/quizList';
 import supabase from '../../../utils/supabase';
@@ -13,6 +13,7 @@ import { getUser } from '../../../api/userApi';
 export default function JobDetailedPage() {
   const [answerConfirm, setAnswerConfirm] = useState(false);
   const post = useLoaderData<PostDetail>();
+  const navigate = useNavigate();
 
   const quizSolveData = (post.quiz_data || []) as QuizItem[]; // 문제 가져오기
   const session = useAuthStore((state) => state.session);
@@ -35,6 +36,7 @@ export default function JobDetailedPage() {
     );
   }, []);
 
+  // 푼 상태 갱신
   useEffect(() => {
     const fetchData = async () => {
       const userData = await getUser(session?.user.id as string);
@@ -57,6 +59,10 @@ export default function JobDetailedPage() {
     }
   }, [answerConfirm, session, post]);
 
+  const solutionHandler = () => {
+    navigate(`/solutions/job/write/${post.id}`);
+  };
+
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -67,7 +73,7 @@ export default function JobDetailedPage() {
 
         {/* 문제 상세 설명 */}
         <div className="mb-[25px] md:mb-[35px]">
-          <DetailText detail={post} />
+          <DetailText data={post} />
         </div>
 
         {/* 문제 설명 컴포넌트 */}
@@ -93,7 +99,11 @@ export default function JobDetailedPage() {
             </Button>
           )}
 
-          {answerConfirm && <Button variant="sub">풀이 작성</Button>}
+          {answerConfirm && (
+            <Button onClick={solutionHandler} variant="sub">
+              풀이 작성
+            </Button>
+          )}
         </div>
       </div>
     </>

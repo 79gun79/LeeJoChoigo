@@ -1,4 +1,4 @@
-import type { getChannelPosts, getPost } from '../api/postApi';
+import type { getChannelPosts, getPost, getPostDetail } from '../api/postApi';
 import type { getUser } from '../api/userApi';
 import type { fetchChannel1 } from '../loader/channel.loader';
 import type { fetchPostDetail } from '../loader/post.loader';
