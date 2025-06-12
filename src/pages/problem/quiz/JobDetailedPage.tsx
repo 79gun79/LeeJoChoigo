@@ -6,12 +6,16 @@ import QuizSolveComponent from '../../../components/detail/QuizSolveComponent';
 import { useLoaderData } from 'react-router';
 import type { PostDetail } from '../../../types';
 import type { QuizItem } from '../../../types/quizList';
+import supabase from '../../../utils/supabase';
+import { useAuthStore } from '../../../stores/authStore';
+import { getUser } from '../../../api/userApi';
 
 export default function JobDetailedPage() {
   const [answerConfirm, setAnswerConfirm] = useState(false);
   const post = useLoaderData<PostDetail>();
 
   const quizSolveData = (post.quiz_data || []) as QuizItem[]; // 문제 가져오기
+  const session = useAuthStore((state) => state.session);
 
   // 유저가 선택한 답
   const [userChoose, setUserChoose] = useState<string[][]>(
@@ -32,12 +36,26 @@ export default function JobDetailedPage() {
   }, []);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const userData = await getUser(session?.user.id as string);
+      const prevSolved = userData?.solved ?? [];
+      try {
+        if (!prevSolved.includes(post.id)) {
+          const { data } = await supabase
+            .from('user')
+            .update({ solved: [...prevSolved, post.id] })
+            .eq('id', userData?.id as string)
+            .select();
+          console.log(data);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
     if (answerConfirm) {
-      const solveList = JSON.parse(localStorage.getItem('solvedPosts') || '{}');
-      solveList[post.id] = true;
-      localStorage.setItem('solvedPosts', JSON.stringify(solveList));
+      fetchData();
     }
-  }, [answerConfirm, post]);
+  }, [answerConfirm, session, post]);
 
   return (
     <>

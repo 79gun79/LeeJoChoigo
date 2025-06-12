@@ -8,7 +8,7 @@ import PageName from '../../components/ui/PageName';
 import type { ChannelType, PostsType } from '../../types';
 import { useLoaderData } from 'react-router';
 import { useNavigate } from 'react-router';
-import { getChannelPosts } from '../../components/api/postApi';
+import { getChannelPosts } from '../../api/postApi';
 import { useEffect, useState } from 'react';
 
 export default function QuestionList() {
