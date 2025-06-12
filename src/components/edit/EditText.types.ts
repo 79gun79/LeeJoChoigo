@@ -31,3 +31,8 @@ export interface CreateQuizHandle {
     quizData: QuizItem[];
   };
 }
+
+export interface SolutionQuizProps {
+  pTitle: string;
+  tag: string;
+}

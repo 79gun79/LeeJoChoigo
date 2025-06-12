@@ -9,7 +9,7 @@ import NotFound from '../pages/NotFound';
 import AlgorithmProblemList from '../pages/problem/algorithm/AlgorithmProblemList';
 import QuizProblemList from '../pages/problem/quiz/QuizProblemList';
 import JobDetailedPage from '../pages/problem/quiz/JobDetailedPage';
-import QuizCreateEdit from '../pages/solution/quiz/QuizCreateEdit';
+import QuizCreateEdit from '../pages/problem/quiz/QuizCreateEdit';
 import AlgorithmSolutionList from '../pages/solution/algorithm/AlgorithmSolutionList';
 import AlgorithmSolutionDetail from '../pages/solution/algorithm/AlgorithmSolutionDetail';
 import AlgorithmSolutionEdit from '../pages/solution/algorithm/AlgorithmSolutionEdit';
@@ -28,6 +28,8 @@ import QuizSolutionList from '../pages/solution/quiz/QuizSolutionList';
 import { fetchProfile } from '../loader/profile.loader';
 import { fetchPostDetail } from '../loader/post.loader';
 import HomePage from '../pages/HomePage';
+import QuizSolutionDetail from '../pages/solution/quiz/QuizSolutionDetail';
+import QuizSolutionEdit from '../pages/solution/quiz/QuizSolutionEdit';
 
 const router = createBrowserRouter([
   {
@@ -81,8 +83,12 @@ const router = createBrowserRouter([
                 element: <QuizSolutionList />,
                 loader: fetchChannel4,
               }, // 목록
-              // { path: ':id', element: <QuizSolutionDetail /> },          // 상세
-              // { path: 'write', element: <QuizSolutionEdit /> },         // 작성
+              { path: ':id', element: <QuizSolutionDetail /> }, // 상세
+              {
+                path: 'write/:id',
+                element: <QuizSolutionEdit />,
+                loader: fetchPostDetail,
+              }, // 작성
             ],
           },
         ],

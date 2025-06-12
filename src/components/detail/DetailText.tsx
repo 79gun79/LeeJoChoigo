@@ -2,13 +2,13 @@ import { Heart, MessageSquare } from 'lucide-react';
 import type { PostDetail } from '../../types';
 import { format } from 'date-fns';
 
-export default function DetailText({ detail }: { detail: PostDetail }) {
+export default function DetailText({ data }: { data: PostDetail }) {
   return (
     <>
       {/* 게시글 상단 */}
       <div className="border-b border-[#ccc]">
         <p className="mb-2.5 text-lg font-semibold md:text-xl lg:text-2xl">
-          {detail.title}
+          {data.title}
         </p>
         <div className="flex items-end pb-3.5">
           <div className="flex items-center gap-2.5 md:gap-3 lg:gap-3.5">
@@ -16,14 +16,14 @@ export default function DetailText({ detail }: { detail: PostDetail }) {
               <img
                 className="h-full w-full object-cover"
                 src={
-                  detail.user.image ||
+                  data.user.image ||
                   'https://www.studiopeople.kr/common/img/default_profile.png'
                 }
               />
             </div>
             <div>
               <p className="text-xs text-[#464646] md:text-sm lg:text-base">
-                {detail.user.fullname}
+                {data.user.fullname}
               </p>
               <button className="rounded-sm bg-[var(--color-gray4)] px-2 py-0.5 text-[10px] text-white md:text-xs lg:text-sm">
                 팔로우
@@ -31,17 +31,17 @@ export default function DetailText({ detail }: { detail: PostDetail }) {
             </div>
           </div>
           <p className="ml-auto text-right text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
-            {format(new Date(detail.created_at), 'yyyy-MM-dd')}
+            {format(new Date(data.created_at), 'yyyy-MM-dd')}
           </p>
         </div>
       </div>
       <div className="py-7">
         <div className="mb-7 text-xs md:text-sm lg:text-base">
-          {detail.content}
+          {data.content}
         </div>
         <div className="flex gap-2">
-          {detail.tags &&
-            detail.tags.map((tag, i) => (
+          {data.tags &&
+            data.tags.map((tag, i) => (
               <p
                 key={i}
                 className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
