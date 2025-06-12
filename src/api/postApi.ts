@@ -53,39 +53,6 @@ export const getPost = async (postId: number) => {
   }
 };
 
-export const getPostDetail = async (postId: number) => {
-  try {
-    const { data, error } = await supabase
-      .from('post')
-      .select(
-        `
-        *,
-        author:user (
-          id,
-          fullname,
-          image
-        ),
-        comment!left (
-          id,
-          is_yn
-        ),
-        like (
-          id,
-          user
-        )
-      `,
-      )
-      .eq('id', postId)
-      .single();
-
-    if (error) throw error;
-    return data;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
-};
-
 export const createComment = async ({
   postId,
   userId,

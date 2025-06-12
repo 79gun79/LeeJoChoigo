@@ -26,7 +26,7 @@ import {
 } from '../loader/channel.loader';
 import QuizSolutionList from '../pages/solution/quiz/QuizSolutionList';
 import { fetchProfile } from '../loader/profile.loader';
-import { fetchPostDetail } from '../loader/post.loader';
+import { getPostDetail } from '../loader/post.loader';
 import HomePage from '../pages/HomePage';
 import QuizSolutionDetail from '../pages/solution/quiz/QuizSolutionDetail';
 import QuizSolutionEdit from '../pages/solution/quiz/QuizSolutionEdit';
@@ -55,7 +55,7 @@ const router = createBrowserRouter([
           {
             path: 'job/:id',
             element: <JobDetailedPage />,
-            loader: fetchPostDetail,
+            loader: getPostDetail,
           },
           { path: 'write', element: <QuizCreateEdit /> },
         ],
@@ -87,7 +87,7 @@ const router = createBrowserRouter([
               {
                 path: 'write/:id',
                 element: <QuizSolutionEdit />,
-                loader: fetchPostDetail,
+                loader: getPostDetail,
               }, // 작성
             ],
           },
@@ -97,7 +97,7 @@ const router = createBrowserRouter([
         path: 'questions',
         children: [
           { index: true, element: <QuestionList />, loader: fetchChannel5 },
-          { path: ':id', element: <QuestionDetail /> },
+          { path: ':id', element: <QuestionDetail />, loader: getPostDetail },
           { path: 'write', element: <QuestionEdit /> },
         ],
       },
