@@ -36,6 +36,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
           problemDesc,
       );
 
+      console.timeEnd('Gemini → Render'); // ✅ 실제 화면에 나타나는 시점
       instance.getCurrentModeEditor().moveCursorToStart();
     }
   }, [problemId, problemDesc, isLoading]);

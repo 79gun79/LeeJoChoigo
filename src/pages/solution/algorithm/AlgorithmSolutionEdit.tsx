@@ -33,6 +33,7 @@ export default function AlgorithmSolutionEdit() {
   };
 
   async function fetchProblemDesc() {
+    console.time('Gemini → Render');
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
       contents: `백준 문제 ${params}번 문제내용과 입출력 형식만 알려줘.`,
