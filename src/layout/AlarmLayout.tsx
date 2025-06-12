@@ -1,21 +1,43 @@
 import { useState, useEffect, useRef } from 'react';
 import { Bell } from 'lucide-react';
 import AlarmListItems from '../components/atoms/AlarmListItems';
-import type { Tables } from '../types/supabase';
 import { useAuthStore } from '../stores/authStore';
-import alarmNotificationsData from '../data/alarmNotificationData';
-
-type Notification = Tables<'notification'>;
+import supabase from '../utils/supabase';
+import type { Notification } from '../types/notification';
 
 export default function AlarmLayout() {
   const isLogin = useAuthStore((state) => state.isLogin);
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const bellRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const fetchNotifications = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setNotifications([]);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('notification')
+        .select(`*, actor:user!actor (id, fullname, image)`)
+        .eq('recipient', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('알림 불러오기 실패:', error);
+      } else {
+        setNotifications(data);
+      }
+    };
+
     if (isLogin) {
-      setNotifications(alarmNotificationsData);
+      fetchNotifications();
     } else {
       setNotifications([]);
     }
@@ -23,7 +45,11 @@ export default function AlarmLayout() {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (open && !bellRef.current?.contains(e.target as Node)) {
+      if (
+        open &&
+        !bellRef.current?.contains(e.target as Node) &&
+        !dropdownRef.current?.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     };
@@ -54,6 +80,7 @@ export default function AlarmLayout() {
 
       {open && (
         <div
+          ref={dropdownRef}
           className="absolute -right-10 z-50 mt-2 w-[250px] max-w-[90vw] rounded-xl bg-white drop-shadow-md md:right-0 md:w-[400px]"
           style={{ minWidth: '220px' }}
         >

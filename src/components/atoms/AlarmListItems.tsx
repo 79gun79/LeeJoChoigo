@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router';
-import type { Tables } from '../../types/supabase';
-
-type Notification = Tables<'notification'>;
+import type { Notification } from '../../types/notification';
 
 interface AlarmListItemsProps {
   notifications: Notification[];
@@ -30,7 +28,7 @@ export default function AlarmListItems({
   const getNotificationLink = (n: Notification) => {
     if (n.type === 'comment' && n.post) return `/problems/${n.post}`;
     if (n.type === 'like' && n.post) return `/problems/${n.post}`;
-    if (n.type === 'follow' && n.actor) return `/profile/${n.actor}`;
+    if (n.type === 'follow' && n.actor?.id) return `/profile/${n.actor.id}`;
     return undefined;
   };
 
@@ -39,6 +37,20 @@ export default function AlarmListItems({
       <div className="t5 text-gray3 p-4 text-center">알림이 없습니다.</div>
     );
   }
+
+  const getNotificationMessage = (n: Notification) => {
+    const actorName = n.actor?.fullname || '알 수 없음';
+    switch (n.type) {
+      case 'comment':
+        return `[${actorName}]님이 새 댓글을 달았습니다.`;
+      case 'follow':
+        return `[${actorName}]님이 팔로우했습니다.`;
+      case 'like':
+        return `[${actorName}]님이 게시글을 좋아합니다.`;
+      default:
+        return '새 알림이 있습니다.';
+    }
+  };
 
   return (
     <ul>
@@ -56,16 +68,7 @@ export default function AlarmListItems({
             }}
           >
             <div className="t4 flex items-center justify-between">
-              <span className={link ? 'text-main underline' : ''}>
-                {n.type === 'comment' &&
-                  `[${n.actor || '알 수 없음'}]님이 새 댓글을 달았습니다.`}
-                {n.type === 'follow' &&
-                  `[${n.actor || '알 수 없음'}]님이 팔로우했습니다.`}
-                {n.type === 'like' &&
-                  `[${n.actor || '알 수 없음'}]님이 게시글을 좋아합니다.`}
-                {!['comment', 'follow', 'like'].includes(n.type) &&
-                  '새 알림이 있습니다.'}
-              </span>
+              <span>{getNotificationMessage(n)}</span>
               <span className="t5 text-gray2 whitespace-nowrap">
                 {getRelativeTime(n.created_at)}
               </span>

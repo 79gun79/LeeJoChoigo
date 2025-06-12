@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
@@ -18,6 +18,7 @@ export default function Header() {
   const session = useAuthStore((state) => state.session);
   const isLogin = useAuthStore((state) => state.isLogin);
   const setLogout = useAuthStore((state) => state.setLogout);
+  const navigate = useNavigate();
 
   const isLoginModalHandler = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
