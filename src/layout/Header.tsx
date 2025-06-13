@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
@@ -9,6 +9,7 @@ import userDefault from '../assets/images/icon-user-default.png';
 import DropdownMenu from '../components/modals/DropdownMenu';
 import { useModalStore } from '../stores/modalStore';
 import logo from '../assets/images/dailyCote.png';
+import AlarmLayout from './AlarmLayout';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -88,8 +89,10 @@ export default function Header() {
         <Navigation onProtectedRoute={isLoginModalHandler} />
 
         {isLogin && (
-          <div className="relative flex items-center gap-4">
-            <Bell />
+          <div className="relative flex items-start gap-4 pt-2">
+            {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
+            <AlarmLayout />
+
             <img
               src={userInfo.avatar_url || userDefault}
               alt="프로필"
