@@ -6,9 +6,10 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import supabase from '../../utils/supabase';
+import TagItem from '../ui/TagItem';
 
 export default forwardRef<EditTextHandle, SolutionQuizProps>(
-  function CreateQuizSolution({ pTitle, tag }, ref) {
+  function CreateQuizSolution({ pTitle, tags, onAddTag, onRemoveTag }, ref) {
     const editorRef = useRef<Editor>(null);
     const titleRef = useRef<HTMLInputElement>(null);
 
@@ -19,7 +20,6 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
         const match = content.match(/!\[.*?\]\((.*?)\)/g);
         const imageUrl = match?.[0]?.match(/\((.*?)\)/)?.[1] || null;
         const imageFileName = imageUrl?.split('/').pop() || null;
-        const tags = [tag];
         return { title, content, imageUrl, imageFileName, tags };
       },
     }));
@@ -84,17 +84,30 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
                   }}
                 />
               </div>
+              <p className="mb-2.5 text-sm md:text-base lg:text-lg">태그</p>
+              <input
+                className="edit-input mb-2.5"
+                type="text"
+                placeholder="태그를 입력하세요"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const value = e.currentTarget.value.trim();
+                    if (value) {
+                      onAddTag(value);
+                      e.currentTarget.value = '';
+                    }
+                  }
+                }}
+              />
               <div className="flex flex-wrap gap-2.5">
-                <div className="mb-2">
-                  <p className="mb-1.5 text-sm md:text-base">카테고리</p>
-                  <div className="flex flex-wrap gap-2.5">
-                    <div className="mb-4 flex flex-wrap gap-2.5">
-                      <label className="rounded-sm bg-[#1BBFBF] px-2 py-1 text-xs text-white md:px-2.5 md:py-1.5 md:text-sm">
-                        {tag}
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                {tags.map((tag) => (
+                  <TagItem
+                    key={tag}
+                    label={tag}
+                    onDelete={() => onRemoveTag(tag)}
+                  />
+                ))}
               </div>
             </div>
           </form>

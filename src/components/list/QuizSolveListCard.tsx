@@ -1,19 +1,18 @@
-import { Check, Heart } from 'lucide-react';
+import { Heart, MessageSquare } from 'lucide-react';
 import Avartar from '../ui/Avartar';
 import type { PostType, User } from '../../types';
-import { getUser } from '../../api/userApi';
+import { previewMarkdown } from '../../utils/markdown';
+import dateFormat from '../../utils/dateFormat';
 import { useEffect, useState } from 'react';
+import { useModalStore } from '../../stores/modalStore';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore';
-import { useModalStore } from '../../stores/modalStore';
-import dateFormat from '../../utils/dateFormat';
-import { previewMarkdown } from '../../utils/markdown';
+import { getUser } from '../../api/userApi';
 
-export default function QuizListCard({ data }: { data: PostType }) {
+export default function QuizSolveListCard({ data }: { data: PostType }) {
   const session = useAuthStore((state) => state.session);
-  const [user, setUser] = useState<User>(null);
-  const [me, setMe] = useState<User>(null);
   const [isPending, setPending] = useState(false);
+  const [me, setMe] = useState<User>(null);
 
   const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
@@ -22,9 +21,7 @@ export default function QuizListCard({ data }: { data: PostType }) {
     const fetchData = async () => {
       try {
         setPending(true);
-        const userData = await getUser(data.author);
         const myData = await getUser(session?.user.id as string);
-        setUser(userData);
         setMe(myData);
       } catch (e) {
         console.error(e);
@@ -40,7 +37,8 @@ export default function QuizListCard({ data }: { data: PostType }) {
       setLogInModal(true);
       return;
     }
-    navigate(`/problems/job/${data.id}`);
+    console.log(me);
+    navigate(`/solutions/job/${data.id}`);
   };
   return (
     <>
@@ -84,15 +82,12 @@ export default function QuizListCard({ data }: { data: PostType }) {
               )}
             </div>
             <ul className="mb-2.5 flex gap-3">
-              {data.tags &&
-                data.tags.map((tag, i) => (
-                  <li
-                    key={i}
-                    className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
-                  >
-                    {tag}
-                  </li>
-                ))}
+              <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
+                태그명
+              </li>
+              <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
+                태그명
+              </li>
             </ul>
             <div className="flex items-end">
               <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
@@ -103,17 +98,15 @@ export default function QuizListCard({ data }: { data: PostType }) {
                   <Heart className="w-3.5 md:w-4 lg:w-4.5" />
                   <span className="text-[10px] md:text-xs lg:text-sm">5</span>
                 </div>
+                <div className="flex items-center gap-1">
+                  <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
+                  <span className="text-[10px] md:text-xs lg:text-sm">5</span>
+                </div>
               </div>
             </div>
           </div>
           <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
-            <Avartar user={user} />
-            {(me?.solved ?? []).includes(data.id) && (
-              <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
-                <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />
-                풀이됨
-              </p>
-            )}
+            <Avartar />
           </div>
         </div>
       )}

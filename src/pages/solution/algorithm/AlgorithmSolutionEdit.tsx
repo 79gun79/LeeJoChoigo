@@ -23,6 +23,7 @@ export default function AlgorithmSolutionEdit() {
   const ai = new GoogleGenAI({ apiKey: APIKEY });
 
   const handleAddTag = (tag: string) => {
+    if (tags.length >= 5) return;
     if (!tags.includes(tag)) {
       setTags((prev) => [...prev, tag]);
     }
