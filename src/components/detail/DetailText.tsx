@@ -6,6 +6,7 @@ import type { CommentType, PostDetailType } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
 import supabase from '../../utils/supabase';
 import dateFormat from '../../utils/dateFormat';
+import { toggleLike } from '../../api/postApi'; // 중복 방지: postApi의 toggleLike만 사용
 
 export default function DetailText({
   data,
@@ -53,23 +54,8 @@ export default function DetailText({
     );
 
     try {
-      const { data: existingLike, error } = await supabase
-        .from('like')
-        .select('id')
-        .eq('post', data.id)
-        .eq('user', userId)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      if (existingLike) {
-        await supabase.from('like').delete().eq('id', existingLike.id);
-      } else {
-        await supabase.from('like').insert({
-          post: data.id,
-          user: userId,
-        });
-      }
+      // 좋아요 토글 및 알림 생성은 postApi의 toggleLike 함수에서 처리
+      await toggleLike(data.id, userId);
     } catch (e) {
       console.error('좋아요 처리 실패:', e);
       setIsLiked(!optimisticLiked);
@@ -82,6 +68,7 @@ export default function DetailText({
       setIsLiking(false);
     }
   }, [isLiked, isLiking, data.id]);
+
   return (
     <>
       {/* 게시글 상단 */}

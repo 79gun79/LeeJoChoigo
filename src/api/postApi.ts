@@ -139,9 +139,41 @@ export const toggleLike = async (postId: number, userId: string) => {
     return false;
   }
 
-  const { error: insertError } = await supabase
+  // 좋아요 추가
+  const { data: likeData, error: insertError } = await supabase
     .from('like')
-    .insert({ post: postId, user: userId });
+    .insert({ post: postId, user: userId })
+    .select('id')
+    .single();
+
   if (insertError) throw insertError;
+
+  // 게시글 작성자 조회
+  const { data: post } = await supabase
+    .from('post')
+    .select('author')
+    .eq('id', postId)
+    .single();
+
+  // 본인 글에 본인이 좋아요 누르면 알림 X
+  if (post && post.author !== userId && likeData?.id) {
+    const { error: notifError } = await supabase.from('notification').insert([
+      {
+        actor: userId,
+        recipient: post.author,
+        type: 'like',
+        like: likeData.id,
+        post: postId,
+        is_seen: false,
+        created_at: new Date().toISOString(),
+      },
+    ]);
+    if (notifError) {
+      console.error('알림 생성 실패:', notifError);
+    } else {
+      console.log('알림 생성 성공');
+    }
+  }
+
   return true;
 };
