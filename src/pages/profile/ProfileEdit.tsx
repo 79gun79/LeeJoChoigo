@@ -22,6 +22,7 @@ export default function ProfileEdit({
   const [profileModal, setProfileModal] = useState(false);
   const bannerRef = useRef<HTMLUListElement>(null);
   const profileRef = useRef<HTMLUListElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   const [bannerImg, setBannerImg] = useState(user.cover_image || defaultBanner);
   const [profileImg, setProfileImg] = useState(user.image || defaultProfile);
@@ -177,19 +178,31 @@ export default function ProfileEdit({
       }
     };
 
+    const clickPopupOutside = (e: MouseEvent) => {
+      if (!(e.target instanceof Node)) return;
+      if (popupRef.current && !popupRef.current.contains(e.target)) {
+        closeProfile();
+      }
+    };
+
     document.addEventListener('mousedown', clickBannerOutside);
     document.addEventListener('mousedown', clickProfileOutside);
+    document.addEventListener('mousedown', clickPopupOutside);
 
     return () => {
       document.removeEventListener('mousedown', clickBannerOutside);
       document.removeEventListener('mousedown', clickProfileOutside);
+      document.removeEventListener('mousedown', clickPopupOutside);
     };
-  }, [bannerModal, profileModal]);
+  }, [bannerModal, profileModal, closeProfile]);
 
   return (
     <>
       <div className="fixed top-0 left-0 z-10 flex h-dvh w-dvw items-center justify-center bg-black/50 px-4">
-        <div className="h-[600px] max-h-11/12 w-full max-w-[400px] overflow-hidden rounded-sm bg-white md:h-[630px] lg:h-[730px] lg:max-w-[500px]">
+        <div
+          ref={popupRef}
+          className="h-[600px] max-h-11/12 w-full max-w-[400px] overflow-hidden rounded-sm bg-white md:h-[630px] lg:h-[730px] lg:max-w-[500px]"
+        >
           <form onSubmit={handleSubmit} className="relative h-full">
             {/* 이미지 */}
             <div className="relative h-[200px] w-full overflow-hidden lg:h-[250px]">
@@ -205,7 +218,7 @@ export default function ProfileEdit({
                   }}
                   className="flex cursor-pointer items-center justify-center rounded-full bg-[var(--color-gray1)] p-1"
                 >
-                  <Settings className="h-3.5 w-3.5 text-[var(--color-gray3)]" />
+                  <Settings className="h-3.5 w-3.5 text-[var(--color-gray4)]" />
                 </button>
                 {bannerModal && (
                   <ul
@@ -257,7 +270,7 @@ export default function ProfileEdit({
                       }}
                       className="absolute -right-1 bottom-0 flex items-center justify-center rounded-full bg-[var(--color-gray1)] p-1"
                     >
-                      <Settings className="h-3.5 w-3.5 text-[var(--color-gray3)]" />
+                      <Settings className="h-3.5 w-3.5 text-[var(--color-gray4)]" />
                     </button>
                     {profileModal && (
                       <ul

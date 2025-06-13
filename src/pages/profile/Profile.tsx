@@ -27,10 +27,12 @@ export default function Profile() {
   const [isSetting, setIsSetting] = useState(false);
   const modalCloseHandle = () => {
     setIsSetting(false);
+    document.body.classList.remove('overflow-hidden');
   };
   const modalSaveHandle = () => {
     setIsSetting(false);
     navigate(`/profile/${user.id}`, { replace: true });
+    document.body.classList.remove('overflow-hidden');
   };
 
   const tabData = [{ title: '작성게시글' }, { title: '작성댓글' }];
@@ -50,9 +52,9 @@ export default function Profile() {
               }
             />
           </div>
-          <div className="absolute bottom-0 left-0 w-full bg-white/20 px-4 py-4 backdrop-blur-md md:px-8 md:py-5 lg:px-14">
-            <div className="mb-2.5 flex items-center gap-2.5">
-              <div className="h-[40px] w-[40px] overflow-hidden rounded-full md:h-[48px] md:w-[48px] lg:h-[56px] lg:w-[56px]">
+          <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-white/60 to-white/0 px-4 pt-6 pb-4 backdrop-blur-sm md:px-8 md:py-5 md:pt-7 lg:px-14">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="h-[40px] w-[40px] shrink-0 overflow-hidden rounded-full md:h-[48px] md:w-[48px] lg:h-[56px] lg:w-[56px]">
                 <img
                   className="h-full w-full object-cover"
                   src={
@@ -67,21 +69,24 @@ export default function Profile() {
                 </p>
                 <p className="text-xs md:text-sm lg:text-base">{user.email}</p>
               </div>
-            </div>
-            <div className="flex gap-2.5">
-              {!authProfile && (
-                <button className="min-w-[94px] rounded-sm bg-[var(--color-gray2)] p-1 text-center text-[10px] text-[var(--color-gray4)] md:text-xs lg:min-w-[120px] lg:text-sm">
-                  팔로우
-                </button>
-              )}
-              {authProfile && (
-                <button
-                  onClick={() => setIsSetting(true)}
-                  className="rounded-sm bg-[var(--color-gray2)] p-1 text-[var(--color-gray4)]"
-                >
-                  <Settings className="h-4 w-4 lg:h-5 lg:w-5" />
-                </button>
-              )}
+              <div className="flex gap-2.5 self-end">
+                {!authProfile && (
+                  <button className="min-w-[94px] rounded-sm bg-[var(--color-gray2)] p-1 text-center text-[10px] text-[var(--color-gray4)] md:text-xs lg:min-w-[120px] lg:text-sm">
+                    팔로우
+                  </button>
+                )}
+                {authProfile && (
+                  <button
+                    onClick={() => {
+                      setIsSetting(true);
+                      document.body.classList.add('overflow-hidden');
+                    }}
+                    className="rounded-sm bg-[var(--color-gray2)] p-1 text-[var(--color-gray4)]"
+                  >
+                    <Settings className="h-4 w-4 lg:h-5 lg:w-5" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
