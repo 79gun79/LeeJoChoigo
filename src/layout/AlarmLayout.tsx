@@ -96,7 +96,7 @@ export default function AlarmLayout() {
           style={{ minWidth: '220px' }}
         >
           <div className="border-gray4 flex items-center justify-between border-b px-4 py-3">
-            <span className="t3">
+            <span className="t3 md:text-[16px]">
               알림
               <span className="t5 bg-main ml-2 rounded-2xl px-2 text-white">
                 {unreadCount}
