@@ -2,23 +2,25 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import EditText from '../../../components/edit/EditText';
 import PageName from '../../../components/ui/PageName';
 import type { EditTextHandle } from '../../../components/edit/EditText.types';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 // import { fetchBjProblemById } from '../../../utils/fetchBjProblems';
 import { GoogleGenAI } from '@google/genai';
 import supabase from '../../../utils/supabase';
+import { notify } from '../../../utils/customAlert';
+import { useAuthStore } from '../../../stores/authStore';
 
 const APIKEY = import.meta.env.VITE_API_GEMINI_KEY;
+const CHANNELID = 3;
 
 export default function AlgorithmSolutionEdit() {
   const [tags, setTags] = useState<string[]>([]);
   const editTextRef = useRef<EditTextHandle>(null);
   const params = useParams<string>().id;
   const [isLoading, startTransition] = useTransition();
-  const [responseLoading, setResponseLoading] = useState(true);
   const [problemTitle, setProblemTitle] = useState<string>();
-  const [problemDesc, setProblemDesc] = useState<string>(
-    '### 백준 문제 보러가기를 클릭해 문제 확인 후 요약해보세요. \n\n제미나이의 문제 요약 기다리는중...',
-  );
+  const [problemDesc, setProblemDesc] = useState<string>('');
+  const session = useAuthStore((state) => state.session);
+  const navigate = useNavigate();
 
   const ai = new GoogleGenAI({ apiKey: APIKEY });
 
@@ -41,7 +43,47 @@ export default function AlgorithmSolutionEdit() {
     return response.text;
   }
 
+  const handleSubmit = async () => {
+    const postData = editTextRef.current?.getPostData();
+    if (!postData) return;
+
+    const { title, content, imageUrl, imageFileName } = postData;
+
+    const authorId = session?.user.id;
+
+    if (!authorId) {
+      notify('로그인이 필요합니다.', 'info');
+      return;
+    }
+
+    if (params) {
+      const { error } = await supabase.from('post').insert([
+        {
+          title,
+          content,
+          image: imageUrl,
+          image_public_id: imageFileName,
+          channel: CHANNELID,
+          tags,
+          is_yn: true,
+          author: authorId,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          problem_id: parseInt(params, 10),
+        },
+      ]);
+      if (error) {
+        console.error('저장 실패', error);
+        notify('등록 실패', 'error');
+      } else {
+        notify('등록 성공!', 'success');
+      }
+    }
+    navigate('/solutions/coding');
+  };
+
   useEffect(() => {
+    // console.time('Mount → Render');
     if (!params) return;
 
     startTransition(async () => {
@@ -84,8 +126,6 @@ export default function AlgorithmSolutionEdit() {
         }
       } catch (e) {
         console.error('문제 설명을 받아오는데 실패했습니다.', e);
-      } finally {
-        setResponseLoading(false);
       }
       // console.log(params);
     });
@@ -93,7 +133,7 @@ export default function AlgorithmSolutionEdit() {
 
   return (
     <>
-      <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
+      <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:h-[calc(100vh-64px)] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
         <div className="mb-[25px] md:mb-[35px]">
           <PageName title="알고리즘풀이" />
         </div>
@@ -103,14 +143,18 @@ export default function AlgorithmSolutionEdit() {
           tags={tags}
           onAddTag={handleAddTag}
           onRemoveTag={handleRemoveTag}
-          isLoading={responseLoading}
-          problemId={params}
-          problemDesc={problemDesc}
-          problemTitle={problemTitle}
+          isLoading={isLoading}
+          problem={{
+            id: params ?? '',
+            desc: problemDesc,
+            title: problemTitle ?? '',
+          }}
         />
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
           <button className="button-lg gray">취소</button>
-          <button className="button-lg">작성하기</button>
+          <button className="button-lg" onClick={handleSubmit}>
+            작성하기
+          </button>
         </div>
       </div>
     </>

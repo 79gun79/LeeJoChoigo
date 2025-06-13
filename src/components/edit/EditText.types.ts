@@ -5,9 +5,11 @@ export interface EditTextProps {
   onAddTag: (val: string) => void;
   onRemoveTag: (val: string) => void;
   isLoading?: boolean;
-  problemId?: string;
-  problemDesc?: string;
-  problemTitle?: string;
+  problem?: {
+    id: string;
+    title: string;
+    desc?: string;
+  };
 }
 
 export interface EditTextHandle {
