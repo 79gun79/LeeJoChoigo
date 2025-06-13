@@ -13,6 +13,7 @@ interface DropdownMenuProps {
   className?: string;
   isOpen: boolean;
   onClose: () => void;
+  closed?: () => void;
 }
 
 const dropdownVariants = {
@@ -42,6 +43,7 @@ export default function DropdownMenu({
   onItemClick,
   isOpen,
   onClose,
+  closed,
 }: DropdownMenuProps) {
   const navigate = useNavigate();
   const modalRef = useRef<HTMLDivElement>(null);
@@ -82,7 +84,7 @@ export default function DropdownMenu({
             <NavLink
               to={item.path}
               className={({ isActive }) =>
-                `${isActive ? 'text-main' : ''} t4 block px-4 py-2 font-normal`
+                `${isActive ? 'text-main font-bold' : ''} t4 hover:text-main block px-4 py-2 font-normal`
               }
               onClick={(e) => {
                 e.preventDefault();
@@ -90,6 +92,8 @@ export default function DropdownMenu({
                   onItemClick(item.path);
                 } else {
                   navigate(item.path);
+                  onClose();
+                  if (closed) closed();
                 }
               }}
             >

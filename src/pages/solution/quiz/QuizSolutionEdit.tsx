@@ -71,20 +71,22 @@ export default function QuizSolutionEdit() {
         <div className="mb-[25px] md:mb-[35px]">
           <PageName title="개발직군 풀이" />
         </div>
-        <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
-          <p className="t3">문제 모음</p>
-          {quizData.map((v, i) => (
-            <QuizShowComponent key={i} index={i} item={v} />
-          ))}
+        <div className="md:grid md:grid-cols-2 md:gap-12">
+          <div className="flex flex-col gap-[10px]">
+            <p className="text-sm md:text-base lg:text-lg">문제 모음</p>
+            {quizData.map((v, i) => (
+              <QuizShowComponent key={i} index={i} item={v} />
+            ))}
+          </div>
+          <CreateQuizSolution
+            pTitle={problemTitle}
+            tags={tags}
+            onAddTag={handleAddTag}
+            onRemoveTag={handleRemoveTag}
+            ref={editTextRef}
+          />
         </div>
-        <CreateQuizSolution
-          pTitle={problemTitle}
-          tags={tags}
-          onAddTag={handleAddTag}
-          onRemoveTag={handleRemoveTag}
-          ref={editTextRef}
-        />
-        <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
+        <div className="flex gap-3 lg:justify-center">
           <button onClick={() => navigate(-1)} className="button-lg gray">
             취소
           </button>

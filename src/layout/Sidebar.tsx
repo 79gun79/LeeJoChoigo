@@ -188,6 +188,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     isLoginModalHandler(e);
                   }}
                   className="py-12"
+                  closed={onClose}
                 />
               </motion.div>
             </motion.div>
