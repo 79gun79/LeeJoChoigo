@@ -1,7 +1,7 @@
 import type { getChannelPosts, getPost, getPostDetail } from '../api/postApi';
 import type { getUser } from '../api/userApi';
 import type { fetchChannel1 } from '../loader/channel.loader';
-import type { fetchPostDetail } from '../loader/post.loader';
+import type { fetchPostDetail, getBJSolveDetail } from '../loader/post.loader';
 type ElementType<T> = T extends (infer U)[] ? U : T;
 
 export type ChannelType = NonNullable<
@@ -21,3 +21,5 @@ export type PostDetail = NonNullable<
 >;
 export type Post = NonNullable<Awaited<ReturnType<typeof getPost>>>;
 export type User = Awaited<ReturnType<typeof getUser>>;
+
+export type BJSolveDetailType = NonNullable<Awaited<ReturnType<typeof getBJSolveDetail>>>
