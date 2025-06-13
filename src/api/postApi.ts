@@ -4,7 +4,19 @@ export const getChannelPosts = async (channelId: number) => {
   try {
     const { data: posts } = await supabase
       .from('post')
-      .select('*')
+      .select(
+        `
+        *,
+        author:user (*),
+        like (
+          id,
+          user
+        ),
+        comment (
+          id
+        )
+      `,
+      )
       .eq('channel', channelId);
 
     return posts;
@@ -20,7 +32,19 @@ export const getChannelCategoryPosts = async (
   try {
     const { data: posts } = await supabase
       .from('post')
-      .select('*')
+      .select(
+        `
+        *,
+        author:user (*),
+        like (
+          id,
+          user
+        ),
+        comment (
+          id
+        )
+      `,
+      )
       .eq('channel', channelId)
       .contains('tags', [category]);
 

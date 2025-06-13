@@ -11,6 +11,7 @@ export default function QuestionEdit() {
   const navigate = useNavigate();
 
   const handleAddTag = (tag: string) => {
+    if (tags.length >= 5) return;
     if (!tags.includes(tag)) {
       setTags((prev) => [...prev, tag]);
     }

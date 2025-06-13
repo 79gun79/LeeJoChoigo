@@ -1,4 +1,4 @@
-import { Heart, MessageSquare } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -6,15 +6,13 @@ import type { CommentType, PostDetailType } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
 import supabase from '../../utils/supabase';
 import dateFormat from '../../utils/dateFormat';
-import { toggleLike } from '../../api/postApi'; // 중복 방지: postApi의 toggleLike만 사용
 
-export default function DetailText({
-  data,
-  hideComment,
-}: {
-  data: PostDetailType;
-  hideComment?: boolean;
-}) {
+import '../../styles/markdown.css';
+import 'highlight.js/styles/github.css';
+import { toggleLike } from '../../api/postApi';
+
+
+export default function DetailText({ data }: { data: PostDetailType }) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
@@ -107,9 +105,52 @@ export default function DetailText({
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeHighlight]}
+              components={{
+                code({ className = '', children, ...props }) {
+                  const match = /language-(\w+)/.exec(className);
+                  const lang = match?.[1];
+
+                  if (match) {
+                    return (
+                      <div className="relative mb-4">
+                        <div className="absolute top-0 left-0 px-2 py-1 text-xs font-medium text-black">
+                          {lang}
+                        </div>
+                        <pre>
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        </pre>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
             >
               {data.content ?? ''}
             </ReactMarkdown>
+          </div>
+        </div>
+        <div className="mb-3 flex gap-2">
+          <div className="mx-auto flex shrink-0 gap-3">
+            <div className="flex flex-col items-center gap-1">
+              <Heart
+                size={20}
+                onClick={handleLike}
+                className={`cursor-pointer transition ${
+                  isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-[#000000]'
+                }`}
+              />
+              <span className="text-[10px] md:text-xs lg:text-sm">
+                {likedUsers.length}
+              </span>
+            </div>
           </div>
         </div>
         <div className="flex gap-2">
@@ -125,34 +166,14 @@ export default function DetailText({
         </div>
       </div>
       {/* 게시글 하단 */}
-      <div className="flex w-full border-t border-[#ccc] py-2.5">
-        <div className="ml-auto flex shrink-0 gap-3">
-          <div className="flex items-center gap-1">
-            <div className="flex items-center gap-1">
-              <Heart
-                onClick={handleLike}
-                className={`w-3.5 cursor-pointer transition md:w-4 lg:w-4.5 ${
-                  isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-[#000000]'
-                }`}
-              />
-              <span className="text-[10px] md:text-xs lg:text-sm">
-                {likedUsers.length}
-              </span>
-            </div>
-          </div>
-          {!hideComment && (
-            <div className="flex items-center gap-1">
-              <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
-              <span className="text-[10px] md:text-xs lg:text-sm">
-                {
-                  data.comment.filter(
-                    (c: { is_yn: boolean }) => c.is_yn !== false,
-                  ).length
-                }
-              </span>
-            </div>
-          )}
-        </div>
+      <div className="flex w-full gap-2 border-t border-[#ccc]">
+        <div className="flex-grow"></div>
+        <button className="text-gray4 px-[10px] py-[6px] text-[10px] md:text-xs lg:text-sm">
+          수정
+        </button>
+        <button className="px-[10px] py-[6px] text-[10px] text-[#FF6d6d] md:text-xs lg:text-sm">
+          삭제
+        </button>
       </div>
     </>
   );

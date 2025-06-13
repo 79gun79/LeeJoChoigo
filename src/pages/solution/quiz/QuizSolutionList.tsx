@@ -1,28 +1,58 @@
-import ListCard from '../../../components/list/ListCard';
 import SearchBox from '../../../components/search/SearchBox';
 import SearchListTop from '../../../components/search/SearchListTop';
 import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
-// import TagItem from '../../../components/ui/TagItem';
 import type { ChannelType, PostsType } from '../../../types';
 import { useLoaderData } from 'react-router';
 import { useEffect, useState } from 'react';
 import { getChannelPosts } from '../../../api/postApi';
+import QuizSolveListCard from '../../../components/list/QuizSolveListCard';
+import Loading from '../../../components/ui/Loading';
 
 export default function QuizSolutionList() {
   const channel = useLoaderData<ChannelType>();
   const [posts, setPosts] = useState<PostsType>([]);
+  const [isPending, setPending] = useState(false);
+
+  const [sortType, setSortType] = useState<'latest' | 'popular'>('latest');
   useEffect(() => {
     const fetchData = async () => {
+      setPending(true);
       try {
         const channelPosts = await getChannelPosts(channel.id);
         setPosts(channelPosts);
       } catch (e) {
         console.error(e);
+      } finally {
+        setPending(false);
       }
     };
     fetchData();
   }, [channel.id]);
+
+  const getSortedPosts = (posts: PostsType) => {
+    if (!posts) return [];
+    const sortedPosts = [...posts];
+
+    if (sortType === 'latest') {
+      return sortedPosts.sort(
+        (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at),
+      );
+    }
+
+    if (sortType === 'popular') {
+      return sortedPosts.sort((a, b) => {
+        const aLikes = a.like?.length ?? 0;
+        const bLikes = b.like?.length ?? 0;
+
+        if (aLikes !== bLikes) return bLikes - aLikes;
+
+        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
+      });
+    }
+
+    return sortedPosts;
+  };
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -43,12 +73,18 @@ export default function QuizSolutionList() {
           </div>
           <div>
             <div className="mb-1">
-              <SearchListTop />
+              <SearchListTop sortType={sortType} setSortType={setSortType} />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {posts &&
-                posts.map((post) => <ListCard key={post.id} data={post} />)}
-              {posts && posts.length === 0 && (
+              {isPending ? (
+                <div className="col-span-2 text-center">
+                  <Loading />
+                </div>
+              ) : posts && posts.length > 0 ? (
+                getSortedPosts(posts).map((post) => (
+                  <QuizSolveListCard key={post.id} data={post} />
+                ))
+              ) : (
                 <div className="col-span-2 py-12 text-center">
                   <h3 className="t1 mb-2 font-medium text-black">
                     포스트가 없습니다.
