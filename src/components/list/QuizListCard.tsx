@@ -11,7 +11,6 @@ import { previewMarkdown } from '../../utils/markdown';
 
 export default function QuizListCard({ data }: { data: PostType }) {
   const session = useAuthStore((state) => state.session);
-  const [user, setUser] = useState<User>(null);
   const [me, setMe] = useState<User>(null);
   const [isPending, setPending] = useState(false);
 
@@ -22,9 +21,7 @@ export default function QuizListCard({ data }: { data: PostType }) {
     const fetchData = async () => {
       try {
         setPending(true);
-        const userData = await getUser(data.author);
         const myData = await getUser(session?.user.id as string);
-        setUser(userData);
         setMe(myData);
       } catch (e) {
         console.error(e);
@@ -101,13 +98,15 @@ export default function QuizListCard({ data }: { data: PostType }) {
               <div className="ml-auto flex shrink-0 gap-3">
                 <div className="flex items-center gap-1">
                   <Heart className="w-3.5 md:w-4 lg:w-4.5" />
-                  <span className="text-[10px] md:text-xs lg:text-sm">5</span>
+                  <span className="text-[10px] md:text-xs lg:text-sm">
+                    {data.like?.length ?? 0}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
           <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
-            <Avartar user={user} />
+            <Avartar user={data.author} />
             {(me?.solved ?? []).includes(data.id) && (
               <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
                 <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />
