@@ -26,7 +26,7 @@ import {
 } from '../loader/channel.loader';
 import QuizSolutionList from '../pages/solution/quiz/QuizSolutionList';
 import { fetchProfile } from '../loader/profile.loader';
-import { getBJSolveDetail, getPostDetail } from '../loader/post.loader';
+import { getPostDetail } from '../loader/post.loader';
 import HomePage from '../pages/HomePage';
 import QuizSolutionDetail from '../pages/solution/quiz/QuizSolutionDetail';
 import QuizSolutionEdit from '../pages/solution/quiz/QuizSolutionEdit';
@@ -74,7 +74,7 @@ const router = createBrowserRouter([
               {
                 path: ':id',
                 element: <AlgorithmSolutionDetail />,
-                loader: getBJSolveDetail,
+                loader: getPostDetail,
               }, // 상세
               { path: 'write/:id', element: <AlgorithmSolutionEdit /> }, // 작성
             ],

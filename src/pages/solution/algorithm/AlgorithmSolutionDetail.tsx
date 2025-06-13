@@ -3,14 +3,14 @@ import CommentEdit from '../../../components/detail/CommentEdit';
 import CommentItem from '../../../components/detail/CommentItem';
 import DetailText from '../../../components/detail/DetailText';
 import PageName from '../../../components/ui/PageName';
-import type { BJSolveDetailType, CommentType } from '../../../types';
+import type { CommentType, PostDetailType } from '../../../types';
 import { getCommentDetail } from '../../../api/postApi';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '../../../stores/authStore';
 
 export default function AlgorithmSolutionDetail() {
   const { id } = useParams<{ id: string }>();
-  const post = useLoaderData<BJSolveDetailType>();
+  const post = useLoaderData<PostDetailType>();
   const [comments, setComments] = useState<CommentType[] | null>(null);
   const session = useAuthStore((state) => state.session);
 
