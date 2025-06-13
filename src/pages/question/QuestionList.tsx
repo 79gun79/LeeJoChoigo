@@ -46,7 +46,7 @@ export default function QuestionList() {
 
     if (sortType === 'latest') {
       return sortedPosts.sort(
-        (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at),
+        (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at),
       );
     }
 
@@ -57,7 +57,7 @@ export default function QuestionList() {
 
         if (aLikes !== bLikes) return bLikes - aLikes;
 
-        return Date.parse(b.created_at) - Date.parse(a.created_at);
+        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
       });
     }
 
