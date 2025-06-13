@@ -8,6 +8,7 @@ import { useModalStore } from '../../stores/modalStore';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore';
 import { getUser } from '../../api/userApi';
+import { toggleLike } from '../../api/postApi';
 
 export default function ListCard({ data }: { data: PostType }) {
   const session = useAuthStore((state) => state.session);
@@ -16,6 +17,10 @@ export default function ListCard({ data }: { data: PostType }) {
 
   const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [likedUsers, setLikedUsers] = useState<{ user: string }[]>([]);
+  const [isLiking, setIsLiking] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +36,48 @@ export default function ListCard({ data }: { data: PostType }) {
     };
     fetchData();
   }, [data, session]);
+
+  useEffect(() => {
+    if (!session?.user?.id || !data.like) return;
+
+    const liked = data.like.some((l) => l.user === session.user.id);
+    setIsLiked(liked);
+    setLikedUsers(data.like);
+  }, [session, data]);
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!session?.user?.id) {
+      setLogInModal(true);
+      return;
+    }
+    if (isLiking) return;
+
+    setIsLiking(true);
+    const userId = session.user.id;
+    const optimisticLiked = !isLiked;
+
+    setIsLiked(optimisticLiked);
+    setLikedUsers((prev) =>
+      optimisticLiked
+        ? [...prev, { user: userId }]
+        : prev.filter((l) => l.user !== userId),
+    );
+
+    try {
+      await toggleLike(data.id, userId);
+    } catch (e) {
+      console.error('좋아요 실패:', e);
+      setIsLiked(!optimisticLiked);
+      setLikedUsers((prev) =>
+        !optimisticLiked
+          ? [...prev, { user: userId }]
+          : prev.filter((l) => l.user !== userId),
+      );
+    } finally {
+      setIsLiking(false);
+    }
+  };
 
   const handleClick = () => {
     if (!session?.user.id) {
@@ -95,9 +142,16 @@ export default function ListCard({ data }: { data: PostType }) {
                 </span>
                 <div className="ml-auto flex shrink-0 gap-3">
                   <div className="flex items-center gap-1">
-                    <Heart className="w-3.5 md:w-4 lg:w-4.5" />
+                    <Heart
+                      onClick={handleLike}
+                      className={`w-3.5 cursor-pointer transition md:w-4 lg:w-4.5 ${
+                        isLiked
+                          ? 'fill-[#E95E5E] text-[#E95E5E]'
+                          : 'text-[#000000]'
+                      }`}
+                    />
                     <span className="text-[10px] md:text-xs lg:text-sm">
-                      {data.like?.length ?? 0}
+                      {likedUsers.length}
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
