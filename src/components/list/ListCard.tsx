@@ -10,7 +10,13 @@ import { useAuthStore } from '../../stores/authStore';
 import { getUser } from '../../api/userApi';
 import { toggleLike } from '../../api/postApi';
 
-export default function ListCard({ data }: { data: PostType }) {
+export default function ListCard({
+  data,
+  channel,
+}: {
+  data: PostType;
+  channel: number;
+}) {
   const session = useAuthStore((state) => state.session);
   const [isPending, setPending] = useState(false);
   const [me, setMe] = useState<User>(null);
@@ -85,7 +91,13 @@ export default function ListCard({ data }: { data: PostType }) {
       return;
     }
     console.log(me);
-    navigate(`/questions/${data.id}`);
+
+    if (channel === 3) {
+      navigate(`/solutions/coding/${data.id}`);
+    } else {
+      navigate(`/questions/${data.id}`);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   return (
     <>
@@ -103,7 +115,7 @@ export default function ListCard({ data }: { data: PostType }) {
           </div>
         </div>
       ) : (
-        <div onClick={handleClick} className="cursor-pointer">
+        <div onClick={handleClick} className="cursor-pointer hover:shadow-md">
           <div className="w-full rounded-sm border border-[#ccc]">
             <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
               <div className="flex gap-2.5">
@@ -111,7 +123,7 @@ export default function ListCard({ data }: { data: PostType }) {
                   <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
                     {data.title}
                   </p>
-                  <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
+                  <p className="mb-2.5 line-clamp-2 h-[44px] text-xs md:text-sm lg:text-base">
                     {data.content
                       ? previewMarkdown(data.content).slice(0, 100)
                       : ''}

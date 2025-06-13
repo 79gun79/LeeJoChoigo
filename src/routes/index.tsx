@@ -71,7 +71,11 @@ const router = createBrowserRouter([
                 element: <AlgorithmSolutionList />,
                 loader: fetchChannel3,
               }, // 목록
-              { path: ':id', element: <AlgorithmSolutionDetail /> }, // 상세
+              {
+                path: ':id',
+                element: <AlgorithmSolutionDetail />,
+                loader: getPostDetail,
+              }, // 상세
               { path: 'write/:id', element: <AlgorithmSolutionEdit /> }, // 작성
             ],
           },
