@@ -1,7 +1,7 @@
 import { Globe, StickyNote } from 'lucide-react';
 import TagItem from '../ui/TagItem';
 import type { EditTextProps, EditTextHandle } from './EditText.types';
-
+import ReactMarkdown from 'react-markdown';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 
@@ -9,37 +9,32 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 // @ts-expect-error: prismjs has no type declarations
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 import supabase from '../../utils/supabase';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import { PulseLoader } from 'react-spinners';
 
 const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
-  {
-    tags,
-    onAddTag,
-    onRemoveTag,
-    isLoading,
-    problemId,
-    problemDesc,
-    problemTitle,
-  },
+  { tags, onAddTag, onRemoveTag, isLoading, problem },
   ref,
 ) {
-  const problemDescRef = useRef<Editor>(null);
+  // const problemDescRef = useRef<Editor>(null);
   const editorRef = useRef<Editor>(null);
   const titleRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (!isLoading && problemDescRef.current && problemId && problemDesc) {
-      const instance = problemDescRef.current.getInstance();
-      instance.setMarkdown(
-        `### 아래 문제 요약은 부정확할 수 있습니다. \n### 정확한 문제는 '백준 문제 보러가기' 버튼을 클릭해 확인하세요.\n\n\n` +
-          problemDesc,
-      );
+  // useEffect(() => {
+  //   if (!isLoading && problemDescRef.current && problemId && problemDesc) {
+  //     const instance = problemDescRef.current.getInstance();
+  //     instance.setMarkdown(
+  //       `### 아래 문제 요약은 부정확할 수 있습니다. \n### 정확한 문제는 '백준 문제 보러가기' 버튼을 클릭해 확인하세요.\n\n\n` +
+  //         problemDesc,
+  //     );
 
-      console.timeEnd('Mount → Render'); // ✅ 실제 화면에 나타나는 시점
-      instance.getCurrentModeEditor().moveCursorToStart();
-    }
-  }, [problemId, problemDesc, isLoading]);
+  //     console.timeEnd('Mount → Render'); // ✅ 실제 화면에 나타나는 시점
+  //     instance.getCurrentModeEditor().moveCursorToStart();
+  //   }
+  // }, [problemId, problemDesc, isLoading]);
 
   useImperativeHandle(ref, () => ({
     getPostData: () => {
@@ -53,22 +48,68 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   }));
 
   const openPopup = () => {
-    window.open(`https://www.acmicpc.net/problem/${problemId}`, '_blank');
+    window.open(`https://www.acmicpc.net/problem/${problem?.id}`, '_blank');
   };
   return (
     <>
       <div className="lg:grid lg:grid-cols-2 lg:gap-12">
-        {problemId && (
+        {problem && (
           <div className="h-full w-full lg:grid lg:grid-rows-[auto_1fr] lg:pb-9">
             <div className="mb-2.5 flex justify-between text-sm md:text-base lg:text-lg">
-              <p>{problemTitle}</p>
+              <p>{problem.title}</p>
               <button onClick={openPopup} className="button-sm">
                 <Globe className="h-[14px] w-[12px] shrink-0" />
                 백준 문제 보러가기
               </button>
             </div>
-            <div className="mb-7 h-[250px] overflow-auto rounded-sm p-2.5 text-xs md:text-sm lg:h-full lg:text-base">
-              <Editor
+            <div
+              className={`problem-desc mb-7 h-[250px] overflow-y-auto rounded-sm p-2.5 text-xs md:text-sm lg:h-[63vh] lg:text-base`}
+            >
+              {isLoading && (
+                <div className="flex items-center gap-[2px] font-semibold text-[var(--color-main)]">
+                  {/* {problemDesc} */}
+                  제미나이의 문제 요약 기다리는 중
+                  <PulseLoader size={3} speedMultiplier={0.5} />
+                </div>
+              )}
+              {!isLoading && problem.desc && (
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeHighlight]}
+                  components={{
+                    h1: ({ children }) => (
+                      <h1 className="h3 mb-[30px] font-bold">{children}</h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="h4 mb-[26px] font-semibold underline decoration-[var(--color-sub1)] decoration-[2.5px] underline-offset-8">
+                        {children}
+                      </h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="h5 mb-[22px] font-semibold">{children}</h3>
+                    ),
+                    p: ({ children }) => (
+                      <p className="mb-[14px]">{children}</p>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="mb-[14px]">{children}</ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="mb-[14px]">{children}</ol>
+                    ),
+                    strong: ({ children }) => (
+                      <strong className="block font-semibold text-[var(--color-main)]">
+                        {children}
+                      </strong>
+                    ),
+                  }}
+                >
+                  {problem.desc}
+                </ReactMarkdown>
+              )}
+              {
+                // 에디터로 렌더링
+                /* <Editor
                 ref={problemDescRef}
                 initialValue={problemDesc}
                 height="100%"
@@ -108,7 +149,8 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
                     }
                   },
                 }}
-              />
+              /> */
+              }
             </div>
           </div>
           /* {problems && (
@@ -118,7 +160,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
           )} */
         )}
 
-        <form className={`col-span-2 w-full ${problemDesc && 'lg:col-span-1'}`}>
+        <form className={`col-span-2 w-full ${problem && 'lg:col-span-1'}`}>
           <div className="mb-[25px] md:mb-[35px]">
             <p className="mb-2.5 text-sm md:text-base lg:text-lg">제목</p>
             <input

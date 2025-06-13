@@ -17,11 +17,8 @@ export default function AlgorithmSolutionEdit() {
   const editTextRef = useRef<EditTextHandle>(null);
   const params = useParams<string>().id;
   const [isLoading, startTransition] = useTransition();
-  const [responseLoading, setResponseLoading] = useState(true);
   const [problemTitle, setProblemTitle] = useState<string>();
-  const [problemDesc, setProblemDesc] = useState<string>(
-    '### 백준 문제 보러가기를 클릭해 문제 확인 후 요약해보세요. \n\n제미나이의 문제 요약 기다리는중...',
-  );
+  const [problemDesc, setProblemDesc] = useState<string>('');
   const session = useAuthStore((state) => state.session);
   const navigate = useNavigate();
 
@@ -85,7 +82,7 @@ export default function AlgorithmSolutionEdit() {
   };
 
   useEffect(() => {
-    console.time('Mount → Render');
+    // console.time('Mount → Render');
     if (!params) return;
 
     startTransition(async () => {
@@ -128,8 +125,6 @@ export default function AlgorithmSolutionEdit() {
         }
       } catch (e) {
         console.error('문제 설명을 받아오는데 실패했습니다.', e);
-      } finally {
-        setResponseLoading(false);
       }
       // console.log(params);
     });
@@ -137,7 +132,7 @@ export default function AlgorithmSolutionEdit() {
 
   return (
     <>
-      <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
+      <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:h-[calc(100vh-64px)] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
         <div className="mb-[25px] md:mb-[35px]">
           <PageName title="알고리즘풀이" />
         </div>
@@ -147,10 +142,12 @@ export default function AlgorithmSolutionEdit() {
           tags={tags}
           onAddTag={handleAddTag}
           onRemoveTag={handleRemoveTag}
-          isLoading={responseLoading}
-          problemId={params}
-          problemDesc={problemDesc}
-          problemTitle={problemTitle}
+          isLoading={isLoading}
+          problem={{
+            id: params ?? '',
+            desc: problemDesc,
+            title: problemTitle ?? '',
+          }}
         />
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
           <button className="button-lg gray">취소</button>
