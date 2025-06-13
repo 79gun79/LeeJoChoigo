@@ -1,6 +1,7 @@
 import { Reply } from 'lucide-react';
 import type { ProfileComments } from '../../pages/profile/Profile';
 import dateFormat from '../../utils/dateFormat';
+import { Link } from 'react-router';
 
 export default function ProfileCommentCard({
   data,
@@ -8,6 +9,18 @@ export default function ProfileCommentCard({
   data: ProfileComments[number];
 }) {
   const { created_at, comment, post } = data;
+  const channelLocation = (channel: number) => {
+    switch (channel) {
+      case 2:
+        return '/problems/job';
+      case 3:
+        return '/solutions/coding';
+      case 4:
+        return '/solutions/job';
+      case 5:
+        return '/questions';
+    }
+  };
   return (
     <>
       {/* 스켈레톤 */}
@@ -22,26 +35,28 @@ export default function ProfileCommentCard({
         </div> */}
 
       <div className="w-full rounded-sm border border-[#ccc]">
-        <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
-          <div className="flex gap-2.5">
-            <div className="w-full">
-              <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
-                {post.title}
-              </p>
-              <div className="flex w-full items-start gap-1.5">
-                <Reply className="h-4 w-4 shrink-0 rotate-180 md:mt-0.5 lg:h-5 lg:w-5" />
-                <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-                  {comment}
+        <Link to={`${channelLocation(post.channel)}/${post.id}`}>
+          <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
+            <div className="flex gap-2.5">
+              <div className="w-full">
+                <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
+                  {post.title}
                 </p>
+                <div className="flex w-full items-start gap-1.5">
+                  <Reply className="h-4 w-4 shrink-0 rotate-180 md:mt-0.5 lg:h-5 lg:w-5" />
+                  <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
+                    {comment}
+                  </p>
+                </div>
               </div>
             </div>
+            <div className="flex items-end">
+              <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
+                {dateFormat(created_at)}
+              </span>
+            </div>
           </div>
-          <div className="flex items-end">
-            <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
-              {dateFormat(created_at)}
-            </span>
-          </div>
-        </div>
+        </Link>
       </div>
     </>
   );

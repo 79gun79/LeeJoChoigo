@@ -22,6 +22,8 @@ export default function QuizProblemList() {
   const [category, setCategory] = useState<string>('');
   const [isPending, setPending] = useState(false);
 
+  const [sortType, setSortType] = useState<'latest' | 'popular'>('latest');
+
   useEffect(() => {
     const fetchData = async () => {
       setPending(true);
@@ -44,6 +46,30 @@ export default function QuizProblemList() {
     };
     fetchData();
   }, [channel.id, category]);
+
+  const getSortedPosts = (posts: PostsType) => {
+    if (!posts) return [];
+    const sortedPosts = [...posts];
+
+    if (sortType === 'latest') {
+      return sortedPosts.sort(
+        (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at),
+      );
+    }
+
+    if (sortType === 'popular') {
+      return sortedPosts.sort((a, b) => {
+        const aLikes = a.like?.length ?? 0;
+        const bLikes = b.like?.length ?? 0;
+
+        if (aLikes !== bLikes) return bLikes - aLikes;
+
+        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
+      });
+    }
+
+    return sortedPosts;
+  };
 
   const handleClick = () => {
     if (!session?.user.id) {
@@ -78,7 +104,7 @@ export default function QuizProblemList() {
           </div>
           <div>
             <div className="mb-1">
-              <SearchListTop />
+              <SearchListTop sortType={sortType} setSortType={setSortType} />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {isPending ? (
@@ -86,7 +112,9 @@ export default function QuizProblemList() {
                   <Loading />
                 </div>
               ) : posts && posts.length > 0 ? (
-                posts.map((post) => <QuizListCard key={post.id} data={post} />)
+                getSortedPosts(posts).map((post) => (
+                  <QuizListCard key={post.id} data={post} />
+                ))
               ) : (
                 <div className="col-span-2 py-12 text-center">
                   <h3 className="t1 mb-2 font-medium text-black">

@@ -83,7 +83,11 @@ const router = createBrowserRouter([
                 element: <QuizSolutionList />,
                 loader: fetchChannel4,
               }, // 목록
-              { path: ':id', element: <QuizSolutionDetail /> }, // 상세
+              {
+                path: ':id',
+                element: <QuizSolutionDetail />,
+                loader: getPostDetail,
+              }, // 상세
               {
                 path: 'write/:id',
                 element: <QuizSolutionEdit />,

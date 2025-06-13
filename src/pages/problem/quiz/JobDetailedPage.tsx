@@ -73,12 +73,12 @@ export default function JobDetailedPage() {
 
         {/* 문제 상세 설명 */}
         <div className="mb-[25px] md:mb-[35px]">
-          <DetailText data={post} hideComment={true} />
+          <DetailText data={post} />
         </div>
 
         {/* 문제 설명 컴포넌트 */}
         <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
-          <p className="t3">문제 모음</p>
+          <p className="t3">퀴즈</p>
           {quizSolveData.map((v, i) => (
             <QuizSolveComponent
               key={i}
