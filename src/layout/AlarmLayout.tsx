@@ -4,6 +4,7 @@ import AlarmListItems from '../components/atoms/AlarmListItems';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
 import type { Notification } from '../types/notification';
+import { fetchNotifications, markAsRead } from '../utils/notifications';
 
 export default function AlarmLayout() {
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -13,7 +14,7 @@ export default function AlarmLayout() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchNotifications = async () => {
+    const fetch = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -23,29 +24,16 @@ export default function AlarmLayout() {
         return;
       }
 
-      const { data, error } = await supabase
-        .from('notification')
-        .select(
-          `
-        *,
-        actor:user!actor ( id, fullname, image ),
-        comment: comment ( post ),
-        like: like ( post ),
-        post: post (channel)
-      `,
-        )
-        .eq('recipient', user.id)
-        .order('created_at', { ascending: false });
-
+      const { data, error } = await fetchNotifications(user.id);
       if (error) {
         console.error('알림 불러오기 실패:', error);
       } else {
-        setNotifications(data);
+        setNotifications(data ?? []);
       }
     };
 
     if (isLogin) {
-      fetchNotifications();
+      fetch();
     } else {
       setNotifications([]);
     }
@@ -68,6 +56,13 @@ export default function AlarmLayout() {
     };
   }, [open]);
 
+  const handleRead = async (id: number) => {
+    await markAsRead(id);
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, is_seen: true } : n)),
+    );
+  };
+
   if (!isLogin) return null;
 
   const unreadCount = notifications.filter((n) => !n.is_seen).length;
@@ -81,7 +76,7 @@ export default function AlarmLayout() {
         aria-label="알림"
       >
         <Bell />
-        {notifications.some((n) => !n.is_seen) && (
+        {unreadCount > 0 && (
           <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500" />
         )}
       </button>
@@ -89,11 +84,11 @@ export default function AlarmLayout() {
       {open && (
         <div
           ref={dropdownRef}
-          className="absolute -right-10 z-50 mt-2 w-[250px] max-w-[90vw] rounded-xl bg-white drop-shadow-md md:right-0 md:w-[400px]"
+          className="absolute -right-10 z-50 mt-2 w-[250px] max-w-[90vw] rounded-xl bg-white drop-shadow-md md:right-0 md:w-[350px]"
           style={{ minWidth: '220px' }}
         >
           <div className="border-gray4 flex items-center justify-between border-b px-4 py-3">
-            <span className="t2">
+            <span className="t3">
               알림
               <span className="t5 bg-main ml-2 rounded-2xl px-2 text-white">
                 {unreadCount}
@@ -110,7 +105,10 @@ export default function AlarmLayout() {
           <div className="max-h-[400px] overflow-y-auto">
             <AlarmListItems
               notifications={notifications}
-              onClickItem={() => setOpen(false)}
+              onClickItem={async (n) => {
+                if (!n.is_seen) await handleRead(n.id);
+                setOpen(false);
+              }}
             />
           </div>
         </div>
