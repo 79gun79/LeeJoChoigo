@@ -37,7 +37,8 @@ export const getChannelCategoryPosts = async (
         *,
         author:user (*),
         like (
-          id
+          id,
+          user
         ),
         comment (
           id
