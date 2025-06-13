@@ -8,23 +8,25 @@ import { useAuthStore } from '../../stores/authStore';
 import { useModalStore } from '../../stores/modalStore';
 import dateFormat from '../../utils/dateFormat';
 import { previewMarkdown } from '../../utils/markdown';
+import { toggleLike } from '../../api/postApi';
 
 export default function QuizListCard({ data }: { data: PostType }) {
   const session = useAuthStore((state) => state.session);
-  const [user, setUser] = useState<User>(null);
   const [me, setMe] = useState<User>(null);
   const [isPending, setPending] = useState(false);
 
   const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
 
+  const [isLiked, setIsLiked] = useState(false);
+  const [likedUsers, setLikedUsers] = useState<{ user: string }[]>([]);
+  const [isLiking, setIsLiking] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setPending(true);
-        const userData = await getUser(data.author);
         const myData = await getUser(session?.user.id as string);
-        setUser(userData);
         setMe(myData);
       } catch (e) {
         console.error(e);
@@ -34,6 +36,40 @@ export default function QuizListCard({ data }: { data: PostType }) {
     };
     fetchData();
   }, [data, session]);
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!session?.user?.id) {
+      setLogInModal(true);
+      return;
+    }
+    if (isLiking) return;
+
+    setIsLiking(true);
+    const userId = session.user.id;
+    const optimisticLiked = !isLiked;
+
+    setIsLiked(optimisticLiked);
+    setLikedUsers((prev) =>
+      optimisticLiked
+        ? [...prev, { user: userId }]
+        : prev.filter((l) => l.user !== userId),
+    );
+
+    try {
+      await toggleLike(data.id, userId);
+    } catch (e) {
+      console.error('좋아요 실패:', e);
+      setIsLiked(!optimisticLiked);
+      setLikedUsers((prev) =>
+        !optimisticLiked
+          ? [...prev, { user: userId }]
+          : prev.filter((l) => l.user !== userId),
+      );
+    } finally {
+      setIsLiking(false);
+    }
+  };
 
   const handleClick = () => {
     if (!session?.user.id) {
@@ -98,16 +134,22 @@ export default function QuizListCard({ data }: { data: PostType }) {
               <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
                 {dateFormat(data.created_at)}
               </span>
-              <div className="ml-auto flex shrink-0 gap-3">
-                <div className="flex items-center gap-1">
-                  <Heart className="w-3.5 md:w-4 lg:w-4.5" />
-                  <span className="text-[10px] md:text-xs lg:text-sm">5</span>
-                </div>
+              <div className="flex-grow"></div>
+              <div className="flex items-center gap-1">
+                <Heart
+                  onClick={handleLike}
+                  className={`w-3.5 cursor-pointer transition md:w-4 lg:w-4.5 ${
+                    isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-[#000000]'
+                  }`}
+                />
+                <span className="text-[10px] md:text-xs lg:text-sm">
+                  {likedUsers.length}
+                </span>
               </div>
             </div>
           </div>
           <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
-            <Avartar user={user} />
+            <Avartar user={data.author} />
             {(me?.solved ?? []).includes(data.id) && (
               <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
                 <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />

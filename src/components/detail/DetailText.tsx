@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Heart, MessageSquare } from 'lucide-react';
+import { ChevronDown, ChevronRight, Heart} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -9,14 +9,10 @@ import dateFormat from '../../utils/dateFormat';
 import '../../styles/markdown.css';
 import 'highlight.js/styles/github.css';
 import ProblemDescRender from '../common/ProblemDescRender';
+import { toggleLike } from '../../api/postApi';
 
-export default function DetailText({
-  data,
-  hideComment,
-}: {
-  data: PostDetailType;
-  hideComment?: boolean;
-}) {
+
+export default function DetailText({ data }: { data: PostDetailType }) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
@@ -57,23 +53,7 @@ export default function DetailText({
     );
 
     try {
-      const { data: existingLike, error } = await supabase
-        .from('like')
-        .select('id')
-        .eq('post', data.id)
-        .eq('user', userId)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      if (existingLike) {
-        await supabase.from('like').delete().eq('id', existingLike.id);
-      } else {
-        await supabase.from('like').insert({
-          post: data.id,
-          user: userId,
-        });
-      }
+      await toggleLike(data.id, userId);
     } catch (e) {
       console.error('좋아요 처리 실패:', e);
       setIsLiked(!optimisticLiked);
@@ -180,6 +160,22 @@ export default function DetailText({
             </ReactMarkdown>
           </div>
         </div>
+        <div className="mb-3 flex gap-2">
+          <div className="mx-auto flex shrink-0 gap-3">
+            <div className="flex flex-col items-center gap-1">
+              <Heart
+                size={20}
+                onClick={handleLike}
+                className={`cursor-pointer transition ${
+                  isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-[#000000]'
+                }`}
+              />
+              <span className="text-[10px] md:text-xs lg:text-sm">
+                {likedUsers.length}
+              </span>
+            </div>
+          </div>
+        </div>
         <div className="flex gap-2">
           {data.tags &&
             data.tags.map((tag: string, i: number) => (
@@ -193,34 +189,14 @@ export default function DetailText({
         </div>
       </div>
       {/* 게시글 하단 */}
-      <div className="flex w-full border-t border-[#ccc] py-2.5">
-        <div className="ml-auto flex shrink-0 gap-3">
-          <div className="flex items-center gap-1">
-            <div className="flex items-center gap-1">
-              <Heart
-                onClick={handleLike}
-                className={`w-3.5 cursor-pointer transition md:w-4 lg:w-4.5 ${
-                  isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-[#000000]'
-                }`}
-              />
-              <span className="text-[10px] md:text-xs lg:text-sm">
-                {likedUsers.length}
-              </span>
-            </div>
-          </div>
-          {!hideComment && (
-            <div className="flex items-center gap-1">
-              <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
-              <span className="text-[10px] md:text-xs lg:text-sm">
-                {
-                  data.comment.filter(
-                    (c: { is_yn: boolean }) => c.is_yn !== false,
-                  ).length
-                }
-              </span>
-            </div>
-          )}
-        </div>
+      <div className="flex w-full gap-2 border-t border-[#ccc]">
+        <div className="flex-grow"></div>
+        <button className="text-gray4 px-[10px] py-[6px] text-[10px] md:text-xs lg:text-sm">
+          수정
+        </button>
+        <button className="px-[10px] py-[6px] text-[10px] text-[#FF6d6d] md:text-xs lg:text-sm">
+          삭제
+        </button>
       </div>
     </>
   );
