@@ -15,8 +15,8 @@ export default function AlarmListItems({
 
   // 알림 타입별로 이동할 링크 생성 함수
   const getNotificationLink = (n: Notification) => {
-    if (n.type === 'comment' && n.post) return `/problems/${n.post}`;
-    if (n.type === 'like' && n.post) return `/problems/${n.post}`;
+    if (n.type === 'comment' && n.comment) return `/problems/${n.comment.post}`;
+    if (n.type === 'like' && n.like) return `/problems/${n.like.post}`;
     if (n.type === 'follow' && n.actor?.id) return `/profile/${n.actor.id}`;
     return undefined;
   };

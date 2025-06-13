@@ -25,7 +25,14 @@ export default function AlarmLayout() {
 
       const { data, error } = await supabase
         .from('notification')
-        .select(`*, actor:user!actor (id, fullname, image)`)
+        .select(
+          `
+        *,
+        actor:user!actor ( id, fullname, image ),
+        comment: comment ( post ),
+        like: like ( post )
+      `,
+        )
         .eq('recipient', user.id)
         .order('created_at', { ascending: false });
 
