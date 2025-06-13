@@ -43,11 +43,34 @@ export default function CommentEdit({ postId, onCommentAdd }: Props) {
         return;
       }
 
-      await createComment({
+      // 1. 댓글 생성
+      const comment = await createComment({
         postId,
         userId,
         content,
       });
+
+      // 2. 게시글 정보 조회 (작성자 id 필요)
+      const { data: post } = await supabase
+        .from('post')
+        .select('author')
+        .eq('id', postId)
+        .single();
+
+      // 3. 본인 글에 본인이 댓글 달면 알림 X
+      if (post && post.author !== userId && comment?.id) {
+        await supabase.from('notification').insert([
+          {
+            actor: userId,
+            recipient: post.author,
+            type: 'comment',
+            comment: comment.id,
+            post: postId,
+            is_seen: false,
+            created_at: new Date().toISOString(),
+          },
+        ]);
+      }
 
       setContent('');
       onCommentAdd();

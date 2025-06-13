@@ -265,6 +265,7 @@ export type Database = {
         Row: {
           actor: string;
           comment: number | null;
+          like: number | null;
           created_at: string;
           follow: number | null;
           id: number;
@@ -278,6 +279,7 @@ export type Database = {
         Insert: {
           actor: string;
           comment?: number | null;
+          like?: number | null;
           created_at?: string;
           follow?: number | null;
           id?: number;
@@ -291,6 +293,7 @@ export type Database = {
         Update: {
           actor?: string;
           comment?: number | null;
+          like?: number | null;
           created_at?: string;
           follow?: number | null;
           id?: number;
@@ -307,6 +310,13 @@ export type Database = {
             columns: ['actor'];
             isOneToOne: false;
             referencedRelation: 'user';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'notification_like_fkey';
+            columns: ['like'];
+            isOneToOne: false;
+            referencedRelation: 'like';
             referencedColumns: ['id'];
           },
           {
