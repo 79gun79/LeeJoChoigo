@@ -32,7 +32,19 @@ export const getChannelCategoryPosts = async (
   try {
     const { data: posts } = await supabase
       .from('post')
-      .select('*')
+      .select(
+        `
+        *,
+        author:user (*),
+        like (
+          id,
+          user
+        ),
+        comment (
+          id
+        )
+      `,
+      )
       .eq('channel', channelId)
       .contains('tags', [category]);
 

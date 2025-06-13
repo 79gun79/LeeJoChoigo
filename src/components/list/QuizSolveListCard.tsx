@@ -8,6 +8,7 @@ import { useModalStore } from '../../stores/modalStore';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore';
 import { getUser } from '../../api/userApi';
+import { toggleLike } from '../../api/postApi';
 
 export default function QuizSolveListCard({ data }: { data: PostType }) {
   const session = useAuthStore((state) => state.session);
@@ -16,6 +17,10 @@ export default function QuizSolveListCard({ data }: { data: PostType }) {
 
   const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [likedUsers, setLikedUsers] = useState<{ user: string }[]>([]);
+  const [isLiking, setIsLiking] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +36,40 @@ export default function QuizSolveListCard({ data }: { data: PostType }) {
     };
     fetchData();
   }, [data, session]);
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!session?.user?.id) {
+      setLogInModal(true);
+      return;
+    }
+    if (isLiking) return;
+
+    setIsLiking(true);
+    const userId = session.user.id;
+    const optimisticLiked = !isLiked;
+
+    setIsLiked(optimisticLiked);
+    setLikedUsers((prev) =>
+      optimisticLiked
+        ? [...prev, { user: userId }]
+        : prev.filter((l) => l.user !== userId),
+    );
+
+    try {
+      await toggleLike(data.id, userId);
+    } catch (e) {
+      console.error('좋아요 실패:', e);
+      setIsLiked(!optimisticLiked);
+      setLikedUsers((prev) =>
+        !optimisticLiked
+          ? [...prev, { user: userId }]
+          : prev.filter((l) => l.user !== userId),
+      );
+    } finally {
+      setIsLiking(false);
+    }
+  };
 
   const handleClick = () => {
     if (!session?.user.id) {
@@ -82,12 +121,14 @@ export default function QuizSolveListCard({ data }: { data: PostType }) {
               )}
             </div>
             <ul className="mb-2.5 flex gap-3">
-              <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
-                태그명
-              </li>
-              <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
-                태그명
-              </li>
+              {data.tags?.map((tag) => (
+                <li
+                  key={tag}
+                  className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
+                >
+                  {tag}
+                </li>
+              ))}
             </ul>
             <div className="flex items-end">
               <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
@@ -95,18 +136,29 @@ export default function QuizSolveListCard({ data }: { data: PostType }) {
               </span>
               <div className="ml-auto flex shrink-0 gap-3">
                 <div className="flex items-center gap-1">
-                  <Heart className="w-3.5 md:w-4 lg:w-4.5" />
-                  <span className="text-[10px] md:text-xs lg:text-sm">5</span>
+                  <Heart
+                    onClick={handleLike}
+                    className={`w-3.5 cursor-pointer transition md:w-4 lg:w-4.5 ${
+                      isLiked
+                        ? 'fill-[#E95E5E] text-[#E95E5E]'
+                        : 'text-[#000000]'
+                    }`}
+                  />
+                  <span className="text-[10px] md:text-xs lg:text-sm">
+                    {likedUsers.length}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
-                  <span className="text-[10px] md:text-xs lg:text-sm">5</span>
+                  <span className="text-[10px] md:text-xs lg:text-sm">
+                    {data.comment?.length ?? 0}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
           <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
-            <Avartar />
+            <Avartar user={data.author} />
           </div>
         </div>
       )}

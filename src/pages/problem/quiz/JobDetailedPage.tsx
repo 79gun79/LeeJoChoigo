@@ -73,7 +73,7 @@ export default function JobDetailedPage() {
 
         {/* 문제 상세 설명 */}
         <div className="mb-[25px] md:mb-[35px]">
-          <DetailText data={post} hideComment={true} />
+          <DetailText data={post} />
         </div>
 
         {/* 문제 설명 컴포넌트 */}
