@@ -77,7 +77,7 @@ export const getPost = async (postId: number) => {
   }
 };
 
-export async function createComment({
+export const createComment = async ({
   postId,
   userId,
   content,
@@ -85,23 +85,19 @@ export async function createComment({
   postId: number;
   userId: string;
   content: string;
-}): Promise<{ id: number }> {
-  const { data, error } = await supabase
-    .from('comment')
-    .insert([
-      {
-        comment: content,
-        post: postId,
-        author: userId,
-        is_yn: true,
-      },
-    ])
-    .select('id') // id만 반환
-    .single(); // 단일 객체 반환
+}) => {
+  const { data, error } = await supabase.from('comment').insert([
+    {
+      comment: content,
+      post: postId,
+      author: userId,
+      is_yn: true,
+    },
+  ]);
 
   if (error) throw error;
   return data;
-}
+};
 
 export const getCommentDetail = async (postId: number) => {
   try {
@@ -163,41 +159,9 @@ export const toggleLike = async (postId: number, userId: string) => {
     return false;
   }
 
-  // 좋아요 추가
-  const { data: likeData, error: insertError } = await supabase
+  const { error: insertError } = await supabase
     .from('like')
-    .insert({ post: postId, user: userId })
-    .select('id')
-    .single();
-
+    .insert({ post: postId, user: userId });
   if (insertError) throw insertError;
-
-  // 게시글 작성자 조회
-  const { data: post } = await supabase
-    .from('post')
-    .select('author')
-    .eq('id', postId)
-    .single();
-
-  // 본인 글에 본인이 좋아요 누르면 알림 X
-  if (post && post.author !== userId && likeData?.id) {
-    const { error: notifError } = await supabase.from('notification').insert([
-      {
-        actor: userId,
-        recipient: post.author,
-        type: 'like',
-        like: likeData.id,
-        post: postId,
-        is_seen: false,
-        created_at: new Date().toISOString(),
-      },
-    ]);
-    if (notifError) {
-      console.error('알림 생성 실패:', notifError);
-    } else {
-      console.log('알림 생성 성공');
-    }
-  }
-
   return true;
 };
