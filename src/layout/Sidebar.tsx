@@ -161,6 +161,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <>
                   <motion.div className="t4 flex" variants={itemVariants}>
                     <NavLink
+                      onClick={onClose}
                       to={`/profile/${session?.user.id}`}
                       className={({ isActive }) =>
                         `${isActive ? 'text-main' : ''} flex flex-1 items-center justify-center gap-1 py-2`

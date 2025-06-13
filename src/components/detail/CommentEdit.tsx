@@ -14,6 +14,7 @@ export default function CommentEdit({ postId, onCommentAdd }: Props) {
   const [user, setUser] = useState<User | null>(null);
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
+  const hasCmt = content.trim().length > 0;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,14 +61,16 @@ export default function CommentEdit({ postId, onCommentAdd }: Props) {
 
   return (
     <>
-      <div className="mb-3 rounded-sm border border-[#ccc] p-3">
+      <div
+        className={`mb-3 rounded-sm border ${hasCmt ? 'border-gray4' : 'border-[#ccc]'} p-3`}
+      >
         <div className="mb-2.5">
           {user && <Avartar user={user} />}
           {!user && <Avartar />}
         </div>
         <form onSubmit={handleCommentSubmit}>
           <textarea
-            className="mb-2.5 h-[50px] w-full resize-none overflow-auto"
+            className="mb-2.5 h-[50px] w-full resize-none overflow-auto outline-none"
             placeholder="댓글을 입력해주세요"
             value={content}
             onChange={(e) => setContent(e.target.value)}
