@@ -1,7 +1,6 @@
 import { Globe, StickyNote } from 'lucide-react';
 import TagItem from '../ui/TagItem';
 import type { EditTextProps, EditTextHandle } from './EditText.types';
-import ReactMarkdown from 'react-markdown';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 
@@ -11,9 +10,8 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import supabase from '../../utils/supabase';
-import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
 import { PulseLoader } from 'react-spinners';
+import ProblemDescRender from '../common/ProblemDescRender';
 
 const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   { tags, onAddTag, onRemoveTag, isLoading, problem },
@@ -73,39 +71,9 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
                 </div>
               )}
               {!isLoading && problem.desc && (
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeHighlight]}
-                  components={{
-                    h1: ({ children }) => (
-                      <h1 className="h3 mb-[30px] font-bold">{children}</h1>
-                    ),
-                    h2: ({ children }) => (
-                      <h2 className="h4 mb-[26px] font-semibold underline decoration-[var(--color-sub1)] decoration-[2.5px] underline-offset-8">
-                        {children}
-                      </h2>
-                    ),
-                    h3: ({ children }) => (
-                      <h3 className="h5 mb-[22px] font-semibold">{children}</h3>
-                    ),
-                    p: ({ children }) => (
-                      <p className="mb-[14px]">{children}</p>
-                    ),
-                    ul: ({ children }) => (
-                      <ul className="mb-[14px]">{children}</ul>
-                    ),
-                    ol: ({ children }) => (
-                      <ol className="mb-[14px]">{children}</ol>
-                    ),
-                    strong: ({ children }) => (
-                      <strong className="block font-semibold text-[var(--color-main)]">
-                        {children}
-                      </strong>
-                    ),
-                  }}
-                >
+                <ProblemDescRender isHeadingHidden={false}>
                   {problem.desc}
-                </ReactMarkdown>
+                </ProblemDescRender>
               )}
               {
                 // 에디터로 렌더링

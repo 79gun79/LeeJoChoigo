@@ -1,7 +1,7 @@
-import type { getChannelPosts, getPost, getPostDetail } from '../api/postApi';
+import type { getChannelPosts, getPost } from '../api/postApi';
 import type { getUser } from '../api/userApi';
 import type { fetchChannel1 } from '../loader/channel.loader';
-import type { fetchPostDetail } from '../loader/post.loader';
+import type { fetchPostDetail, getPostDetail } from '../loader/post.loader';
 type ElementType<T> = T extends (infer U)[] ? U : T;
 
 export type ChannelType = NonNullable<
