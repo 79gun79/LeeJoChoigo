@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore';
 import { getUser } from '../../api/userApi';
 
-export default function ListCard({ data }: { data: PostType }) {
+export default function QuizSolveListCard({ data }: { data: PostType }) {
   const session = useAuthStore((state) => state.session);
   const [isPending, setPending] = useState(false);
   const [me, setMe] = useState<User>(null);
@@ -38,7 +38,7 @@ export default function ListCard({ data }: { data: PostType }) {
       return;
     }
     console.log(me);
-    navigate(`/questions/${data.id}`);
+    navigate(`/solutions/job/${data.id}`);
   };
   return (
     <>

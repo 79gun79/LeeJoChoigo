@@ -37,5 +37,7 @@ export interface CreateQuizHandle {
 
 export interface SolutionQuizProps {
   pTitle: string;
-  tag: string;
+  tags: string[];
+  onAddTag: (val: string) => void;
+  onRemoveTag: (val: string) => void;
 }

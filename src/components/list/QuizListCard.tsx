@@ -58,61 +58,62 @@ export default function QuizListCard({ data }: { data: PostType }) {
           </div>
         </div>
       ) : (
-        <div onClick={handleClick} className="cursor-pointer">
-          <div className="w-full rounded-sm border border-[#ccc]">
-            <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
-              <div className="flex gap-2.5">
-                <div className="w-[calc(100%-110px)] md:w-[calc(100%-130px)] lg:w-[calc(100%-150px)]">
-                  <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
-                    {data.title}
-                  </p>
-                  <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-                    {data.content
-                      ? previewMarkdown(data.content).slice(0, 100)
-                      : ''}
-                  </p>
-                </div>
-                {data.image && (
-                  <div className="ml-auto h-[65px] w-[85px] shrink-0 overflow-hidden md:h-[75px] md:w-[105px] lg:h-[85px] lg:w-[125px]">
-                    <img
-                      src={data.image}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                )}
-              </div>
-              <ul className="mb-2.5 flex gap-3">
-                {data.tags &&
-                  data.tags.map((tag, i) => (
-                    <li
-                      key={i}
-                      className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
-                    >
-                      {tag}
-                    </li>
-                  ))}
-              </ul>
-              <div className="flex items-end">
-                <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
-                  {dateFormat(data.created_at)}
-                </span>
-                <div className="ml-auto flex shrink-0 gap-3">
-                  <div className="flex items-center gap-1">
-                    <Heart className="w-3.5 md:w-4 lg:w-4.5" />
-                    <span className="text-[10px] md:text-xs lg:text-sm">5</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
-              <Avartar user={user} />
-              {(me?.solved ?? []).includes(data.id) && (
-                <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
-                  <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />
-                  풀이됨
+        <div
+          onClick={handleClick}
+          className="w-full cursor-pointer rounded-sm border border-[#ccc] hover:shadow-md"
+        >
+          <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
+            <div className="flex gap-2.5">
+              <div className="w-[calc(100%-110px)] md:w-[calc(100%-130px)] lg:w-[calc(100%-150px)]">
+                <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
+                  {data.title}
                 </p>
+                <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
+                  {data.content
+                    ? previewMarkdown(data.content).slice(0, 100)
+                    : ''}
+                </p>
+              </div>
+              {data.image && (
+                <div className="ml-auto h-[65px] w-[85px] shrink-0 overflow-hidden md:h-[75px] md:w-[105px] lg:h-[85px] lg:w-[125px]">
+                  <img
+                    src={data.image}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
               )}
             </div>
+            <ul className="mb-2.5 flex gap-3">
+              {data.tags &&
+                data.tags.map((tag, i) => (
+                  <li
+                    key={i}
+                    className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
+                  >
+                    {tag}
+                  </li>
+                ))}
+            </ul>
+            <div className="flex items-end">
+              <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
+                {dateFormat(data.created_at)}
+              </span>
+              <div className="ml-auto flex shrink-0 gap-3">
+                <div className="flex items-center gap-1">
+                  <Heart className="w-3.5 md:w-4 lg:w-4.5" />
+                  <span className="text-[10px] md:text-xs lg:text-sm">5</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
+            <Avartar user={user} />
+            {(me?.solved ?? []).includes(data.id) && (
+              <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
+                <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />
+                풀이됨
+              </p>
+            )}
           </div>
         </div>
       )}

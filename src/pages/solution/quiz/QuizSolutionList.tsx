@@ -1,13 +1,12 @@
-import ListCard from '../../../components/list/ListCard';
 import SearchBox from '../../../components/search/SearchBox';
 import SearchListTop from '../../../components/search/SearchListTop';
 import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
-// import TagItem from '../../../components/ui/TagItem';
 import type { ChannelType, PostsType } from '../../../types';
 import { useLoaderData } from 'react-router';
 import { useEffect, useState } from 'react';
 import { getChannelPosts } from '../../../api/postApi';
+import QuizSolveListCard from '../../../components/list/QuizSolveListCard';
 
 export default function QuizSolutionList() {
   const channel = useLoaderData<ChannelType>();
@@ -47,7 +46,9 @@ export default function QuizSolutionList() {
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {posts &&
-                posts.map((post) => <ListCard key={post.id} data={post} />)}
+                posts.map((post) => (
+                  <QuizSolveListCard key={post.id} data={post} />
+                ))}
               {posts && posts.length === 0 && (
                 <div className="col-span-2 py-12 text-center">
                   <h3 className="t1 mb-2 font-medium text-black">
