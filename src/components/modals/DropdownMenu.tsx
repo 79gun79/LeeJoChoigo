@@ -66,7 +66,7 @@ export default function DropdownMenu({
     <AnimatePresence>
       <motion.div
         ref={modalRef}
-        className={`absolute top-10 left-8 z-50 flex flex-col rounded-md border bg-white whitespace-nowrap drop-shadow-md md:top-11 md:left-0 ${className}`}
+        className={`absolute z-50 flex flex-col rounded-md border bg-white whitespace-nowrap drop-shadow-md ${className}`}
         initial="hidden"
         animate="visible"
         exit="exit"
