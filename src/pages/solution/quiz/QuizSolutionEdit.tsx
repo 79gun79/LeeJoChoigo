@@ -2,7 +2,7 @@ import PageName from '../../../components/ui/PageName';
 import { useLoaderData, useNavigate } from 'react-router';
 import supabase from '../../../utils/supabase';
 import type { CreateQuizHandle } from '../../../components/edit/EditText.types';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { notify } from '../../../utils/customAlert';
 import type { PostDetail } from '../../../types';
 import type { QuizItem } from '../../../types/quizList';
@@ -12,16 +12,27 @@ import CreateQuizSolution from '../../../components/edit/CreateQuizSolution';
 export default function QuizSolutionEdit() {
   const problem = useLoaderData<PostDetail>();
   const problemTitle = (problem.title || '문제 정보 없음') as string;
-  const category = (problem.tags || ['기타']) as string[];
+  const [tags, setTags] = useState<string[]>(problem.tags || ['기타']);
   const quizData = (problem.quiz_data || []) as QuizItem[]; // 문제 가져오기
 
   const editTextRef = useRef<CreateQuizHandle>(null);
   const navigate = useNavigate();
 
+  const handleAddTag = (tag: string) => {
+    if (tags.length >= 5) return;
+    if (!tags.includes(tag)) {
+      setTags((prev) => [...prev, tag]);
+    }
+  };
+
+  const handleRemoveTag = (tag: string) => {
+    setTags((prev) => prev.filter((t) => t !== tag));
+  };
+
   const handleSubmit = async () => {
     const postData = editTextRef.current?.getPostData();
     if (!postData) return;
-    const { title, content, imageUrl, imageFileName, tags } = postData;
+    const { title, content, imageUrl, imageFileName } = postData;
 
     if (title === '') return notify('제목을 입력하세요!', 'info');
     if (content === '') return notify('내용을 입력하세요!', 'info');
@@ -42,6 +53,7 @@ export default function QuizSolutionEdit() {
         author: authorId,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
+        solved_problem_level: problem.id,
       },
     ]);
 
@@ -67,7 +79,9 @@ export default function QuizSolutionEdit() {
         </div>
         <CreateQuizSolution
           pTitle={problemTitle}
-          tag={category[0] || '기타'}
+          tags={tags}
+          onAddTag={handleAddTag}
+          onRemoveTag={handleRemoveTag}
           ref={editTextRef}
         />
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">

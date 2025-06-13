@@ -7,7 +7,6 @@ export default function dateFormat(create_at: string) {
   const diffDay = now.getTime() - createDate.getTime();
 
   const oneDayMs = 24 * 60 * 60 * 1000;
-  console.log(diffDay, oneDayMs);
   if (diffDay < 60 * 1000) {
     return '방금 전';
   } else if (diffDay > oneDayMs) {

@@ -1,19 +1,19 @@
-import { Check, Heart } from 'lucide-react';
+import { Heart, MessageSquare } from 'lucide-react';
 import Avartar from '../ui/Avartar';
 import type { PostType, User } from '../../types';
-import { getUser } from '../../api/userApi';
+import { previewMarkdown } from '../../utils/markdown';
+import dateFormat from '../../utils/dateFormat';
 import { useEffect, useState } from 'react';
+import { useModalStore } from '../../stores/modalStore';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore';
-import { useModalStore } from '../../stores/modalStore';
-import dateFormat from '../../utils/dateFormat';
-import { previewMarkdown } from '../../utils/markdown';
+import { getUser } from '../../api/userApi';
 import { toggleLike } from '../../api/postApi';
 
-export default function QuizListCard({ data }: { data: PostType }) {
+export default function QuizSolveListCard({ data }: { data: PostType }) {
   const session = useAuthStore((state) => state.session);
-  const [me, setMe] = useState<User>(null);
   const [isPending, setPending] = useState(false);
+  const [me, setMe] = useState<User>(null);
 
   const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
@@ -76,7 +76,8 @@ export default function QuizListCard({ data }: { data: PostType }) {
       setLogInModal(true);
       return;
     }
-    navigate(`/problems/job/${data.id}`);
+    console.log(me);
+    navigate(`/solutions/job/${data.id}`);
   };
   return (
     <>
@@ -120,42 +121,44 @@ export default function QuizListCard({ data }: { data: PostType }) {
               )}
             </div>
             <ul className="mb-2.5 flex gap-3">
-              {data.tags &&
-                data.tags.map((tag, i) => (
-                  <li
-                    key={i}
-                    className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
-                  >
-                    {tag}
-                  </li>
-                ))}
+              {data.tags?.map((tag) => (
+                <li
+                  key={tag}
+                  className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
+                >
+                  {tag}
+                </li>
+              ))}
             </ul>
             <div className="flex items-end">
               <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
                 {dateFormat(data.created_at)}
               </span>
-              <div className="flex-grow"></div>
-              <div className="flex items-center gap-1">
-                <Heart
-                  onClick={handleLike}
-                  className={`w-3.5 cursor-pointer transition md:w-4 lg:w-4.5 ${
-                    isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-[#000000]'
-                  }`}
-                />
-                <span className="text-[10px] md:text-xs lg:text-sm">
-                  {likedUsers.length}
-                </span>
+              <div className="ml-auto flex shrink-0 gap-3">
+                <div className="flex items-center gap-1">
+                  <Heart
+                    onClick={handleLike}
+                    className={`w-3.5 cursor-pointer transition md:w-4 lg:w-4.5 ${
+                      isLiked
+                        ? 'fill-[#E95E5E] text-[#E95E5E]'
+                        : 'text-[#000000]'
+                    }`}
+                  />
+                  <span className="text-[10px] md:text-xs lg:text-sm">
+                    {likedUsers.length}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
+                  <span className="text-[10px] md:text-xs lg:text-sm">
+                    {data.comment?.length ?? 0}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
           <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
             <Avartar user={data.author} />
-            {(me?.solved ?? []).includes(data.id) && (
-              <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
-                <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />
-                풀이됨
-              </p>
-            )}
           </div>
         </div>
       )}

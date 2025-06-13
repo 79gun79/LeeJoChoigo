@@ -52,9 +52,9 @@ export default function AlgorithmSolutionList() {
               <ListCard solve={true} />
               <ListCard solve={false} /> */}
               {posts &&
-                posts.map((post) => <ListCard key={post.id} data={post} />)}
+                posts.map((post) => <ListCard key={post.id} data={post} channel={channel.id} />)}
               {posts && posts.length === 0 && (
-                <div className="col-span-2 py-12 text-center">
+                <div className="col-span-2 py-12 text-center">algorithm
                   <h3 className="t1 mb-2 font-medium text-black">
                     포스트가 없습니다.
                   </h3>

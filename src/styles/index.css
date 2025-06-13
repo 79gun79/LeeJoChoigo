@@ -30,6 +30,9 @@ button {
   .edit-input {
     @apply w-full rounded-sm border border-[#ccc] px-2.5 py-2 text-xs disabled:bg-[var(--color-gray1)] disabled:text-[var(--color-gray3)] md:text-sm lg:text-base;
   }
+  .problem-desc {
+    @apply w-full rounded-sm border border-[#ccc] px-3.5 py-4 text-xs md:text-sm lg:text-base;
+  }
   .button-sm {
     @apply flex items-center gap-1 rounded-sm bg-[var(--color-main)] px-2 py-1 text-[10px] text-white md:text-xs lg:text-sm;
   }
