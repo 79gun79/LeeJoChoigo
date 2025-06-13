@@ -1,4 +1,4 @@
-import { Heart } from 'lucide-react';
+import { ChevronDown, ChevronRight, Heart} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -6,9 +6,9 @@ import type { CommentType, PostDetailType } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
 import supabase from '../../utils/supabase';
 import dateFormat from '../../utils/dateFormat';
-
 import '../../styles/markdown.css';
 import 'highlight.js/styles/github.css';
+import ProblemDescRender from '../common/ProblemDescRender';
 import { toggleLike } from '../../api/postApi';
 
 
@@ -16,6 +16,7 @@ export default function DetailText({ data }: { data: PostDetailType }) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
+  const [isShow, setIsShow] = useState(false);
 
   useEffect(() => {
     const checkIsLiked = async () => {
@@ -52,7 +53,6 @@ export default function DetailText({ data }: { data: PostDetailType }) {
     );
 
     try {
-      // 좋아요 토글 및 알림 생성은 postApi의 toggleLike 함수에서 처리
       await toggleLike(data.id, userId);
     } catch (e) {
       console.error('좋아요 처리 실패:', e);
@@ -102,6 +102,29 @@ export default function DetailText({ data }: { data: PostDetailType }) {
       <div className="py-7">
         <div className="mb-7 text-xs md:text-sm lg:text-base">
           <div className="markdown-body">
+            {data.parent &&
+              data.parent.solved_problem_id &&
+              data.parent.title &&
+              data.parent.content && (
+                <ul className="rounded-sm border border-[#DEDEDE] py-[20px]">
+                  <li
+                    className={`flex cursor-pointer list-none items-center gap-[5px] pt-[4px] ${isShow && 'pb-[16px]'}`}
+                    onClick={() => setIsShow(!isShow)}
+                  >
+                    {!isShow && <ChevronRight size={22} />}
+                    {isShow && <ChevronDown size={22} />}
+                    <div className="">
+                      "백준 {data.parent.solved_problem_id}번 :{' '}
+                      {data.parent.title}" 문제 보기
+                    </div>
+                  </li>
+                  <li className={`list-none px-[30px] ${!isShow && 'hidden'}`}>
+                    <ProblemDescRender isHeadingHidden={true}>
+                      {data.parent.content}
+                    </ProblemDescRender>
+                  </li>
+                </ul>
+              )}
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeHighlight]}
