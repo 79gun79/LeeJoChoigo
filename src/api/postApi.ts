@@ -9,7 +9,8 @@ export const getChannelPosts = async (channelId: number) => {
         *,
         author:user (*),
         like (
-          id
+          id,
+          user
         ),
         comment (
           id

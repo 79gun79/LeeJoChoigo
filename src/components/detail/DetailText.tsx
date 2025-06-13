@@ -8,6 +8,7 @@ import supabase from '../../utils/supabase';
 import dateFormat from '../../utils/dateFormat';
 import '../../styles/markdown.css';
 import 'highlight.js/styles/github.css';
+import { toggleLike } from '../../api/postApi';
 
 export default function DetailText({ data }: { data: PostDetailType }) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
@@ -49,23 +50,7 @@ export default function DetailText({ data }: { data: PostDetailType }) {
     );
 
     try {
-      const { data: existingLike, error } = await supabase
-        .from('like')
-        .select('id')
-        .eq('post', data.id)
-        .eq('user', userId)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      if (existingLike) {
-        await supabase.from('like').delete().eq('id', existingLike.id);
-      } else {
-        await supabase.from('like').insert({
-          post: data.id,
-          user: userId,
-        });
-      }
+      await toggleLike(data.id, userId);
     } catch (e) {
       console.error('좋아요 처리 실패:', e);
       setIsLiked(!optimisticLiked);
