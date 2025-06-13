@@ -4,7 +4,10 @@ export interface EditTextProps {
   tags: string[];
   onAddTag: (val: string) => void;
   onRemoveTag: (val: string) => void;
-  problems?: boolean;
+  isLoading?: boolean;
+  problemId?: string;
+  problemDesc?: string;
+  problemTitle?: string;
 }
 
 export interface EditTextHandle {
@@ -30,4 +33,9 @@ export interface CreateQuizHandle {
     tags: string[];
     quizData: QuizItem[];
   };
+}
+
+export interface SolutionQuizProps {
+  pTitle: string;
+  tag: string;
 }

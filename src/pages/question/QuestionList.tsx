@@ -8,27 +8,41 @@ import PageName from '../../components/ui/PageName';
 import type { ChannelType, PostsType } from '../../types';
 import { useLoaderData } from 'react-router';
 import { useNavigate } from 'react-router';
-import { getChannelPosts } from '../../components/api/postApi';
+import { getChannelPosts } from '../../api/postApi';
 import { useEffect, useState } from 'react';
+import { useModalStore } from '../../stores/modalStore';
+import { useAuthStore } from '../../stores/authStore';
+import Loading from '../../components/ui/Loading';
 
 export default function QuestionList() {
   const channel = useLoaderData<ChannelType>();
+  const session = useAuthStore((state) => state.session);
+  const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
 
   const [posts, setPosts] = useState<PostsType>([]);
+  const [isPending, setPending] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
+      setPending(true);
       try {
         const channelPosts = await getChannelPosts(channel.id);
         setPosts(channelPosts);
       } catch (e) {
         console.error(e);
+      } finally {
+        setPending(false);
       }
     };
     fetchData();
   }, [channel.id]);
 
   const handleClick = () => {
+    if (!session?.user.id) {
+      setLogInModal(true);
+      return;
+    }
     navigate('/questions/write');
   };
   return (
@@ -54,13 +68,13 @@ export default function QuestionList() {
               <SearchListTop />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {/* <ListCard image="sda" />
-              <ListCard image="sda" solve={true} />
-              <ListCard solve={true} />
-              <ListCard solve={false} /> */}
-              {posts &&
-                posts.map((post) => <ListCard key={post.id} data={post} />)}
-              {posts && posts.length === 0 && (
+              {isPending ? (
+                <div className="col-span-2 text-center">
+                  <Loading />
+                </div>
+              ) : posts && posts.length > 0 ? (
+                posts.map((post) => <ListCard key={post.id} data={post} />)
+              ) : (
                 <div className="col-span-2 py-12 text-center">
                   <h3 className="t1 mb-2 font-medium text-black">
                     포스트가 없습니다.

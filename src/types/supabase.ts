@@ -425,6 +425,7 @@ export type Database = {
           is_email_verified: boolean;
           is_online: boolean;
           role: string | null;
+          solved: number[] | null;
           updated_at: string | null;
         };
         Insert: {
@@ -439,6 +440,7 @@ export type Database = {
           is_email_verified?: boolean;
           is_online?: boolean;
           role?: string | null;
+          solved?: number[] | null;
           updated_at?: string | null;
         };
         Update: {
@@ -453,6 +455,7 @@ export type Database = {
           is_email_verified?: boolean;
           is_online?: boolean;
           role?: string | null;
+          solved?: number[] | null;
           updated_at?: string | null;
         };
         Relationships: [];

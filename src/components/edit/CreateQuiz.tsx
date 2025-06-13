@@ -1,6 +1,5 @@
-// import { StickyNote } from 'lucide-react';
 import { Plus } from 'lucide-react';
-import QuizComponent from '../detail/QuizComponent';
+import QuizComponent from './QuizComponent';
 import CheckItem from '../ui/CheckItem';
 import {
   forwardRef,
