@@ -1,21 +1,10 @@
 import { useNavigate } from 'react-router';
 import type { Notification } from '../../types/notification';
+import dateFormat from '../../utils/dateFormat';
 
 interface AlarmListItemsProps {
   notifications: Notification[];
   onClickItem?: (notification: Notification) => void;
-}
-
-// 몇 분 전, 몇 시간 전 등 상대적 시간 표시 함수
-function getRelativeTime(dateString: string) {
-  const now = new Date();
-  const date = new Date(dateString);
-  const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-  if (diff < 60) return `${diff}초 전`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
-  return `${Math.floor(diff / 86400)}일 전`;
 }
 
 export default function AlarmListItems({
@@ -70,7 +59,7 @@ export default function AlarmListItems({
             <div className="t4 flex items-center justify-between">
               <span>{getNotificationMessage(n)}</span>
               <span className="t5 text-gray2 whitespace-nowrap">
-                {getRelativeTime(n.created_at)}
+                {dateFormat(n.created_at)}
               </span>
             </div>
           </li>
