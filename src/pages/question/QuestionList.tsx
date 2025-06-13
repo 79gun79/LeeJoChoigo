@@ -100,7 +100,7 @@ export default function QuestionList() {
                 </div>
               ) : posts && posts.length > 0 ? (
                 getSortedPosts(posts).map((post) => (
-                  <ListCard key={post.id} data={post} />
+                  <ListCard key={post.id} data={post} channel={5} />
                 ))
               ) : (
                 <div className="col-span-2 py-12 text-center">

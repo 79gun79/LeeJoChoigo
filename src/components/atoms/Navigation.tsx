@@ -15,6 +15,7 @@ interface NavigationProps {
   onProtectedRoute: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   direction?: 'horizontal' | 'vertical';
   className?: string;
+  closed?: () => void;
 }
 
 const menuItems: MenuItem[] = [
@@ -44,11 +45,12 @@ export default function Navigation({
   onProtectedRoute,
   direction = 'horizontal',
   className = '',
+  closed,
 }: NavigationProps) {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const layout =
     direction === 'vertical'
-      ? 'h5 flex-col flex gap-4 items-start pt-10 ml-4'
+      ? 'h5 flex-col flex gap-4 items-start pt-4 ml-4'
       : 't4 hidden md:flex md:gap-8 lg:gap-16';
 
   const handleMenuClick = (
@@ -61,6 +63,8 @@ export default function Navigation({
     if (item.subItems) {
       e.preventDefault();
       setOpenMenu(openMenu === item.name ? null : item.name);
+    } else {
+      if (closed) closed();
     }
   };
 
@@ -96,6 +100,7 @@ export default function Navigation({
             {item.subItems && isOpen && (
               <DropdownMenu
                 isOpen={isOpen}
+                closed={closed}
                 onClose={() => setOpenMenu(null)}
                 items={item.subItems}
               />

@@ -6,8 +6,8 @@ import type { ChannelType, PostsType } from '../../../types';
 import { useLoaderData } from 'react-router';
 import { useEffect, useState } from 'react';
 import { getChannelPosts } from '../../../api/postApi';
-import QuizSolveListCard from '../../../components/list/QuizSolveListCard';
 import Loading from '../../../components/ui/Loading';
+import ListCard from '../../../components/list/ListCard';
 
 export default function QuizSolutionList() {
   const channel = useLoaderData<ChannelType>();
@@ -82,7 +82,7 @@ export default function QuizSolutionList() {
                 </div>
               ) : posts && posts.length > 0 ? (
                 getSortedPosts(posts).map((post) => (
-                  <QuizSolveListCard key={post.id} data={post} />
+                  <ListCard key={post.id} data={post} channel={4} />
                 ))
               ) : (
                 <div className="col-span-2 py-12 text-center">
