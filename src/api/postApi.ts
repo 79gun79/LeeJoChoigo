@@ -4,7 +4,18 @@ export const getChannelPosts = async (channelId: number) => {
   try {
     const { data: posts } = await supabase
       .from('post')
-      .select('*')
+      .select(
+        `
+        *,
+        author:user (*),
+        like (
+          id
+        ),
+        comment (
+          id
+        )
+      `,
+      )
       .eq('channel', channelId);
 
     return posts;

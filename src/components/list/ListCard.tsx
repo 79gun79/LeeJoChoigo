@@ -56,57 +56,62 @@ export default function ListCard({ data }: { data: PostType }) {
           </div>
         </div>
       ) : (
-        <div
-          onClick={handleClick}
-          className="w-full cursor-pointer rounded-sm border border-[#ccc] hover:shadow-md"
-        >
-          <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
-            <div className="flex gap-2.5">
-              <div className="w-[calc(100%-110px)] md:w-[calc(100%-130px)] lg:w-[calc(100%-150px)]">
-                <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
-                  {data.title}
-                </p>
-                <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-                  {data.content
-                    ? previewMarkdown(data.content).slice(0, 100)
-                    : ''}
-                </p>
+        <div onClick={handleClick} className="cursor-pointer">
+          <div className="w-full rounded-sm border border-[#ccc]">
+            <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
+              <div className="flex gap-2.5">
+                <div className="w-[calc(100%-110px)] md:w-[calc(100%-130px)] lg:w-[calc(100%-150px)]">
+                  <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
+                    {data.title}
+                  </p>
+                  <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
+                    {data.content
+                      ? previewMarkdown(data.content).slice(0, 100)
+                      : ''}
+                  </p>
+                </div>
+                {data.image && (
+                  <div className="ml-auto h-[65px] w-[85px] shrink-0 overflow-hidden md:h-[75px] md:w-[105px] lg:h-[85px] lg:w-[125px]">
+                    <img
+                      src={data.image}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
-              {data.image && (
-                <div className="ml-auto h-[65px] w-[85px] shrink-0 overflow-hidden md:h-[75px] md:w-[105px] lg:h-[85px] lg:w-[125px]">
-                  <img
-                    src={data.image}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              )}
-            </div>
-            <ul className="mb-2.5 flex gap-3">
-              <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
-                태그명
-              </li>
-              <li className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm">
-                태그명
-              </li>
-            </ul>
-            <div className="flex items-end">
-              <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
-                {dateFormat(data.created_at)}
-              </span>
-              <div className="ml-auto flex shrink-0 gap-3">
-                <div className="flex items-center gap-1">
-                  <Heart className="w-3.5 md:w-4 lg:w-4.5" />
-                  <span className="text-[10px] md:text-xs lg:text-sm">5</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
-                  <span className="text-[10px] md:text-xs lg:text-sm">5</span>
+              <ul className="mb-2.5 flex gap-3">
+                {data.tags?.map((tag) => (
+                  <li
+                    key={tag}
+                    className="rounded-sm bg-[var(--color-gray1)] px-2 py-0.5 text-[10px] text-[var(--color-gray4)] md:text-xs lg:text-sm"
+                  >
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex items-end">
+                <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
+                  {dateFormat(data.created_at)}
+                </span>
+                <div className="ml-auto flex shrink-0 gap-3">
+                  <div className="flex items-center gap-1">
+                    <Heart className="w-3.5 md:w-4 lg:w-4.5" />
+                    <span className="text-[10px] md:text-xs lg:text-sm">
+                      {data.like?.length ?? 0}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
+                    <span className="text-[10px] md:text-xs lg:text-sm">
+                      {data.comment?.length ?? 0}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
-            <Avartar />
+            <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
+              <Avartar user={data.author} />
+            </div>
           </div>
         </div>
       )}

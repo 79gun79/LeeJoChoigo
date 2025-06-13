@@ -6,6 +6,8 @@ import type { CommentType, PostDetailType } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
 import supabase from '../../utils/supabase';
 import dateFormat from '../../utils/dateFormat';
+import '../../styles/markdown.css';
+import 'highlight.js/styles/github.css';
 
 export default function DetailText({
   data,
@@ -82,6 +84,7 @@ export default function DetailText({
       setIsLiking(false);
     }
   }, [isLiked, isLiking, data.id]);
+
   return (
     <>
       {/* 게시글 상단 */}
@@ -120,6 +123,33 @@ export default function DetailText({
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeHighlight]}
+              components={{
+                code({ className = '', children, ...props }) {
+                  const match = /language-(\w+)/.exec(className);
+                  const lang = match?.[1];
+
+                  if (match) {
+                    return (
+                      <div className="relative mb-4">
+                        <div className="absolute top-0 left-0 px-2 py-1 text-xs font-medium text-black">
+                          {lang}
+                        </div>
+                        <pre>
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        </pre>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
             >
               {data.content ?? ''}
             </ReactMarkdown>
