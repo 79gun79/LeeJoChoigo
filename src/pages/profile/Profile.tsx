@@ -70,7 +70,7 @@ export default function Profile() {
                 <p className="text-xs md:text-sm lg:text-base">{user.email}</p>
               </div>
               <div className="flex gap-2.5 self-end">
-                {authProfile && (
+                {!authProfile && (
                   <button className="min-w-[94px] rounded-sm bg-[var(--color-gray2)] p-1 text-center text-[10px] text-[var(--color-gray4)] md:text-xs lg:min-w-[120px] lg:text-sm">
                     팔로우
                   </button>
