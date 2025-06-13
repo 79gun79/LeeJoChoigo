@@ -50,7 +50,7 @@ export default function Navigation({
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const layout =
     direction === 'vertical'
-      ? 'h5 flex-col flex gap-4 items-start pt-10 ml-4'
+      ? 'h5 flex-col flex gap-4 items-start pt-4 ml-4'
       : 't4 hidden md:flex md:gap-8 lg:gap-16';
 
   const handleMenuClick = (

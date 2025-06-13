@@ -108,7 +108,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <AnimatePresence>
         {isOpen && (
           <motion.aside
-            className="fixed top-[40px] left-2 z-50 w-[220px] overflow-hidden rounded-xl bg-white shadow-md"
+            className="fixed top-[50px] left-2 z-50 w-[210px] overflow-hidden rounded-xl bg-white shadow-md"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -188,7 +188,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   onProtectedRoute={(e) => {
                     isLoginModalHandler(e);
                   }}
-                  className="py-12"
+                  className="py-8"
                   closed={onClose}
                 />
               </motion.div>
