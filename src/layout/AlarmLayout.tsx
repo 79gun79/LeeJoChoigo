@@ -67,6 +67,14 @@ export default function AlarmLayout() {
 
   const unreadCount = notifications.filter((n) => !n.is_seen).length;
 
+  const deleteReadNotifications = async () => {
+    // Supabase에서 is_seen === true 인 알림 삭제
+    await supabase.from('notification').delete().eq('is_seen', true);
+
+    // 로컬 상태에서도 제거
+    setNotifications((prev) => prev.filter((n) => !n.is_seen));
+  };
+
   return (
     <div className="relative">
       <button
@@ -75,7 +83,7 @@ export default function AlarmLayout() {
         className="relative"
         aria-label="알림"
       >
-        <Bell />
+        <Bell className="hover:bg-gray1 h-8 w-8 rounded-2xl p-1" />
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500" />
         )}
@@ -96,7 +104,10 @@ export default function AlarmLayout() {
             </span>
             <button
               className="text-gray3 hover:text-black"
-              onClick={() => setOpen(false)}
+              onClick={async () => {
+                await deleteReadNotifications();
+                setOpen(false);
+              }}
               aria-label="알림 닫기"
             >
               ✕

@@ -89,7 +89,7 @@ export default function Header() {
         <Navigation onProtectedRoute={isLoginModalHandler} />
 
         {isLogin && (
-          <div className="relative flex items-center gap-4">
+          <div className="relative flex items-start gap-4 pt-2">
             {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
             <AlarmLayout />
 
