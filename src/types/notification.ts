@@ -12,4 +12,7 @@ export type Notification = Tables<'notification'> & {
   like?: {
     post: number;
   } | null;
+  post?: {
+    channel: number;
+  } | null;
 };

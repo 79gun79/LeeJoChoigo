@@ -265,7 +265,7 @@ export type Database = {
         Row: {
           actor: string;
           comment: number | null;
-          like?: number | null;
+          like: number | null;
           created_at: string;
           follow: number | null;
           id: number;

@@ -30,7 +30,8 @@ export default function AlarmLayout() {
         *,
         actor:user!actor ( id, fullname, image ),
         comment: comment ( post ),
-        like: like ( post )
+        like: like ( post ),
+        post: post (channel)
       `,
         )
         .eq('recipient', user.id)

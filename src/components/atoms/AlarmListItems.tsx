@@ -15,9 +15,36 @@ export default function AlarmListItems({
 
   // 알림 타입별로 이동할 링크 생성 함수
   const getNotificationLink = (n: Notification) => {
-    if (n.type === 'comment' && n.comment) return `/problems/${n.comment.post}`;
-    if (n.type === 'like' && n.like) return `/problems/${n.like.post}`;
-    if (n.type === 'follow' && n.actor?.id) return `/profile/${n.actor.id}`;
+    const getChannelPath = (channelId: number) => {
+      switch (channelId) {
+        case 1:
+          return '/problems/coding';
+        case 2:
+          return '/problems/job';
+        case 3:
+          return '/solution/coding';
+        case 4:
+          return '/solution/job';
+        case 5:
+          return '/questions';
+        default:
+          return '/';
+      }
+    };
+
+    const basePath = n.post?.channel
+      ? getChannelPath(n.post.channel)
+      : undefined;
+
+    if (n.type === 'comment' && n.comment) {
+      return basePath ? `${basePath}/${n.comment.post}` : undefined;
+    }
+    if (n.type === 'like' && n.like) {
+      return basePath ? `${basePath}/${n.like.post}` : undefined;
+    }
+    if (n.type === 'follow' && n.actor?.id) {
+      return `/profile/${n.actor.id}`;
+    }
     return undefined;
   };
 
