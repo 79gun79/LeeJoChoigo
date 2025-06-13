@@ -2,12 +2,15 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import EditText from '../../../components/edit/EditText';
 import PageName from '../../../components/ui/PageName';
 import type { EditTextHandle } from '../../../components/edit/EditText.types';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 // import { fetchBjProblemById } from '../../../utils/fetchBjProblems';
 import { GoogleGenAI } from '@google/genai';
 import supabase from '../../../utils/supabase';
+import { notify } from '../../../utils/customAlert';
+import { useAuthStore } from '../../../stores/authStore';
 
 const APIKEY = import.meta.env.VITE_API_GEMINI_KEY;
+const CHANNELID = 3;
 
 export default function AlgorithmSolutionEdit() {
   const [tags, setTags] = useState<string[]>([]);
@@ -19,6 +22,8 @@ export default function AlgorithmSolutionEdit() {
   const [problemDesc, setProblemDesc] = useState<string>(
     '### 백준 문제 보러가기를 클릭해 문제 확인 후 요약해보세요. \n\n제미나이의 문제 요약 기다리는중...',
   );
+  const session = useAuthStore((state) => state.session);
+  const navigate = useNavigate();
 
   const ai = new GoogleGenAI({ apiKey: APIKEY });
 
@@ -39,6 +44,45 @@ export default function AlgorithmSolutionEdit() {
     });
     return response.text;
   }
+
+  const handleSubmit = async () => {
+    const postData = editTextRef.current?.getPostData();
+    if (!postData) return;
+
+    const { title, content, imageUrl, imageFileName } = postData;
+
+    const authorId = session?.user.id;
+
+    if (!authorId) {
+      notify('로그인이 필요합니다.', 'info');
+      return;
+    }
+
+    if (params) {
+      const { error } = await supabase.from('post').insert([
+        {
+          title,
+          content,
+          image: imageUrl,
+          image_public_id: imageFileName,
+          channel: CHANNELID,
+          tags,
+          is_yn: true,
+          author: authorId,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          problem_id: parseInt(params, 10),
+        },
+      ]);
+      if (error) {
+        console.error('저장 실패', error);
+        notify('등록 실패', 'error');
+      } else {
+        notify('등록 성공!', 'success');
+      }
+    }
+    navigate('/solutions/coding');
+  };
 
   useEffect(() => {
     console.time('Mount → Render');
@@ -110,7 +154,9 @@ export default function AlgorithmSolutionEdit() {
         />
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
           <button className="button-lg gray">취소</button>
-          <button className="button-lg">작성하기</button>
+          <button className="button-lg" onClick={handleSubmit}>
+            작성하기
+          </button>
         </div>
       </div>
     </>
