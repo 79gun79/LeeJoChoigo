@@ -53,7 +53,7 @@ export const getPost = async (postId: number) => {
   }
 };
 
-export const createComment = async ({
+export async function createComment({
   postId,
   userId,
   content,
@@ -61,19 +61,23 @@ export const createComment = async ({
   postId: number;
   userId: string;
   content: string;
-}) => {
-  const { data, error } = await supabase.from('comment').insert([
-    {
-      comment: content,
-      post: postId,
-      author: userId,
-      is_yn: true,
-    },
-  ]);
+}): Promise<{ id: number }> {
+  const { data, error } = await supabase
+    .from('comment')
+    .insert([
+      {
+        comment: content,
+        post: postId,
+        author: userId,
+        is_yn: true,
+      },
+    ])
+    .select('id') // id만 반환
+    .single(); // 단일 객체 반환
 
   if (error) throw error;
   return data;
-};
+}
 
 export const getCommentDetail = async (postId: number) => {
   try {
