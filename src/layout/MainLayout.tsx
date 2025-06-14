@@ -7,8 +7,10 @@ export default function MainLayout() {
   const { isLogInOpen, setLogInModal } = useModalStore();
   return (
     <>
-      <Header />
-      <main>
+      <div className="fixed top-0 left-0 z-999 w-full bg-white">
+        <Header />
+      </div>
+      <main className="pt-[55px] md:pt-[60px]">
         <Outlet />
         {isLogInOpen && (
           <IsLoginModal

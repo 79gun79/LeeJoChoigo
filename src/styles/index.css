@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './font.css';
+
 @theme {
   /* Gray Scale */
   --color-black: #000000;
@@ -52,5 +53,26 @@ button {
   }
   .button-quiz.plus {
     @apply bg-sub1 text-white;
+  }
+
+  /* 메인 */
+  .content-title {
+    @apply text-base font-bold md:text-lg lg:text-2xl;
+  }
+  .content-title-sub {
+    @apply text-gray3 text-[10px] font-light md:text-xs lg:text-sm;
+  }
+  .icon-bg {
+    @apply bg-gray1 flex h-9 w-9 items-center justify-center rounded-full lg:h-12 lg:w-12;
+  }
+  .menu-button {
+    @apply hover:border-main relative flex w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-sm border border-[#ccc] px-2 py-3 transition-colors duration-500 lg:gap-5;
+  }
+  .menu-button-effect {
+    @apply bg-main absolute -bottom-1/2 -z-1 h-0 w-full origin-center rounded-full transition-all duration-800 ease-out group-hover:h-[200%] group-hover:w-[200%];
+  }
+
+  .hover-box:hover .hover {
+    @apply underline;
   }
 }
