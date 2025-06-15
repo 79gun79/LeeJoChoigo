@@ -13,3 +13,20 @@ export const getUser = async (userId: string) => {
     console.error(e);
   }
 };
+
+export const followUser = async (followerId: string, followingId: string) => {
+  const { data, error } = await supabase
+    .from('follow')
+    .insert([{ follower: followerId, user: followingId }]);
+  if (error) throw error;
+  return data;
+};
+
+export const unfollowUser = async (followerId: string, followingId: string) => {
+  const { error } = await supabase
+    .from('follow')
+    .delete()
+    .eq('follower', followerId)
+    .eq('user', followingId);
+  if (error) throw error;
+};
