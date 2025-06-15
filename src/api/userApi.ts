@@ -13,21 +13,30 @@ export const getUser = async (userId: string) => {
     console.error(e);
   }
 };
-
 export const followUser = async (followerId: string, followingId: string) => {
+  const alreadyFollowing = await checkIsFollowing(followerId, followingId);
+  if (alreadyFollowing) return;
+
   const { data, error } = await supabase
     .from('follow')
     .insert([{ follower: followerId, user: followingId }]);
+
   if (error) throw error;
-  await supabase.from('notification').insert([
-    {
-      actor: followerId,
-      recipient: followingId,
-      type: 'follow',
-      is_seen: false,
-      created_at: new Date().toISOString(),
-    },
-  ]);
+
+  try {
+    await supabase.from('notification').insert([
+      {
+        actor: followerId,
+        recipient: followingId,
+        type: 'follow',
+        is_seen: false,
+        created_at: new Date().toISOString(),
+      },
+    ]);
+  } catch (notifError) {
+    console.warn('알림 생성 실패:', notifError);
+  }
+
   return data;
 };
 
@@ -37,6 +46,7 @@ export const unfollowUser = async (followerId: string, followingId: string) => {
     .delete()
     .eq('follower', followerId)
     .eq('user', followingId);
+
   if (error) throw error;
 };
 
