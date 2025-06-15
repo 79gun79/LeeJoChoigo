@@ -5,7 +5,7 @@ export const searchPosts = async (query: string) => {
     const { data: posts } = await supabase
       .from('post')
       .select('*')
-      .ilike('channel', `%${query}%`);
+      .ilike('title', `%${query}%`);
 
     return posts;
   } catch (e) {

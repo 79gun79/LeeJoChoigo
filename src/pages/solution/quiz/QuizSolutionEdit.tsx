@@ -53,7 +53,7 @@ export default function QuizSolutionEdit() {
         author: authorId,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-        solved_problem_level: problem.id,
+        problem_id: problem.id,
       },
     ]);
 

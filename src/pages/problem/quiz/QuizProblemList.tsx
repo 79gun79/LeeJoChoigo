@@ -11,6 +11,7 @@ import { useAuthStore } from '../../../stores/authStore';
 import { useModalStore } from '../../../stores/modalStore';
 import Loading from '../../../components/ui/Loading';
 import ListCard from '../../../components/list/ListCard';
+import Nopost from '../../../components/ui/Nopost';
 
 export default function QuizProblemList() {
   const channel = useLoaderData<ChannelType>();
@@ -121,11 +122,7 @@ export default function QuizProblemList() {
                   />
                 ))
               ) : (
-                <div className="col-span-2 py-12 text-center">
-                  <h3 className="t1 mb-2 font-medium text-black">
-                    포스트가 없습니다.
-                  </h3>
-                </div>
+                <Nopost />
               )}
             </div>
           </div>

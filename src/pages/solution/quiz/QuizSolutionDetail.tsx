@@ -31,7 +31,7 @@ export default function QuizSolutionDetail() {
   };
   const fetchQuiz = async () => {
     setLoading(true);
-    const res = await getPost(post.solved_problem_level);
+    const res = await getPost(post.problem_id || 1);
     setQuiz((res?.quiz_data || []) as QuizItem[]);
     setQuizTitle(res?.title || '');
     setQuizId(res?.id || 1);
