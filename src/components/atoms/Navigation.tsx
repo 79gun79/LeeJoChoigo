@@ -103,6 +103,7 @@ export default function Navigation({
                 closed={closed}
                 onClose={() => setOpenMenu(null)}
                 items={item.subItems}
+                className="absolute top-full left-7 md:left-0"
               />
             )}
           </div>

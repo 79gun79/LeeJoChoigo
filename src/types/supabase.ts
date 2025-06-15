@@ -265,11 +265,11 @@ export type Database = {
         Row: {
           actor: string;
           comment: number | null;
-          like: number | null;
           created_at: string;
           follow: number | null;
           id: number;
           is_seen: boolean;
+          like: number | null;
           message: number | null;
           post: number | null;
           recipient: string;
@@ -279,11 +279,11 @@ export type Database = {
         Insert: {
           actor: string;
           comment?: number | null;
-          like?: number | null;
           created_at?: string;
           follow?: number | null;
           id?: number;
           is_seen?: boolean;
+          like?: number | null;
           message?: number | null;
           post?: number | null;
           recipient: string;
@@ -293,11 +293,11 @@ export type Database = {
         Update: {
           actor?: string;
           comment?: number | null;
-          like?: number | null;
           created_at?: string;
           follow?: number | null;
           id?: number;
           is_seen?: boolean;
+          like?: number | null;
           message?: number | null;
           post?: number | null;
           recipient?: string;
@@ -313,13 +313,6 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'notification_like_fkey';
-            columns: ['like'];
-            isOneToOne: false;
-            referencedRelation: 'like';
-            referencedColumns: ['id'];
-          },
-          {
             foreignKeyName: 'notification_comment_fkey';
             columns: ['comment'];
             isOneToOne: false;
@@ -331,6 +324,13 @@ export type Database = {
             columns: ['follow'];
             isOneToOne: false;
             referencedRelation: 'follow';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'notification_like_fkey';
+            columns: ['like'];
+            isOneToOne: false;
+            referencedRelation: 'like';
             referencedColumns: ['id'];
           },
           {
@@ -366,6 +366,7 @@ export type Database = {
           image: string | null;
           image_public_id: string | null;
           is_yn: boolean;
+          problem_id: number | null;
           quiz_data: Json[] | null;
           solved_problem_id: number | null;
           solved_problem_level: number | null;
@@ -382,6 +383,7 @@ export type Database = {
           image?: string | null;
           image_public_id?: string | null;
           is_yn?: boolean;
+          problem_id?: number | null;
           quiz_data?: Json[] | null;
           solved_problem_id?: number | null;
           solved_problem_level?: number | null;
@@ -398,6 +400,7 @@ export type Database = {
           image?: string | null;
           image_public_id?: string | null;
           is_yn?: boolean;
+          problem_id?: number | null;
           quiz_data?: Json[] | null;
           solved_problem_id?: number | null;
           solved_problem_level?: number | null;
@@ -419,6 +422,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'channel';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'post_problem_id_fkey';
+            columns: ['problem_id'];
+            isOneToOne: false;
+            referencedRelation: 'post';
+            referencedColumns: ['solved_problem_id'];
           },
         ];
       };
