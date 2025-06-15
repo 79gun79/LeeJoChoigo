@@ -93,7 +93,6 @@ export default function ListCard({
       return;
     }
     console.log(me);
-
     switch (channel) {
       case 1:
         navigate(`/problems/coding/${data.id}`);

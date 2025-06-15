@@ -1,14 +1,41 @@
 import PageName from '../../components/ui/PageName';
 import EditText from '../../components/edit/EditText';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { EditTextHandle } from '../../components/edit/EditText.types';
 import supabase from '../../utils/supabase';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
+import { getPost } from '../../api/postApi';
+import { notify } from '../../utils/customAlert';
 
 export default function QuestionEdit() {
   const [tags, setTags] = useState<string[]>([]);
   const editTextRef = useRef<EditTextHandle>(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const postId = searchParams.get('id');
+
+  useEffect(() => {
+    if (!postId) return;
+    console.log('postId :', postId);
+    const fetchPost = async () => {
+      const post = await getPost(Number(postId));
+      if (!post) {
+        notify('존재하지 않는 게시글입니다.', 'error');
+        navigate('/questions');
+        return;
+      }
+
+      setTags(post.tags ?? []);
+      editTextRef.current?.setPostData({
+        title: post.title!,
+        content: post.content!,
+        imageUrl: post.image,
+        imageFileName: post.image_public_id,
+      });
+    };
+
+    fetchPost();
+  }, [postId]);
 
   const handleAddTag = (tag: string) => {
     if (tags.length >= 5) return;
@@ -27,6 +54,16 @@ export default function QuestionEdit() {
 
     const { title, content, imageUrl, imageFileName } = postData;
 
+    if (!title.trim()) {
+      notify('제목을 입력해주세요.', 'warning');
+      return;
+    }
+
+    if (!content.trim()) {
+      notify('내용을 입력해주세요.', 'warning');
+      return;
+    }
+
     const { data: userData } = await supabase.auth.getUser();
     const authorId = userData.user?.id;
 
@@ -35,27 +72,50 @@ export default function QuestionEdit() {
       return;
     }
 
-    const { error } = await supabase.from('post').insert([
-      {
-        title,
-        content,
-        image: imageUrl,
-        image_public_id: imageFileName,
-        channel: 5,
-        tags,
-        is_yn: true,
-        author: authorId,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      },
-    ]);
+    if (postId) {
+      const { error } = await supabase
+        .from('post')
+        .update({
+          title,
+          content,
+          image: imageUrl,
+          image_public_id: imageFileName,
+          tags,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', Number(postId))
+        .eq('author', authorId);
 
-    if (error) {
-      console.error('저장 실패', error);
-      alert('등록 실패');
+      if (error) {
+        notify('수정 실패', 'error');
+        return;
+      }
+
+      notify('수정 성공', 'success');
     } else {
-      alert('등록 성공!');
+      const { error } = await supabase.from('post').insert([
+        {
+          title,
+          content,
+          image: imageUrl,
+          image_public_id: imageFileName,
+          tags,
+          channel: 5,
+          is_yn: true,
+          author: authorId,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+      ]);
+
+      if (error) {
+        notify('등록 실패', 'error');
+        return;
+      }
+
+      notify('등록 성공', 'success');
     }
+
     navigate('/questions');
   };
 
@@ -74,7 +134,7 @@ export default function QuestionEdit() {
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
           <button className="button-lg gray">취소</button>
           <button className="button-lg" onClick={handleSubmit}>
-            작성하기
+            {postId ? '수정하기' : '작성하기'}
           </button>
         </div>
       </div>

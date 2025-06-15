@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Heart} from 'lucide-react';
+import { ChevronDown, ChevronRight, Heart } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -10,64 +10,83 @@ import dateFormat from '../../utils/dateFormat';
 import '../../styles/markdown.css';
 import 'highlight.js/styles/github.css';
 import ProblemDescRender from '../common/ProblemDescRender';
-import { toggleLike } from '../../api/postApi';
-
+import { deletePost, toggleLike } from '../../api/postApi';
+import { useNavigate } from 'react-router';
+import { getChannelPath } from '../../utils/channelPath';
+import { notify } from '../../utils/customAlert';
 
 export default function DetailText({ data }: { data: PostDetailType }) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [isShow, setIsShow] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkIsLiked = async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      const userId = userData.user?.id;
-      if (!userId) return;
+    supabase.auth.getUser().then(({ data }) => {
+      setCurrentUserId(data.user?.id ?? null);
+    });
+  }, []);
 
-      const liked = likedUsers.some((l: { user: string }) => l.user === userId);
-      setIsLiked(liked);
-    };
-
-    checkIsLiked();
-  }, [likedUsers]);
+  useEffect(() => {
+    if (!currentUserId) return;
+    const liked = likedUsers.some(
+      (l: { user: string }) => l.user === currentUserId,
+    );
+    setIsLiked(liked);
+  }, [likedUsers, currentUserId]);
 
   const handleLike = useCallback(async () => {
-    if (isLiking) return;
-    setIsLiking(true);
-
-    const { data: userData } = await supabase.auth.getUser();
-    const userId = userData.user?.id;
-    if (!userId) {
+    if (isLiking || !currentUserId) {
       alert('로그인이 필요합니다.');
-      setIsLiking(false);
       return;
     }
 
+    setIsLiking(true);
     const optimisticLiked = !isLiked;
 
     setIsLiked(optimisticLiked);
     setLikedUsers((prev: { user: string }[]) =>
       optimisticLiked
-        ? [...prev, { user: userId }]
-        : prev.filter((l) => l.user !== userId),
+        ? [...prev, { user: currentUserId }]
+        : prev.filter((l) => l.user !== currentUserId),
     );
 
     try {
-      // 좋아요 토글 및 알림 생성은 postApi의 toggleLike 함수에서 처리
-      await toggleLike(data.id, userId);
+      await toggleLike(data.id, currentUserId);
     } catch (e) {
       console.error('좋아요 처리 실패:', e);
       setIsLiked(!optimisticLiked);
       setLikedUsers((prev: { user: string }[]) =>
         !optimisticLiked
-          ? [...prev, { user: userId }]
-          : prev.filter((l) => l.user !== userId),
+          ? [...prev, { user: currentUserId }]
+          : prev.filter((l) => l.user !== currentUserId),
       );
     } finally {
       setIsLiking(false);
     }
-  }, [isLiked, isLiking, data.id]);
+  }, [isLiked, isLiking, currentUserId, data.id]);
+
+  const handleEdit = () => {
+    navigate(`${getChannelPath(data.channel)}/write?id=${data.id}`);
+  };
+
+  const handleDelete = async () => {
+    if (!currentUserId) return;
+
+    try {
+      await deletePost(data.id, currentUserId);
+      notify('삭제되었습니다', 'success');
+
+      navigate(getChannelPath(data.channel));
+    } catch (e) {
+      console.log('실패 : ', e);
+      notify('삭제에 실패했습니다.', 'error');
+    }
+  };
+
+  const isAuthor = currentUserId === data.author?.id;
 
   return (
     <>
@@ -191,15 +210,23 @@ export default function DetailText({ data }: { data: PostDetailType }) {
         </div>
       </div>
       {/* 게시글 하단 */}
-      <div className="flex w-full gap-2 border-t border-[#ccc]">
-        <div className="flex-grow"></div>
-        <button className="text-gray4 px-[10px] py-[6px] text-[10px] md:text-xs lg:text-sm">
-          수정
-        </button>
-        <button className="px-[10px] py-[6px] text-[10px] text-[#FF6d6d] md:text-xs lg:text-sm">
-          삭제
-        </button>
-      </div>
+      {isAuthor && (
+        <div className="flex w-full gap-2 border-t border-[#ccc]">
+          <div className="flex-grow"></div>
+          <button
+            onClick={handleEdit}
+            className="text-gray4 px-[10px] py-[6px] text-[10px] md:text-xs lg:text-sm"
+          >
+            수정
+          </button>
+          <button
+            onClick={handleDelete}
+            className="px-[10px] py-[6px] text-[10px] text-[#FF6d6d] md:text-xs lg:text-sm"
+          >
+            삭제
+          </button>
+        </div>
+      )}
     </>
   );
 }

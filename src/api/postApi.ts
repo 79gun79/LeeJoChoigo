@@ -17,7 +17,8 @@ export const getChannelPosts = async (channelId: number) => {
         )
       `,
       )
-      .eq('channel', channelId);
+      .eq('channel', channelId)
+      .eq('is_yn', true);
 
     return posts;
   } catch (e) {
@@ -200,4 +201,17 @@ export const toggleLike = async (postId: number, userId: string) => {
   }
 
   return true;
+};
+
+export const deletePost = async (postId: number, userId: string) => {
+  const { error } = await supabase
+    .from('post')
+    .update({
+      is_yn: false,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', postId)
+    .eq('author', userId); // 작성자 본인만 수정
+
+  if (error) throw error;
 };

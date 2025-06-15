@@ -12,6 +12,7 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 import supabase from '../../utils/supabase';
 import { PulseLoader } from 'react-spinners';
 import ProblemDescRender from '../common/ProblemDescRender';
+import { useLocation } from 'react-router';
 
 const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   { tags, onAddTag, onRemoveTag, isLoading, problem },
@@ -20,7 +21,8 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   // const problemDescRef = useRef<Editor>(null);
   const editorRef = useRef<Editor>(null);
   const titleRef = useRef<HTMLInputElement>(null);
-
+  const location = useLocation();
+  const questionPage = location.pathname.startsWith('/questions');
   // useEffect(() => {
   //   if (!isLoading && problemDescRef.current && problemId && problemDesc) {
   //     const instance = problemDescRef.current.getInstance();
@@ -42,6 +44,10 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
       const imageUrl = match?.[0]?.match(/\((.*?)\)/)?.[1] || null;
       const imageFileName = imageUrl?.split('/').pop() || null;
       return { title, content, imageUrl, imageFileName, tags };
+    },
+    setPostData: ({ title, content }) => {
+      if (titleRef.current) titleRef.current.value = title;
+      editorRef.current?.getInstance().setMarkdown(content);
     },
   }));
 
@@ -140,16 +146,18 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
             />
             <div className="mb-2.5 flex items-end">
               <p className="text-sm md:text-base lg:text-lg">내용</p>
-              <div className="ml-auto flex gap-2">
-                <button className="button-sm">
-                  <StickyNote className="h-[14px] w-[12px] shrink-0" /> 템플릿
-                  불러오기
-                </button>
-                <button className="button-sm">
-                  <StickyNote className="h-[14px] w-[12px] shrink-0" />
-                  템플릿 저장
-                </button>
-              </div>
+              {!questionPage && (
+                <div className="ml-auto flex gap-2">
+                  <button className="button-sm">
+                    <StickyNote className="h-[14px] w-[12px] shrink-0" /> 템플릿
+                    불러오기
+                  </button>
+                  <button className="button-sm">
+                    <StickyNote className="h-[14px] w-[12px] shrink-0" /> 템플릿
+                    저장
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
