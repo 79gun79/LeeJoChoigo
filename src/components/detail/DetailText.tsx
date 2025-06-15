@@ -11,13 +11,29 @@ import '../../styles/markdown.css';
 import 'highlight.js/styles/github.css';
 import ProblemDescRender from '../common/ProblemDescRender';
 import { toggleLike } from '../../api/postApi';
-import HandleToggleFollow from '../atoms/HandleToggleFollow';
+import FollowButton from '../atoms/FollowButton';
+import { checkIsFollowing } from '../../api/userApi';
 
 export default function DetailText({ data }: { data: PostDetailType }) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [isShow, setIsShow] = useState(false);
+
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    const check = async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      const myId = userData.user?.id;
+      if (!myId) return;
+
+      const following = await checkIsFollowing(myId, data.author.id);
+      setIsFollowing(following);
+    };
+
+    check();
+  }, []);
 
   useEffect(() => {
     const checkIsLiked = async () => {
@@ -91,7 +107,10 @@ export default function DetailText({ data }: { data: PostDetailType }) {
               <p className="text-xs text-[#464646] md:text-sm lg:text-base">
                 {data.author.fullname}
               </p>
-              <HandleToggleFollow />
+              <FollowButton
+                targetUserId={data.author.id}
+                isFollowingInitial={isFollowing}
+              />
             </div>
           </div>
           <p className="ml-auto text-right text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">

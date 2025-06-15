@@ -19,6 +19,15 @@ export const followUser = async (followerId: string, followingId: string) => {
     .from('follow')
     .insert([{ follower: followerId, user: followingId }]);
   if (error) throw error;
+  await supabase.from('notification').insert([
+    {
+      actor: followerId,
+      recipient: followingId,
+      type: 'follow',
+      is_seen: false,
+      created_at: new Date().toISOString(),
+    },
+  ]);
   return data;
 };
 
@@ -29,4 +38,23 @@ export const unfollowUser = async (followerId: string, followingId: string) => {
     .eq('follower', followerId)
     .eq('user', followingId);
   if (error) throw error;
+};
+
+export const checkIsFollowing = async (
+  followerId: string,
+  followingId: string,
+): Promise<boolean> => {
+  const { data, error } = await supabase
+    .from('follow')
+    .select('id')
+    .eq('follower', followerId)
+    .eq('user', followingId)
+    .maybeSingle();
+
+  if (error) {
+    console.error('팔로우 상태 조회 오류:', error);
+    return false;
+  }
+
+  return !!data;
 };
