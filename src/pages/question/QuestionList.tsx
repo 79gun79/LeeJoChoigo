@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { useModalStore } from '../../stores/modalStore';
 import { useAuthStore } from '../../stores/authStore';
 import Loading from '../../components/ui/Loading';
+import Nopost from '../../components/ui/Nopost';
 
 export default function QuestionList() {
   const channel = useLoaderData<ChannelType>();
@@ -100,14 +101,10 @@ export default function QuestionList() {
                 </div>
               ) : posts && posts.length > 0 ? (
                 getSortedPosts(posts).map((post) => (
-                  <ListCard key={post.id} data={post} />
+                  <ListCard key={post.id} data={post} channel={5} />
                 ))
               ) : (
-                <div className="col-span-2 py-12 text-center">
-                  <h3 className="t1 mb-2 font-medium text-black">
-                    포스트가 없습니다.
-                  </h3>
-                </div>
+                <Nopost />
               )}
             </div>
             <button

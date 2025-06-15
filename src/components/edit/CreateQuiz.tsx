@@ -90,8 +90,31 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
 
     return (
       <>
-        <div className="lg:grid lg:grid-cols-2 lg:gap-12">
-          <form className="col-span-2 w-full">
+        <form className="md:grid md:grid-cols-2 md:gap-12">
+          <div className="mb-2 flex flex-col gap-[10px]">
+            <p className="text-sm md:text-base lg:text-lg">퀴즈생성</p>
+            {quizList.map((v, i) => (
+              <div key={i} ref={i === quizList.length - 1 ? currentPos : null}>
+                <QuizComponent
+                  index={i}
+                  item={v}
+                  onDelete={deleteQuiz}
+                  onChange={updateQuiz}
+                  onValid={(valid) => changeValid(i, valid)}
+                />
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addQuiz}
+              disabled={quizList.length >= 10 ? true : false}
+              className="bg-gray3 t3 flex h-[40px] w-full cursor-pointer items-center justify-center rounded-[4px] text-white transition hover:shadow-lg active:bg-black disabled:hidden"
+            >
+              <Plus size={24} />
+              <span className="ml-[3px]">문제 추가</span>
+            </button>
+          </div>
+          <div className="col-span-2 w-full md:col-span-1">
             <div className="mb-[25px] md:mb-[35px]">
               <p className="mb-2.5 text-sm md:text-base lg:text-lg">제목</p>
               <input
@@ -171,35 +194,9 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
                   </div>
                 </div>
               </div>
-              <div className="mb-2 flex flex-col gap-[10px]">
-                <p className="text-sm md:text-base">퀴즈생성</p>
-                {quizList.map((v, i) => (
-                  <div
-                    key={i}
-                    ref={i === quizList.length - 1 ? currentPos : null}
-                  >
-                    <QuizComponent
-                      index={i}
-                      item={v}
-                      onDelete={deleteQuiz}
-                      onChange={updateQuiz}
-                      onValid={(valid) => changeValid(i, valid)}
-                    />
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addQuiz}
-                  disabled={quizList.length >= 10 ? true : false}
-                  className="bg-gray3 t3 flex h-[40px] w-full cursor-pointer items-center justify-center rounded-[4px] text-white transition hover:shadow-lg active:bg-black disabled:hidden"
-                >
-                  <Plus size={24} />
-                  <span className="ml-[3px]">문제 추가</span>
-                </button>
-              </div>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </>
     );
   },

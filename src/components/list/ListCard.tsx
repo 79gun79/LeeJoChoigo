@@ -1,4 +1,4 @@
-import { Heart, MessageSquare } from 'lucide-react';
+import { Check, Heart, MessageSquare } from 'lucide-react';
 import Avartar from '../ui/Avartar';
 import type { PostType, User } from '../../types';
 import { previewMarkdown } from '../../utils/markdown';
@@ -13,9 +13,11 @@ import { toggleLike } from '../../api/postApi';
 export default function ListCard({
   data,
   channel,
+  hideComment,
 }: {
   data: PostType;
   channel: number;
+  hideComment?: boolean; // 댓글을 가려야하는 경우
 }) {
   const session = useAuthStore((state) => state.session);
   const [isPending, setPending] = useState(false);
@@ -92,10 +94,22 @@ export default function ListCard({
     }
     console.log(me);
 
-    if (channel === 3) {
-      navigate(`/solutions/coding/${data.id}`);
-    } else {
-      navigate(`/questions/${data.id}`);
+    switch (channel) {
+      case 1:
+        navigate(`/problems/coding/${data.id}`);
+        break;
+      case 2:
+        navigate(`/problems/job/${data.id}`);
+        break;
+      case 3:
+        navigate(`/solutions/coding/${data.id}`);
+        break;
+      case 4:
+        navigate(`/solutions/job/${data.id}`);
+        break;
+      default:
+        navigate(`/questions/${data.id}`);
+        break;
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -166,17 +180,25 @@ export default function ListCard({
                       {likedUsers.length}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
-                    <span className="text-[10px] md:text-xs lg:text-sm">
-                      {data.comment?.length ?? 0}
-                    </span>
-                  </div>
+                  {!hideComment && (
+                    <div className="flex items-center gap-1">
+                      <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
+                      <span className="text-[10px] md:text-xs lg:text-sm">
+                        {data.comment?.length ?? 0}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
             <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
               <Avartar user={data.author} />
+              {(me?.solved ?? []).includes(data.id) && (
+                <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
+                  <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />
+                  풀이됨
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -28,7 +28,7 @@ export default function HomePage() {
             ]}
             typeSpeed={70} //타이핑 속도
             backSpeed={30} //타이핑 지우는 속도
-            backDelay={5000}
+            backDelay={1000}
             loop={true} //반복할건지
           />
           <img

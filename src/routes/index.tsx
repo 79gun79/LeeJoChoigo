@@ -30,12 +30,13 @@ import { getPostDetail } from '../loader/post.loader';
 import HomePage from '../pages/HomePage';
 import QuizSolutionDetail from '../pages/solution/quiz/QuizSolutionDetail';
 import QuizSolutionEdit from '../pages/solution/quiz/QuizSolutionEdit';
+import Loading from '../components/ui/Loading';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
-    hydrateFallbackElement: <></>,
+    hydrateFallbackElement: <Loading />,
     loader: fetchUserData,
     children: [
       {

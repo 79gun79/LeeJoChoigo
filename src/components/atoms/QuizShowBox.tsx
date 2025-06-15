@@ -13,14 +13,14 @@ export default function QuizShowBox({
     <>
       <div
         className={twMerge(
-          'flex h-10 items-center justify-center bg-white px-[10px] py-[10px] shadow-md md:min-w-[330px]',
+          'flex h-10 items-center justify-center bg-white px-[10px] py-[10px] shadow-md md:min-w-[140px]',
           `${correct ? 'bg-green-info/50' : 'bg-white'}`,
         )}
       >
         <div className="bg-sub3 text-main flex h-5 w-5 items-center justify-center rounded-full text-sm font-semibold">
           {id}
         </div>
-        <label className="text-main t4 w-full px-[10px] md:text-sm">
+        <label className="text-main w-full px-[10px] text-sm md:text-xs lg:text-sm">
           {value}
         </label>
       </div>

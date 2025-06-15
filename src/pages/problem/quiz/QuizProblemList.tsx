@@ -1,5 +1,4 @@
 import { Plus } from 'lucide-react';
-import QuizListCard from '../../../components/list/QuizListCard';
 import SearchBox from '../../../components/search/SearchBox';
 import SearchListTop from '../../../components/search/SearchListTop';
 import CheckItem from '../../../components/ui/CheckItem';
@@ -11,6 +10,8 @@ import { getChannelCategoryPosts, getChannelPosts } from '../../../api/postApi';
 import { useAuthStore } from '../../../stores/authStore';
 import { useModalStore } from '../../../stores/modalStore';
 import Loading from '../../../components/ui/Loading';
+import ListCard from '../../../components/list/ListCard';
+import Nopost from '../../../components/ui/Nopost';
 
 export default function QuizProblemList() {
   const channel = useLoaderData<ChannelType>();
@@ -113,14 +114,15 @@ export default function QuizProblemList() {
                 </div>
               ) : posts && posts.length > 0 ? (
                 getSortedPosts(posts).map((post) => (
-                  <QuizListCard key={post.id} data={post} />
+                  <ListCard
+                    key={post.id}
+                    channel={2}
+                    data={post}
+                    hideComment={true}
+                  />
                 ))
               ) : (
-                <div className="col-span-2 py-12 text-center">
-                  <h3 className="t1 mb-2 font-medium text-black">
-                    포스트가 없습니다.
-                  </h3>
-                </div>
+                <Nopost />
               )}
             </div>
           </div>

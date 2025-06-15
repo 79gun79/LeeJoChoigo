@@ -34,7 +34,7 @@ button {
     @apply w-full rounded-sm border border-[#ccc] px-3.5 py-4 text-xs md:text-sm lg:text-base;
   }
   .button-sm {
-    @apply flex items-center gap-1 rounded-sm bg-[var(--color-main)] px-2 py-1 text-[10px] text-white md:text-xs lg:text-sm;
+    @apply hover:bg-main/80 bg-main flex items-center gap-1 rounded-sm px-2 py-1 text-[10px] text-white md:text-xs lg:text-sm;
   }
   .button-sm.gray {
     @apply hover:bg-gray1 bg-[var(--color-bg-white)] text-[var(--color-gray4)];
