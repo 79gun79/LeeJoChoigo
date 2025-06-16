@@ -11,6 +11,7 @@ import {
   fetchProfileComments,
   fetchProfilePost,
 } from '../../loader/profile.loader';
+import { useLocation } from 'react-router';
 
 export default function ProfileList({
   userId,
@@ -19,11 +20,14 @@ export default function ProfileList({
   userId: string;
   currentTab: number;
 }) {
+  const location = useLocation();
+  const receivedvMenu = location.state?.menu || 0;
+
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState<ProfilePosts | null>();
   const [comments, setComments] = useState<ProfileComments | null>();
   const [isSelectActive, setIsSelectActive] = useState(false);
-  const [selectFilterMenu, setSelectFilterMenu] = useState(0);
+  const [selectFilterMenu, setSelectFilterMenu] = useState(receivedvMenu);
   const [filterPosts, setFilterPosts] = useState<ProfilePosts | null>();
   const [filterComments, setFilterComments] =
     useState<ProfileComments | null>();
@@ -36,7 +40,9 @@ export default function ProfileList({
     { title: '개발직군 풀이', id: 4 },
     { title: '질문게시판', id: 5 },
   ];
-
+  useEffect(() => {
+    setSelectFilterMenu(receivedvMenu);
+  }, [receivedvMenu]);
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -45,12 +51,12 @@ export default function ProfileList({
           const posts = await fetchProfilePost(userId);
           setPosts(posts);
           // 탭변경시 전체글로 초기화
-          setSelectFilterMenu(0);
+          // setSelectFilterMenu(0);
         } else {
           const comments = await fetchProfileComments(userId);
           setComments(comments);
           // 탭변경시 전체글로 초기화
-          setSelectFilterMenu(0);
+          // setSelectFilterMenu(0);
         }
       } catch (error) {
         console.error('데이터를 불러오지 못했습니다.', error);

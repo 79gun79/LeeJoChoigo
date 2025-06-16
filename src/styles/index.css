@@ -72,6 +72,12 @@ button {
     @apply bg-main absolute -bottom-1/2 -z-1 h-0 w-full origin-center rounded-full transition-all duration-800 ease-out group-hover:h-[200%] group-hover:w-[200%];
   }
 
+  .hover-box:hover {
+    @apply shadow-[0_0_10px_rgba(0,0,0,0.15)] transition-shadow duration-400 ease-out;
+  }
+  .md-hover-none:hover {
+    @apply md:shadow-none md:transition-none;
+  }
   .hover-box:hover .hover {
     @apply underline;
   }
