@@ -12,6 +12,7 @@ import { useModalStore } from '../../../stores/modalStore';
 import Loading from '../../../components/ui/Loading';
 import ListCard from '../../../components/list/ListCard';
 import Nopost from '../../../components/ui/Nopost';
+import { searchPosts } from '../../../api/searchApi';
 
 export default function QuizProblemList() {
   const channel = useLoaderData<ChannelType>();
@@ -19,11 +20,13 @@ export default function QuizProblemList() {
   const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
 
+  const [initPosts, setInitPosts] = useState<PostsType>([]);
   const [posts, setPosts] = useState<PostsType>([]);
   const [category, setCategory] = useState<string>('');
   const [isPending, setPending] = useState(false);
 
   const [sortType, setSortType] = useState<'latest' | 'popular'>('latest');
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +34,7 @@ export default function QuizProblemList() {
       try {
         if (category === '') {
           const channelPosts = await getChannelPosts(channel.id);
+          setInitPosts(channelPosts);
           setPosts(channelPosts);
         } else {
           const channelPosts = await getChannelCategoryPosts(
@@ -80,6 +84,16 @@ export default function QuizProblemList() {
     navigate('/problems/write');
   };
 
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      setPosts(initPosts);
+      return;
+    }
+
+    const search = await searchPosts(query, channel.id);
+    if (search) setPosts(search);
+  };
+
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -87,7 +101,11 @@ export default function QuizProblemList() {
           <PageName title={channel.name} />
         </div>
         <div className="mb-[25px] md:mb-[35px]">
-          <SearchBox />
+          <SearchBox
+            query={query}
+            setQuery={setQuery}
+            onSearch={handleSearch}
+          />
         </div>
         <div>
           <div className="mb-2">

@@ -83,7 +83,7 @@ export default function QuestionList() {
       return;
     }
 
-    const search = await searchPosts(query, 5);
+    const search = await searchPosts(query, channel.id);
     if (search) setPosts(search);
   };
   return (
@@ -119,7 +119,7 @@ export default function QuestionList() {
                 </div>
               ) : posts && posts.length > 0 ? (
                 getSortedPosts(posts).map((post) => (
-                  <ListCard key={post.id} data={post} channel={5} />
+                  <ListCard key={post.id} data={post} channel={channel.id} />
                 ))
               ) : (
                 <Nopost />

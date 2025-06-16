@@ -1,8 +1,8 @@
 import AlgorithmListCard from '../../../components/list/AlgorithmListCard';
-import SearchBox from '../../../components/search/SearchBox';
+// import SearchBox from '../../../components/search/SearchBox';
 import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
-import SearchListTop from '../../../components/search/SearchListTop';
+// import SearchListTop from '../../../components/search/SearchListTop';
 import { useEffect, useRef } from 'react';
 import { useProblemStore } from '../../../stores/problemStore';
 import { useLoaderData } from 'react-router';
@@ -39,8 +39,6 @@ export default function AlgorithmProblemList() {
     });
   }, []);
 
-  useEffect(() => {}, []);
-
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -48,7 +46,11 @@ export default function AlgorithmProblemList() {
           <PageName title={channel.name} />
         </div>
         <div className="mb-[25px] md:mb-[35px]">
-          <SearchBox />
+          {/* <SearchBox
+            query={query}
+            setQuery={setQuery}
+            onSearch={handleSearch}
+          /> */}
           <TagSearch />
         </div>
         <div>
@@ -60,9 +62,7 @@ export default function AlgorithmProblemList() {
             </div>
           </div>
           <div>
-            <div className="mb-1">
-              <SearchListTop />
-            </div>
+            <div className="mb-1">{/* <SearchListTop /> */}</div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {problems &&
                 problems.map((problem) => (
