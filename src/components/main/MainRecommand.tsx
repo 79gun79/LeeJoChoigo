@@ -15,8 +15,8 @@ export default function MainRecommand({
 }) {
   const [isActive, setIsActive] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [randomAlgorithms, setRandomAlgorithms] = useState<PostType[]>([]);
-  const [randomJobs, setRandomJobs] = useState<PostType[]>([]);
+  const [randomAlgorithms, setRandomAlgorithms] = useState<PostType[]>();
+  const [randomJobs, setRandomJobs] = useState<PostType[]>();
 
   useEffect(() => {
     const postsFetch = async () => {
@@ -38,6 +38,7 @@ export default function MainRecommand({
 
         setRandomAlgorithms(randomAlgos);
         setRandomJobs(randomJobs);
+
         setIsLoading(false);
       } catch (error) {
         console.error('데이터를 불러오지 못했습니다.', error);
@@ -82,7 +83,7 @@ export default function MainRecommand({
             </button>
             <div className="hidden group-[.active]:block md:block md:px-3">
               <div className="absolute top-[44px] left-0 flex w-full flex-col gap-2.5 md:static md:gap-0">
-                {isLoading && isUserLoading
+                {isLoading || isUserLoading
                   ? [...Array(3)].map((_, i) => (
                       <div
                         key={i}
@@ -131,44 +132,45 @@ export default function MainRecommand({
             </button>
             <div className="hidden group-[.active]:block md:block md:px-4">
               <div className="absolute top-[44px] left-0 flex w-full flex-col gap-2.5 md:static md:gap-0">
-                {isLoading && isUserLoading ? (
-                  [...Array(3)].map((_, i) => (
-                    <div
-                      key={i}
-                      className={`rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:p-4 ${i !== 2 && 'md:border-b'}`}
-                    >
-                      <div className="mb-2.5 h-3.5 w-1/5 animate-pulse rounded-sm bg-gray-200 md:h-4 lg:h-5"></div>
-                      <div className="mb-2.5 h-4 w-3/5 animate-pulse rounded-sm bg-gray-200 md:h-5 lg:h-6"></div>
-                      <div className="h-3 w-4/5 animate-pulse rounded-sm bg-gray-200 md:h-4 lg:h-5"></div>
-                    </div>
-                  ))
-                ) : randomJobs && randomJobs.length !== 0 ? (
-                  randomJobs.map((problem, index) => (
-                    <Link
-                      to={`/problems/job/${problem?.id}`}
-                      key={index}
-                      className={`md-hover-none hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:py-4 ${index + 1 !== randomJobs.length && 'md:border-b'}`}
-                    >
-                      <p className="text-sub1 line-clamp-1 text-xs font-semibold md:text-sm">
-                        {problem.tags}
-                      </p>
-                      <p className="hover line-clamp-1 text-sm font-bold md:text-base">
-                        {problem.title}
-                      </p>
-                      <p className="line-clamp-1 text-xs md:text-sm">
-                        {problem.content}
-                      </p>
-                    </Link>
-                  ))
-                ) : (
-                  <div className="text-gray3 flex h-[300px] w-full flex-col items-center justify-center gap-3 text-center text-sm md:col-span-2">
-                    <span className="text-5xl">🥳</span>
-                    <p>
-                      모든 문제를 마스터 하셨습니다! <br /> 더 이상 추천 해드릴
-                      문제가 없습니다!
-                    </p>
-                  </div>
-                )}
+                {isLoading || isUserLoading
+                  ? [...Array(3)].map((_, i) => (
+                      <div
+                        key={i}
+                        className={`rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:p-4 ${i !== 2 && 'md:border-b'}`}
+                      >
+                        <div className="mb-2.5 h-3.5 w-1/5 animate-pulse rounded-sm bg-gray-200 md:h-4 lg:h-5"></div>
+                        <div className="mb-2.5 h-4 w-3/5 animate-pulse rounded-sm bg-gray-200 md:h-5 lg:h-6"></div>
+                        <div className="h-3 w-4/5 animate-pulse rounded-sm bg-gray-200 md:h-4 lg:h-5"></div>
+                      </div>
+                    ))
+                  : randomJobs &&
+                    (randomJobs.length !== 0 ? (
+                      randomJobs.map((problem, index) => (
+                        <Link
+                          to={`/problems/job/${problem?.id}`}
+                          key={index}
+                          className={`md-hover-none hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:py-4 ${index + 1 !== randomJobs.length && 'md:border-b'}`}
+                        >
+                          <p className="text-sub1 line-clamp-1 text-xs font-semibold md:text-sm">
+                            {problem.tags}
+                          </p>
+                          <p className="hover line-clamp-1 text-sm font-bold md:text-base">
+                            {problem.title}
+                          </p>
+                          <p className="line-clamp-1 text-xs md:text-sm">
+                            {problem.content}
+                          </p>
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="text-gray3 flex h-[300px] w-full flex-col items-center justify-center gap-3 text-center text-sm md:col-span-2">
+                        <span className="text-5xl">🥳</span>
+                        <p>
+                          모든 문제를 마스터 하셨습니다! <br /> 더 이상 추천
+                          해드릴 문제가 없습니다!
+                        </p>
+                      </div>
+                    ))}
               </div>
               <Link
                 to="/problems/job"
