@@ -70,9 +70,9 @@ export default function AlgorithmListCard({
             <div className="ml-auto flex shrink-0 gap-3">
               <div className="flex items-center gap-1">
                 <Heart
-                  className={`w-3.5 transition md:w-4 lg:w-4.5 ${
+                  className={`w-3.5 cursor-pointer transition md:w-4 lg:w-4.5 ${
                     isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-[#000000]'
-                  } ${isLiking ? 'cursor-not-allowed opacity-40' : 'cursor-pointer'}`}
+                  }`}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleLike(e);
