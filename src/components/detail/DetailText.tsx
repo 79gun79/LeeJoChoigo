@@ -15,6 +15,7 @@ import { deletePost, toggleLike } from '../../api/postApi';
 import { useNavigate } from 'react-router';
 import { getChannelPath } from '../../utils/channelPath';
 import { notify } from '../../utils/customAlert';
+import ProfileLinkNavigation from '../atoms/profileLinkNavigation';
 
 export default function DetailText({ data }: { data: PostDetailType }) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
@@ -103,21 +104,12 @@ export default function DetailText({ data }: { data: PostDetailType }) {
         </p>
         <div className="flex items-end pb-3.5">
           <div className="flex items-center gap-2.5 md:gap-3 lg:gap-3.5">
-            <div className="h-[32px] w-[32px] overflow-hidden rounded-full border border-[#eee] md:h-[36px] md:w-[36px] lg:h-[40px] lg:w-[40px]">
-              <img
-                className="h-full w-full object-cover"
-                src={
-                  data.author?.image ||
-                  'https://www.studiopeople.kr/common/img/default_profile.png'
-                }
-              />
-            </div>
-            <div>
-              <p className="text-xs text-[#464646] md:text-sm lg:text-base">
-                {data.author.fullname}
-              </p>
-              <FollowButton targetUserId={data.author.id} />
-            </div>
+            <ProfileLinkNavigation
+              fullname={data.author.fullname}
+              userId={data.author.id}
+              image={data.author.image}
+            />
+            <FollowButton targetUserId={data.author.id} />
           </div>
           <p className="ml-auto text-right text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
             {dateFormat(data.created_at)}

@@ -67,7 +67,7 @@ export default function FollowButton({
     <button
       onClick={handleToggleFollow}
       disabled={loading}
-      className={`t4 rounded-md px-2 py-0.5 ${
+      className={`t4 rounded-md px-2 py-0.5 whitespace-nowrap ${
         isFollowing ? 'bg-gray3 text-white' : 'bg-main text-white'
       } ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
     >
