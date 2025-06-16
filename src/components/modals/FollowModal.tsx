@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import supabase from '../../utils/supabase';
 import FollowButton from '../atoms/FollowButton';
 import ProfileLinkNavigation from '../atoms/profileLinkNavigation';
-import { useLoaderData } from 'react-router';
 import type { fetchProfile } from '../../loader/profile.loader';
 
 interface FollowModalProps {
