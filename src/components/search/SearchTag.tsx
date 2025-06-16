@@ -57,7 +57,11 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
         <div
           className={`mt-2.5 rounded-sm bg-[#F2F2F2] px-2.5 py-3 md:px-3.5 md:py-4 lg:px-4.5 lg:py-4.5`}
         >
-          <form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
             <div
               className={`mb-2 flex rounded-sm border bg-white ${hasText ? 'border-[var(--color-sub1)]' : 'border-gray1'}`}
             >
