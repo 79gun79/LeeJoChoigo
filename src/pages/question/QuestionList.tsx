@@ -4,7 +4,7 @@ import SearchBox from '../../components/search/SearchBox';
 import SearchListTop from '../../components/search/SearchListTop';
 import TagSearch from '../../components/search/SearchTag';
 import PageName from '../../components/ui/PageName';
-// import TagItem from '../../components/ui/TagItem';
+import TagItem from '../../components/ui/TagItem';
 import type { ChannelType, PostsType } from '../../types';
 import { useLoaderData } from 'react-router';
 import { useNavigate } from 'react-router';
@@ -29,6 +29,7 @@ export default function QuestionList() {
   const [sortType, setSortType] = useState<'latest' | 'popular'>('latest');
   const [query, setQuery] = useState('');
 
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       setPending(true);
@@ -86,6 +87,21 @@ export default function QuestionList() {
     const search = await searchPosts(query, channel.id);
     if (search) setPosts(search);
   };
+
+  const handleTagSearch = (tags: string[]) => {
+    setSelectedTags(tags);
+
+    if (tags.length === 0) {
+      setPosts(initPosts);
+      return;
+    }
+
+    const filtered = (initPosts ?? []).filter((post) =>
+      tags.some((tag) => post.tags?.includes(tag)),
+    );
+
+    setPosts(filtered);
+  };
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -98,14 +114,15 @@ export default function QuestionList() {
             setQuery={setQuery}
             onSearch={handleSearch}
           />
-          <TagSearch />
+          <TagSearch onSearch={handleTagSearch} channelId={channel.id} />
         </div>
         <div>
           <div className="mb-2">
-            <p className="mb-1.5 text-sm md:text-base">선택한 태그</p>
+            <p className="mb-1.5 text-sm md:text-base"></p>
             <ul className="flex flex-wrap gap-2.5">
-              <li>{/* <TagItem></TagItem> */}</li>
-              <li>{/* <TagItem></TagItem> */}</li>
+              {selectedTags.map((tag) => (
+                <TagItem key={tag} label={tag} />
+              ))}
             </ul>
           </div>
           <div>
