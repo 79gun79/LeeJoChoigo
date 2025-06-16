@@ -1,9 +1,9 @@
 import { create } from 'zustand';
-import type { PostType } from '../types/post';
 import { fetchBjProblems } from '../utils/fetchBjProblems';
+import type { BJPostType } from '../types';
 
 type PostStore = {
-  problems: { page: number; posts: PostType[] }[];
+  problems: { page: number; posts: BJPostType[] }[];
   setProblemsByPage: (page: number) => Promise<void>;
 };
 
@@ -19,6 +19,6 @@ export const useProblemStore = create<PostStore>((set, get) => ({
         problems: [...state.problems, { page, posts: data }],
       }));
     }
-    console.log('저장완료 : ', get().problems.length + '개');
+    console.log('problem store : ', get().problems.length + '개');
   },
 }));

@@ -1,9 +1,10 @@
 import { Check, Heart } from 'lucide-react';
-import type { PostType } from '../../types/post';
 import { calculateLevel } from '../../utils/calculateLevel';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore';
 import { useModalStore } from '../../stores/modalStore';
+import { usePostLike } from '../../hooks/usePostLike';
+import type { BJPostType } from '../../types';
 
 // 임시로 지정한 props 입니다
 export default function AlgorithmListCard({
@@ -11,11 +12,15 @@ export default function AlgorithmListCard({
   problem,
 }: {
   solve?: boolean;
-  problem: PostType;
+  problem: BJPostType;
 }) {
   const session = useAuthStore((state) => state.session);
   const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
+  const { isLiked, likedUsers, isLiking, handleLike } = usePostLike({
+    postId: problem.id,
+    initialLikes: problem.like,
+  });
 
   let level = '레벨 없음';
   if (problem.solved_problem_level)
@@ -64,8 +69,18 @@ export default function AlgorithmListCard({
             </span>
             <div className="ml-auto flex shrink-0 gap-3">
               <div className="flex items-center gap-1">
-                <Heart className="w-3.5 md:w-4 lg:w-4.5" />
-                <span className="text-[10px] md:text-xs lg:text-sm">5</span>
+                <Heart
+                  className={`w-3.5 transition md:w-4 lg:w-4.5 ${
+                    isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-[#000000]'
+                  } ${isLiking ? 'cursor-not-allowed opacity-40' : 'cursor-pointer'}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleLike(e);
+                  }}
+                />
+                <span className="text-[10px] md:text-xs lg:text-sm">
+                  {likedUsers.length}
+                </span>
               </div>
             </div>
           </div>
