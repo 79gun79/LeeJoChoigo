@@ -3,13 +3,15 @@ import { ArrowDownUp } from 'lucide-react';
 type Props = {
   sortType: 'latest' | 'popular';
   setSortType: (type: 'latest' | 'popular') => void;
+  query?: string;
 };
-export default function SearchListTop({ sortType, setSortType }: Props) {
+export default function SearchListTop({ sortType, setSortType, query }: Props) {
   return (
     <>
       <div className="flex items-center text-sm md:text-base">
         <p>
-          검색어 : <span className="text-[var(--color-sub1)]">검색 키워드</span>
+          검색어 :
+          <span className="text-sub1 font-bold">{query || '검색 키워드'}</span>
         </p>
         <div className="ml-auto">
           <div className="relative">

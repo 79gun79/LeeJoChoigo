@@ -92,7 +92,11 @@ export default function QuizSolutionList() {
           </div>
           <div>
             <div className="mb-1">
-              <SearchListTop sortType={sortType} setSortType={setSortType} />
+              <SearchListTop
+                query={query}
+                sortType={sortType}
+                setSortType={setSortType}
+              />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {isPending ? (

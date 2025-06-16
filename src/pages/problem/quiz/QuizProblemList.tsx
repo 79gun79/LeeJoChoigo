@@ -110,7 +110,7 @@ export default function QuizProblemList() {
         <div>
           <div className="mb-2">
             <p className="mb-1.5 text-sm md:text-base">
-              카테고리 유형 : <b>{category}</b>
+              선택한 유형 : <b>{category || '전체'}</b>
             </p>
             <div className="flex flex-wrap gap-2.5">
               <div className="mb-4 flex flex-wrap gap-2.5">
@@ -123,7 +123,11 @@ export default function QuizProblemList() {
           </div>
           <div>
             <div className="mb-1">
-              <SearchListTop sortType={sortType} setSortType={setSortType} />
+              <SearchListTop
+                query={query}
+                sortType={sortType}
+                setSortType={setSortType}
+              />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {isPending ? (

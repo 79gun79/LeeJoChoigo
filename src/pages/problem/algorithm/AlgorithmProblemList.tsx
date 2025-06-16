@@ -2,7 +2,7 @@ import AlgorithmListCard from '../../../components/list/AlgorithmListCard';
 // import SearchBox from '../../../components/search/SearchBox';
 import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
-// import SearchListTop from '../../../components/search/SearchListTop';
+import SearchListTop from '../../../components/search/SearchListTop';
 import { useEffect, useRef } from 'react';
 import { useProblemStore } from '../../../stores/problemStore';
 import { useLoaderData } from 'react-router';
@@ -16,6 +16,8 @@ export default function AlgorithmProblemList() {
   const endListRef = useRef<HTMLDivElement | null>(null);
   const isFetched = useRef(false);
   const channel = useLoaderData<ChannelType>();
+
+  const { sortType, setSortType } = useProblemStore();
 
   useEffect(() => {
     if (isFetched.current) return;
@@ -37,7 +39,7 @@ export default function AlgorithmProblemList() {
         if (current) observer.unobserve(current);
       };
     });
-  }, []);
+  }, [setProblemsByPage]);
 
   return (
     <>
@@ -62,7 +64,9 @@ export default function AlgorithmProblemList() {
             </div>
           </div>
           <div>
-            <div className="mb-1">{/* <SearchListTop /> */}</div>
+            <div className="mb-1">
+              <SearchListTop sortType={sortType} setSortType={setSortType} />
+            </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {problems &&
                 problems.map((problem) => (
@@ -76,9 +80,6 @@ export default function AlgorithmProblemList() {
                   </h3>
                 </div>
               )}
-
-              {/* <AlgorithmListCard />
-              <AlgorithmListCard /> */}
             </div>
             <div ref={endListRef}></div>
           </div>

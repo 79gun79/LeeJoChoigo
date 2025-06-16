@@ -9,6 +9,7 @@ import supabase from '../../../utils/supabase';
 import { notify } from '../../../utils/customAlert';
 import { useAuthStore } from '../../../stores/authStore';
 import { getPost } from '../../../api/postApi';
+import { getUser } from '../../../api/userApi';
 
 const APIKEY = import.meta.env.VITE_API_GEMINI_KEY;
 const CHANNELID = 3;
@@ -104,6 +105,16 @@ export default function AlgorithmSolutionEdit() {
       notify('수정 성공', 'success');
     } else {
       if (params) {
+        const userData = await getUser(session?.user.id as string);
+        const prevSolved = userData?.solved ?? [];
+        if (!prevSolved.includes(parseInt(params, 10))) {
+          const { data } = await supabase
+            .from('user')
+            .update({ solved: [...prevSolved, parseInt(params, 10)] })
+            .eq('id', userData?.id as string)
+            .select();
+          console.log(data);
+        }
         const { error } = await supabase.from('post').insert([
           {
             title,
