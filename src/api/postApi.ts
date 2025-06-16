@@ -43,7 +43,8 @@ export const getChannelCategoryPosts = async (
           user
         ),
         comment (
-          id
+          id,
+          is_yn
         )
       `,
       )

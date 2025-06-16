@@ -8,18 +8,23 @@ import { useEffect, useState } from 'react';
 import { getChannelPosts } from '../../../api/postApi';
 import Loading from '../../../components/ui/Loading';
 import ListCard from '../../../components/list/ListCard';
+import { searchPosts } from '../../../api/searchApi';
 
 export default function QuizSolutionList() {
   const channel = useLoaderData<ChannelType>();
+  const [initPosts, setInitPosts] = useState<PostsType>([]);
   const [posts, setPosts] = useState<PostsType>([]);
   const [isPending, setPending] = useState(false);
 
   const [sortType, setSortType] = useState<'latest' | 'popular'>('latest');
+  const [query, setQuery] = useState('');
+
   useEffect(() => {
     const fetchData = async () => {
       setPending(true);
       try {
         const channelPosts = await getChannelPosts(channel.id);
+        setInitPosts(channelPosts);
         setPosts(channelPosts);
       } catch (e) {
         console.error(e);
@@ -53,6 +58,16 @@ export default function QuizSolutionList() {
 
     return sortedPosts;
   };
+
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      setPosts(initPosts);
+      return;
+    }
+
+    const search = await searchPosts(query, channel.id);
+    if (search) setPosts(search);
+  };
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -60,7 +75,11 @@ export default function QuizSolutionList() {
           <PageName title={channel.name} />
         </div>
         <div className="mb-[25px] md:mb-[35px]">
-          <SearchBox />
+          <SearchBox
+            query={query}
+            setQuery={setQuery}
+            onSearch={handleSearch}
+          />
           <TagSearch />
         </div>
         <div>
@@ -82,7 +101,7 @@ export default function QuizSolutionList() {
                 </div>
               ) : posts && posts.length > 0 ? (
                 getSortedPosts(posts).map((post) => (
-                  <ListCard key={post.id} data={post} channel={4} />
+                  <ListCard key={post.id} data={post} channel={channel.id} />
                 ))
               ) : (
                 <div className="col-span-2 py-12 text-center">
