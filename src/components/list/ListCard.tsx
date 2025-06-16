@@ -129,8 +129,8 @@ export default function ListCard({
         </div>
       ) : (
         <div onClick={handleClick} className="cursor-pointer hover:shadow-md">
-          <div className="w-full rounded-sm border border-[#ccc]">
-            <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
+          <div className="h-full w-full rounded-sm border border-[#ccc] md:flex md:flex-col">
+            <div className="px-3 pt-3.5 pb-3 md:flex md:h-full md:flex-col md:px-4 md:pt-4 md:pb-3.5">
               <div className="flex gap-2.5">
                 <div className="w-[calc(100%-110px)] md:w-[calc(100%-130px)] lg:w-[calc(100%-150px)]">
                   <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
@@ -161,7 +161,7 @@ export default function ListCard({
                   </li>
                 ))}
               </ul>
-              <div className="flex items-end">
+              <div className="flex items-end md:mt-auto">
                 <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
                   {dateFormat(data.created_at)}
                 </span>
@@ -191,7 +191,7 @@ export default function ListCard({
                 </div>
               </div>
             </div>
-            <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
+            <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:mt-auto md:px-4 md:py-2.5">
               <Avartar user={data.author} />
               {(me?.solved ?? []).includes(data.id) && (
                 <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">

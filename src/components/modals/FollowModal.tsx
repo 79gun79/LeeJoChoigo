@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import supabase from '../../utils/supabase';
 import FollowButton from '../atoms/FollowButton';
+import ProfileLinkNavigation from '../atoms/profileLinkNavigation';
+import type { fetchProfile } from '../../loader/profile.loader';
 
 interface FollowModalProps {
   userId: string;
@@ -9,18 +11,13 @@ interface FollowModalProps {
   onClose: () => void;
 }
 
-interface UserInfo {
-  id: string;
-  fullname: string;
-  image: string | null;
-}
-
+export type User = NonNullable<Awaited<ReturnType<typeof fetchProfile>>>;
 export default function FollowModal({
   userId,
   type,
   onClose,
 }: FollowModalProps) {
-  const [users, setUsers] = useState<UserInfo[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,7 +33,7 @@ export default function FollowModal({
 
       const { data, error } = await supabase
         .from('follow')
-        .select(`${relationColumn}(id, fullname, image)`)
+        .select(`${relationColumn}(id, fullname, image, email)`)
         .eq(filterColumn, userId);
 
       if (error) {
@@ -87,16 +84,14 @@ export default function FollowModal({
           ) : (
             <ul className="divide-y">
               {users.map((user) => (
-                <li key={user.id} className="flex items-center gap-3 py-2">
-                  <img
-                    src={
-                      user.image ||
-                      'https://www.studiopeople.kr/common/img/default_profile.png'
-                    }
-                    alt={user.fullname}
-                    className="h-8 w-8 rounded-full object-cover md:h-10 md:w-10"
+                <li key={user.id} className="flex items-center py-2">
+                  <ProfileLinkNavigation
+                    fullname={user.fullname}
+                    userId={user.id}
+                    image={user.image}
+                    onClose={onClose}
+                    email={user.email}
                   />
-                  <span className="t4">{user.fullname}</span>
                   <FollowButton targetUserId={user.id} />
                 </li>
               ))}

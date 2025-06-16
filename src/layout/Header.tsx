@@ -70,68 +70,73 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex h-[55px] w-full items-center justify-between overflow-visible border-b border-[#cccccc] px-4 md:h-[60px] md:justify-around md:px-0">
-        <div className="flex gap-3">
-          <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
-            <Menu className="w-[22px]" />
-          </button>
-          <button
-            className="text-main cursor-pointer"
-            onClick={() => navigate('/')}
-          >
-            <img
-              className="ml-[-8px] h-8 w-28 object-cover md:h-10 md:w-32"
-              src={logo}
-            />
-          </button>
-        </div>
-
-        <Navigation onProtectedRoute={isLoginModalHandler} />
-
-        {isLogin && (
-          <div className="relative flex items-start gap-4 pt-2">
-            {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
-            <AlarmLayout />
-
-            <img
-              src={userInfo.avatar_url || userDefault}
-              alt="프로필"
-              className="h-7 cursor-pointer rounded-full lg:h-8"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-            />
-            {dropdownOpen && (
-              <DropdownMenu
-                items={[
-                  { name: '마이페이지', path: `/profile/${session?.user.id}` },
-                  { name: '로그아웃', path: '/logout' },
-                ]}
-                isOpen={dropdownOpen}
-                onItemClick={handleDropdownClick}
-                onClose={() => setDropdownOpen(false)}
-                className="absolute top-full right-0"
+      <header className="shadow-sm">
+        <div className="flex h-[55px] w-full items-center justify-between overflow-visible px-4 md:h-[75px] md:px-8 lg:px-14 xl:mx-auto xl:max-w-6xl xl:px-0">
+          <div className="flex h-full gap-3">
+            <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
+              <Menu className="w-[22px]" />
+            </button>
+            <button
+              className="text-main flex h-full cursor-pointer items-center justify-center overflow-hidden"
+              onClick={() => navigate('/')}
+            >
+              <img
+                className="ml-[-8px] w-30 object-cover md:w-34 lg:w-38"
+                src={logo}
               />
-            )}
+            </button>
           </div>
-        )}
 
-        {!isLogin && (
-          <div className="flex items-center gap-4">
-            <button
-              className="t5 rounded-[4px] border border-[#060606] px-3 py-1"
-              onClick={() =>
-                navigate('/login', { state: { from: location.pathname } })
-              }
-            >
-              로그인
-            </button>
-            <button
-              className="bg-main t5 border-main rounded-[4px] border px-3 py-1 text-white"
-              onClick={() => navigate('/signup')}
-            >
-              가입
-            </button>
-          </div>
-        )}
+          <Navigation onProtectedRoute={isLoginModalHandler} />
+
+          {isLogin && (
+            <div className="relative flex items-start gap-4 pt-2">
+              {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
+              <AlarmLayout />
+
+              <img
+                src={userInfo.avatar_url || userDefault}
+                alt="프로필"
+                className="h-7 cursor-pointer rounded-full lg:h-8"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              />
+              {dropdownOpen && (
+                <DropdownMenu
+                  items={[
+                    {
+                      name: '마이페이지',
+                      path: `/profile/${session?.user.id}`,
+                    },
+                    { name: '로그아웃', path: '/logout' },
+                  ]}
+                  isOpen={dropdownOpen}
+                  onItemClick={handleDropdownClick}
+                  onClose={() => setDropdownOpen(false)}
+                  className="absolute top-full right-0"
+                />
+              )}
+            </div>
+          )}
+
+          {!isLogin && (
+            <div className="flex items-center gap-4">
+              <button
+                className="t5 rounded-[4px] border border-[#060606] px-3 py-1"
+                onClick={() =>
+                  navigate('/login', { state: { from: location.pathname } })
+                }
+              >
+                로그인
+              </button>
+              <button
+                className="bg-main t5 border-main rounded-[4px] border px-3 py-1 text-white"
+                onClick={() => navigate('/signup')}
+              >
+                가입
+              </button>
+            </div>
+          )}
+        </div>
       </header>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </>
