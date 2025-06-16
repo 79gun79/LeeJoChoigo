@@ -39,10 +39,11 @@ export default function DetailText({ data }: { data: PostDetailType }) {
   }, [likedUsers, currentUserId]);
 
   const handleLike = useCallback(async () => {
-    if (isLiking || !currentUserId) {
+    if (!currentUserId) {
       alert('로그인이 필요합니다.');
       return;
     }
+    if (isLiking) return;
 
     setIsLiking(true);
     const optimisticLiked = !isLiked;

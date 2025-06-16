@@ -158,6 +158,12 @@ export const toggleLike = async (postId: number, userId: string) => {
   if (error) throw error;
 
   if (existing) {
+    const { error: notifDeleteError } = await supabase
+      .from('notification')
+      .delete()
+      .eq('like', existing.id);
+    if (notifDeleteError) throw notifDeleteError;
+
     const { error: deleteError } = await supabase
       .from('like')
       .delete()
