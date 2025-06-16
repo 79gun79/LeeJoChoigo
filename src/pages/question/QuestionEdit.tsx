@@ -132,7 +132,9 @@ export default function QuestionEdit() {
           onRemoveTag={handleRemoveTag}
         />
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
-          <button className="button-lg gray">취소</button>
+          <button onClick={() => navigate(-1)} className="button-lg gray">
+            취소
+          </button>
           <button className="button-lg" onClick={handleSubmit}>
             {postId ? '수정하기' : '작성하기'}
           </button>

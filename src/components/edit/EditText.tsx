@@ -12,10 +12,9 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 import supabase from '../../utils/supabase';
 import { PulseLoader } from 'react-spinners';
 import ProblemDescRender from '../common/ProblemDescRender';
-import { useLocation } from 'react-router';
 import { useAuthStore } from '../../stores/authStore';
 import { notify } from '../../utils/customAlert';
-import { te } from 'date-fns/locale';
+//import { te } from 'date-fns/locale';
 
 const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   { tags, onAddTag, onRemoveTag, isLoading, problem },
@@ -24,8 +23,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   // const problemDescRef = useRef<Editor>(null);
   const editorRef = useRef<Editor>(null);
   const titleRef = useRef<HTMLInputElement>(null);
-  const location = useLocation();
-  const questionPage = location.pathname.startsWith('/questions');
+
   const userId = useAuthStore((state) => state.session)?.user.id;
 
   // useEffect(() => {
@@ -197,7 +195,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
             <div className="mb-2.5 flex items-end">
               <p className="text-sm md:text-base lg:text-lg">내용</p>
 
-              {!questionPage && (
+              {problem && (
                 <div className="ml-auto flex gap-2">
                   <button
                     className="button-sm"
