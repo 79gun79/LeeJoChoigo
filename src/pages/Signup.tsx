@@ -112,7 +112,7 @@ export default function Signup() {
                 작성해주세요.
               </div>
             ) : (
-              <div className="t6 mb-[10px] text-green-600 md:mb-[14px]">
+              <div className="t5 mb-[10px] text-green-600 md:mb-[14px]">
                 올바른 형식입니다.
               </div>
             )}
