@@ -93,7 +93,6 @@ export default function ListCard({
       return;
     }
     console.log(me);
-
     switch (channel) {
       case 1:
         navigate(`/problems/coding/${data.id}`);
@@ -184,7 +183,8 @@ export default function ListCard({
                     <div className="flex items-center gap-1">
                       <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
                       <span className="text-[10px] md:text-xs lg:text-sm">
-                        {data.comment?.length ?? 0}
+                        {data.comment?.filter((c) => c.is_yn === true).length ??
+                          0}
                       </span>
                     </div>
                   )}

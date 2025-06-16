@@ -20,6 +20,12 @@ export interface EditTextHandle {
     imageFileName: string | null;
     tags: string[];
   };
+  setPostData: (data: {
+    title: string;
+    content: string;
+    imageUrl: string | null;
+    imageFileName: string | null;
+  }) => void;
 }
 
 export interface CreateQuizProps {
