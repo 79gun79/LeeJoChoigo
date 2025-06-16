@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import supabase from '../../utils/supabase';
 import FollowButton from '../atoms/FollowButton';
 
@@ -42,7 +43,6 @@ export default function FollowModal({
         console.error(`${type} 목록을 불러오는데 실패했습니다:`, error);
         setUsers([]);
       } else {
-        // 관계 필드만 추출
         const extracted = data.map((item: any) =>
           type === 'follower' ? item.follower : item.user,
         );
@@ -55,9 +55,16 @@ export default function FollowModal({
     fetchFollows();
   }, [type, userId]);
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="w-full max-w-sm rounded-xl bg-white p-5 shadow-lg">
+  // 다른 부모 요소의 stacking context에 갇혀서 겹치는 문제가 생김.
+  // React Portal 사용
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+      <div
+        className="fixed inset-0 bg-black/30"
+        onClick={onClose}
+        aria-label="모달 닫기"
+      />
+      <div className="relative z-10 w-full max-w-sm rounded-xl bg-white p-5 shadow-lg">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="t3">
             {type === 'follower' ? '팔로워 목록' : '팔로잉 목록'}
@@ -79,25 +86,23 @@ export default function FollowModal({
         ) : (
           <ul className="divide-y">
             {users.map((user) => (
-              <>
-                <li key={user.id} className="flex items-center gap-3 py-2">
-                  <img
-                    src={
-                      user.image ||
-                      'https://www.studiopeople.kr/common/img/default_profile.png'
-                    }
-                    alt={user.fullname}
-                    className="h-8 w-8 rounded-full object-cover md:h-10 md:w-10"
-                  />
-                  <span className="t4">{user.fullname}</span>
-
-                  <FollowButton targetUserId={user.id} />
-                </li>
-              </>
+              <li key={user.id} className="flex items-center gap-3 py-2">
+                <img
+                  src={
+                    user.image ||
+                    'https://www.studiopeople.kr/common/img/default_profile.png'
+                  }
+                  alt={user.fullname}
+                  className="h-8 w-8 rounded-full object-cover md:h-10 md:w-10"
+                />
+                <span className="t4">{user.fullname}</span>
+                <FollowButton targetUserId={user.id} />
+              </li>
             ))}
           </ul>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
