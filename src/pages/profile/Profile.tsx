@@ -85,7 +85,7 @@ export default function Profile() {
                   </button>
                 )}
               </div>
-              <FollowInfo />
+              <FollowInfo userId={user.id} />
             </div>
           </div>
         </div>
