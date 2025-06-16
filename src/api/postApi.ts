@@ -13,7 +13,8 @@ export const getChannelPosts = async (channelId: number) => {
           user
         ),
         comment (
-          id
+          id,
+          is_yn
         )
       `,
       )
