@@ -51,12 +51,12 @@ export default function FollowButton({
     }
   };
 
-  if (loading || targetUserId === undefined) return null;
+  if (targetUserId === undefined) return null;
   return (
     <button
       onClick={handleToggleFollow}
       disabled={loading}
-      className={`rounded-md px-2 py-0.5 text-sm ${
+      className={`t4 rounded-md px-2 py-0.5 ${
         isFollowing ? 'bg-gray3 text-white' : 'bg-main text-white'
       } ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
     >
