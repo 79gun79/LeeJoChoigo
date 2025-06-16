@@ -1,6 +1,6 @@
 import AlgorithmListCard from '../../../components/list/AlgorithmListCard';
 // import SearchBox from '../../../components/search/SearchBox';
-import TagSearch from '../../../components/search/SearchTag';
+// import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
 import SearchListTop from '../../../components/search/SearchListTop';
 import { useEffect, useRef } from 'react';
@@ -53,7 +53,7 @@ export default function AlgorithmProblemList() {
             setQuery={setQuery}
             onSearch={handleSearch}
           /> */}
-          <TagSearch />
+          {/* <TagSearch /> */}
         </div>
         <div>
           <div className="mb-2">

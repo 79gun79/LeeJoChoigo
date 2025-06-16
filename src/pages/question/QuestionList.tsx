@@ -30,6 +30,7 @@ export default function QuestionList() {
   const [query, setQuery] = useState('');
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       setPending(true);
