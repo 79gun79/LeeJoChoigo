@@ -4,7 +4,7 @@ import FollowButton from '../atoms/FollowButton';
 
 interface FollowModalProps {
   userId: string;
-  type: 'follower' | 'following'; // follower = 나를 팔로우한 사람들, following = 내가 팔로우한 사람들
+  type: 'follower' | 'following';
   onClose: () => void;
 }
 
@@ -57,7 +57,7 @@ export default function FollowModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="w-full max-w-sm rounded-lg bg-white p-5 shadow-lg">
+      <div className="w-full max-w-sm rounded-xl bg-white p-5 shadow-lg">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="t3">
             {type === 'follower' ? '팔로워 목록' : '팔로잉 목록'}
@@ -66,11 +66,12 @@ export default function FollowModal({
             ✕
           </button>
         </div>
+        <hr />
 
         {loading ? (
-          <p className="text-gray3 text-center text-sm">불러오는 중...</p>
+          <p className="text-gray3 t5 text-center">불러오는 중...</p>
         ) : users.length === 0 ? (
-          <p className="text-gray3 text-center text-sm">
+          <p className="text-gray3 t5 text-center">
             {type === 'follower'
               ? '팔로워가 없습니다.'
               : '팔로잉한 유저가 없습니다.'}

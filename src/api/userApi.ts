@@ -14,6 +14,9 @@ export const getUser = async (userId: string) => {
   }
 };
 export const followUser = async (followerId: string, followingId: string) => {
+  if (followerId === followingId) {
+    throw new Error('자기 자신 팔로우함');
+  }
   const alreadyFollowing = await checkIsFollowing(followerId, followingId);
   if (alreadyFollowing) return;
 

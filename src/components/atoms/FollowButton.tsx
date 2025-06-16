@@ -9,12 +9,21 @@ export default function FollowButton({
 }) {
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isOwnProfile, setIsOwnProfile] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchFollowStatus = async () => {
       const { data: userData } = await supabase.auth.getUser();
       const myId = userData.user?.id;
-      if (!myId || myId === targetUserId) {
+
+      if (!myId || !targetUserId) {
+        setLoading(false);
+        return;
+      }
+
+      // 본인 계정인지 확인
+      if (myId === targetUserId) {
+        setIsOwnProfile(true);
         setLoading(false);
         return;
       }
@@ -51,7 +60,9 @@ export default function FollowButton({
     }
   };
 
-  if (targetUserId === undefined) return null;
+  // 본인 계정이거나 targetUserId가 없으면 아무것도 렌더링하지 않음
+  if (isOwnProfile || !targetUserId) return null;
+
   return (
     <button
       onClick={handleToggleFollow}
