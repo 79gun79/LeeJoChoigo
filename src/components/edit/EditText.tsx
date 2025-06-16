@@ -12,6 +12,9 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 import supabase from '../../utils/supabase';
 import { PulseLoader } from 'react-spinners';
 import ProblemDescRender from '../common/ProblemDescRender';
+import { useAuthStore } from '../../stores/authStore';
+import { notify } from '../../utils/customAlert';
+//import { te } from 'date-fns/locale';
 
 const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   { tags, onAddTag, onRemoveTag, isLoading, problem },
@@ -20,6 +23,8 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   // const problemDescRef = useRef<Editor>(null);
   const editorRef = useRef<Editor>(null);
   const titleRef = useRef<HTMLInputElement>(null);
+
+  const userId = useAuthStore((state) => state.session)?.user.id;
 
   // useEffect(() => {
   //   if (!isLoading && problemDescRef.current && problemId && problemDesc) {
@@ -43,11 +48,60 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
       const imageFileName = imageUrl?.split('/').pop() || null;
       return { title, content, imageUrl, imageFileName, tags };
     },
+    setPostData: ({ title, content }) => {
+      if (titleRef.current) titleRef.current.value = title;
+      editorRef.current?.getInstance().setMarkdown(content);
+    },
   }));
 
   const openPopup = () => {
     window.open(`https://www.acmicpc.net/problem/${problem?.id}`, '_blank');
   };
+
+  const saveTemplate = async () => {
+    const content = editorRef.current?.getInstance().getMarkdown() || null;
+
+    try {
+      if (userId) {
+        const { error } = await supabase
+          .from('template')
+          .upsert({ content, user: userId }, { onConflict: 'user' })
+          .select();
+
+        if (error) {
+          console.error('템플릿 저장에 실패했습니다 ', error.message);
+        }
+
+        notify('템플릿이 저장되었습니다', 'success');
+      }
+    } catch (e) {
+      console.error('템플릿 저장에 실패했습니다 ', e);
+    }
+  };
+
+  const fetchTemplate = async () => {
+    try {
+      if (userId) {
+        const { data: template, error } = await supabase
+          .from('template')
+          .select('content')
+          .eq('user', userId)
+          .single();
+
+        if (error) {
+          console.error('템플릿 불러오기에 실패했습니다 ', error.message);
+        }
+        if (template && template.content) {
+          const instance = editorRef.current?.getInstance();
+          instance.setMarkdown(template.content);
+          instance.getCurrentModeEditor().moveCursorToStart();
+        }
+      }
+    } catch (e) {
+      console.error('템플릿 불러오기에 실패했습니다', e);
+    }
+  };
+
   return (
     <>
       <div className="lg:grid lg:grid-cols-2 lg:gap-12">
@@ -140,16 +194,27 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
             />
             <div className="mb-2.5 flex items-end">
               <p className="text-sm md:text-base lg:text-lg">내용</p>
-              <div className="ml-auto flex gap-2">
-                <button className="button-sm">
-                  <StickyNote className="h-[14px] w-[12px] shrink-0" /> 템플릿
-                  불러오기
-                </button>
-                <button className="button-sm">
-                  <StickyNote className="h-[14px] w-[12px] shrink-0" />
-                  템플릿 저장
-                </button>
-              </div>
+
+              {problem && (
+                <div className="ml-auto flex gap-2">
+                  <button
+                    className="button-sm"
+                    type="button"
+                    onClick={fetchTemplate}
+                  >
+                    <StickyNote className="h-[14px] w-[12px] shrink-0" /> 템플릿
+                    불러오기
+                  </button>
+                  <button
+                    className="button-sm"
+                    type="button"
+                    onClick={saveTemplate}
+                  >
+                    <StickyNote className="h-[14px] w-[12px] shrink-0" />
+                    템플릿 저장
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">

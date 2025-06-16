@@ -3,6 +3,7 @@ import type { CommentType } from '../../types';
 
 import { deleteComment } from '../../api/postApi';
 import dateFormat from '../../utils/dateFormat';
+import { notify } from '../../utils/customAlert';
 
 type Props = {
   data: CommentType;
@@ -15,14 +16,13 @@ export default function CommentItem({ data, onDelete, isAuthor }: Props) {
   const date = updated_at ? updated_at : created_at;
 
   const handleDelete = async () => {
-    const confirmed = window.confirm('댓글을 삭제할까요?');
-    if (!confirmed) return;
-
     try {
       await deleteComment(id);
       onDelete();
+      notify('댓글 삭제 성공', 'success');
     } catch (e) {
       console.error('댓글 삭제 실패:', e);
+      notify('댓글 삭제 실패', 'error');
     }
   };
   return (

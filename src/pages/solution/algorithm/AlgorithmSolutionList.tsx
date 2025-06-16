@@ -9,21 +9,68 @@ import type { ChannelType, PostsType } from '../../../types';
 import { useLoaderData } from 'react-router';
 import { useEffect, useState } from 'react';
 import { getChannelPosts } from '../../../api/postApi';
+import { searchPosts } from '../../../api/searchApi';
+import Loading from '../../../components/ui/Loading';
+import Nopost from '../../../components/ui/Nopost';
 
 export default function AlgorithmSolutionList() {
   const channel = useLoaderData<ChannelType>();
+  const [initPosts, setInitPosts] = useState<PostsType>([]);
   const [posts, setPosts] = useState<PostsType>([]);
+  const [isPending, setPending] = useState(false);
+
+  const [sortType, setSortType] = useState<'latest' | 'popular'>('latest');
+  const [query, setQuery] = useState('');
   useEffect(() => {
     const fetchData = async () => {
+      setPending(true);
       try {
         const channelPosts = await getChannelPosts(channel.id);
+        setInitPosts(channelPosts);
         setPosts(channelPosts);
       } catch (e) {
         console.error(e);
+      } finally {
+        setPending(false);
       }
     };
     fetchData();
   }, [channel.id]);
+
+  const getSortedPosts = (posts: PostsType) => {
+    if (!posts) return [];
+    const sortedPosts = [...posts];
+
+    if (sortType === 'latest') {
+      return sortedPosts.sort(
+        (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at),
+      );
+    }
+
+    if (sortType === 'popular') {
+      return sortedPosts.sort((a, b) => {
+        const aLikes = a.like?.length ?? 0;
+        const bLikes = b.like?.length ?? 0;
+
+        if (aLikes !== bLikes) return bLikes - aLikes;
+
+        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
+      });
+    }
+
+    return sortedPosts;
+  };
+
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      setPosts(initPosts);
+      return;
+    }
+
+    const search = await searchPosts(query, channel.id);
+    if (search) setPosts(search);
+  };
+
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -31,7 +78,11 @@ export default function AlgorithmSolutionList() {
           <PageName title={channel.name} />
         </div>
         <div className="mb-[25px] md:mb-[35px]">
-          <SearchBox />
+          <SearchBox
+            query={query}
+            setQuery={setQuery}
+            onSearch={handleSearch}
+          />
           <TagSearch />
         </div>
         <div>
@@ -44,21 +95,19 @@ export default function AlgorithmSolutionList() {
           </div>
           <div>
             <div className="mb-1">
-              <SearchListTop />
+              <SearchListTop sortType={sortType} setSortType={setSortType} />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {/* <ListCard image="sda" />
-              <ListCard image="sda" solve={true} />
-              <ListCard solve={true} />
-              <ListCard solve={false} /> */}
-              {posts &&
-                posts.map((post) => <ListCard key={post.id} data={post} channel={channel.id} />)}
-              {posts && posts.length === 0 && (
-                <div className="col-span-2 py-12 text-center">algorithm
-                  <h3 className="t1 mb-2 font-medium text-black">
-                    포스트가 없습니다.
-                  </h3>
+              {isPending ? (
+                <div className="col-span-2 text-center">
+                  <Loading />
                 </div>
+              ) : posts && posts.length > 0 ? (
+                getSortedPosts(posts).map((post) => (
+                  <ListCard key={post.id} data={post} channel={channel.id} />
+                ))
+              ) : (
+                <Nopost />
               )}
             </div>
           </div>
