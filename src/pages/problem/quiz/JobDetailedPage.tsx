@@ -15,7 +15,7 @@ export default function JobDetailedPage() {
   const post = useLoaderData<PostDetailType>();
   const navigate = useNavigate();
 
-  const quizSolveData = (post.quiz_data || []) as QuizItem[]; // 문제 가져오기
+  const quizSolveData = (post.quiz_data ?? []) as QuizItem[]; // 문제 가져오기
   const session = useAuthStore((state) => state.session);
 
   // 유저가 선택한 답

@@ -25,6 +25,8 @@ export interface EditTextHandle {
     content: string;
     imageUrl: string | null;
     imageFileName: string | null;
+    tags?: string[];
+    quizData?: QuizItem[];
   }) => void;
 }
 
@@ -41,6 +43,14 @@ export interface CreateQuizHandle {
     tags: string[];
     quizData: QuizItem[];
   };
+  setPostData: (data: {
+    title: string;
+    content: string;
+    imageUrl: string | null;
+    imageFileName: string | null;
+    tags: string[];
+    quizData: QuizItem[];
+  }) => void;
 }
 
 export interface SolutionQuizProps {

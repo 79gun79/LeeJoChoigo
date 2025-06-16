@@ -35,6 +35,11 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
         const quizData = quizList;
         return { title, content, imageUrl, imageFileName, tags, quizData };
       },
+      setPostData: ({ title, content, quizData }) => {
+        if (titleRef.current) titleRef.current.value = title;
+        editorRef.current?.getInstance().setMarkdown(content);
+        setQuizList(quizData);
+      },
     }));
 
     const [quizList, setQuizList] = useState<QuizItem[]>([]);
