@@ -55,7 +55,7 @@ export default function FollowModal({
     fetchFollows();
   }, [type, userId]);
 
-  // 다른 부모 요소의 stacking context에 갇혀서 겹치는 문제가 생김.
+  // z-index를 높게 줘도 다른 부모 요소의 stacking context에 갇혀서 겹치는 문제가 생김.
   // React Portal 사용
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center">
