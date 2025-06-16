@@ -2,6 +2,7 @@ import type { getChannelPosts, getPost } from '../api/postApi';
 import type { getUser } from '../api/userApi';
 import type { fetchChannel1 } from '../loader/channel.loader';
 import type { fetchPostDetail, getPostDetail } from '../loader/post.loader';
+import type { fetchBjProblems } from '../utils/fetchBjProblems';
 type ElementType<T> = T extends (infer U)[] ? U : T;
 
 export type ChannelType = NonNullable<
@@ -21,3 +22,7 @@ export type PostDetail = NonNullable<
 >;
 export type Post = NonNullable<Awaited<ReturnType<typeof getPost>>>;
 export type User = Awaited<ReturnType<typeof getUser>>;
+
+export type BJPostType = ElementType<
+  NonNullable<Awaited<ReturnType<typeof fetchBjProblems>>>
+>;

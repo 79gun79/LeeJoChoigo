@@ -9,14 +9,22 @@ export const fetchBjProblems = async (page: number) => {
 
     const { data: post, error } = await supabase
       .from('post')
-      .select('*')
+      .select(
+        `
+        *,
+        like(
+          post,
+          user
+        )
+      `,
+      )
       .eq('channel', 1)
       .range(from, to);
 
     if (error) {
       console.error('문제 데이터 불러오는 것을 실패했습니다.', error);
     }
-    
+
     console.log(`${page} 페이지 불러오기 완료`);
     return post;
   } catch (error) {
