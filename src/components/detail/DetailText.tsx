@@ -10,13 +10,11 @@ import dateFormat from '../../utils/dateFormat';
 import '../../styles/markdown.css';
 import 'highlight.js/styles/github.css';
 import ProblemDescRender from '../common/ProblemDescRender';
-import { toggleLike } from '../../api/postApi';
 import FollowButton from '../atoms/FollowButton';
 import { deletePost, toggleLike } from '../../api/postApi';
 import { useNavigate } from 'react-router';
 import { getChannelPath } from '../../utils/channelPath';
 import { notify } from '../../utils/customAlert';
-
 
 export default function DetailText({ data }: { data: PostDetailType }) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
