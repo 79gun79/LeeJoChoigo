@@ -1,13 +1,14 @@
 import PageName from '../../../components/ui/PageName';
-import { useLoaderData, useNavigate } from 'react-router';
+import { useLoaderData, useNavigate, useSearchParams } from 'react-router';
 import supabase from '../../../utils/supabase';
-import type { CreateQuizHandle } from '../../../components/edit/EditText.types';
-import { useRef, useState } from 'react';
+import type { EditTextHandle } from '../../../components/edit/EditText.types';
+import { useEffect, useRef, useState } from 'react';
 import { notify } from '../../../utils/customAlert';
 import type { PostDetail } from '../../../types';
 import type { QuizItem } from '../../../types/quizList';
 import QuizShowComponent from '../../../components/edit/QuizShowComponent';
 import CreateQuizSolution from '../../../components/edit/CreateQuizSolution';
+import { getPost } from '../../../api/postApi';
 
 export default function QuizSolutionEdit() {
   const problem = useLoaderData<PostDetail>();
@@ -15,8 +16,35 @@ export default function QuizSolutionEdit() {
   const [tags, setTags] = useState<string[]>(problem.tags || ['기타']);
   const quizData = (problem.quiz_data || []) as QuizItem[]; // 문제 가져오기
 
-  const editTextRef = useRef<CreateQuizHandle>(null);
+  const editTextRef = useRef<EditTextHandle>(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const postId = searchParams.get('id');
+
+  useEffect(() => {
+    if (!postId) return;
+    console.log('postId :', postId);
+    const fetchPost = async () => {
+      const post = await getPost(Number(postId));
+      if (!post) {
+        notify('존재하지 않는 게시글입니다.', 'error');
+        navigate('/questions');
+        return;
+      }
+
+      setTags(post.tags ?? []);
+      editTextRef.current?.setPostData({
+        title: post.title!,
+        content: post.content!,
+        imageUrl: post.image,
+        imageFileName: post.image_public_id,
+        tags: post.tags!,
+        quizData: post.quiz_data as QuizItem[],
+      });
+    };
+
+    fetchPost();
+  }, [postId]);
 
   const handleAddTag = (tag: string) => {
     if (tags.length >= 5) return;
@@ -41,28 +69,51 @@ export default function QuizSolutionEdit() {
     const authorId = userData.user?.id;
     if (!authorId) return;
 
-    const { error } = await supabase.from('post').insert([
-      {
-        title,
-        content,
-        tags,
-        image: imageUrl,
-        image_public_id: imageFileName,
-        channel: 4,
-        is_yn: true,
-        author: authorId,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        problem_id: problem.id,
-      },
-    ]);
+    if (postId) {
+      const { error } = await supabase
+        .from('post')
+        .update({
+          title,
+          content,
+          image: imageUrl,
+          image_public_id: imageFileName,
+          tags,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', Number(postId))
+        .eq('author', authorId);
 
-    if (error) {
-      console.error('저장 실패', error);
-      notify('등록 실패!', 'warning');
+      if (error) {
+        notify('수정 실패', 'error');
+        return;
+      }
+
+      notify('수정 성공', 'success');
     } else {
-      notify('등록 성공!', 'success');
+      const { error } = await supabase.from('post').insert([
+        {
+          title,
+          content,
+          tags,
+          image: imageUrl,
+          image_public_id: imageFileName,
+          channel: 4,
+          is_yn: true,
+          author: authorId,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          problem_id: problem.id,
+        },
+      ]);
+
+      if (error) {
+        console.error('저장 실패', error);
+        notify('등록 실패!', 'warning');
+      } else {
+        notify('등록 성공!', 'success');
+      }
     }
+
     navigate('/solutions/job');
   };
   return (

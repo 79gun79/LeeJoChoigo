@@ -58,7 +58,7 @@ const router = createBrowserRouter([
             element: <JobDetailedPage />,
             loader: getPostDetail,
           },
-          { path: 'write', element: <QuizCreateEdit /> },
+          { path: 'job/write', element: <QuizCreateEdit /> },
         ],
       },
       {

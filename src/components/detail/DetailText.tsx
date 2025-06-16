@@ -70,7 +70,11 @@ export default function DetailText({ data }: { data: PostDetailType }) {
   }, [isLiked, isLiking, currentUserId, data.id]);
 
   const handleEdit = () => {
-    navigate(`${getChannelPath(data.channel)}/write?id=${data.id}`);
+    if ([3, 4].includes(data.channel))
+      navigate(
+        `${getChannelPath(data.channel)}/write/${data.problem_id}?id=${data.id}`,
+      );
+    else navigate(`${getChannelPath(data.channel)}/write?id=${data.id}`);
   };
 
   const handleDelete = async () => {

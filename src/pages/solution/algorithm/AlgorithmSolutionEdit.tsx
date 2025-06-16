@@ -2,12 +2,13 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import EditText from '../../../components/edit/EditText';
 import PageName from '../../../components/ui/PageName';
 import type { EditTextHandle } from '../../../components/edit/EditText.types';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 // import { fetchBjProblemById } from '../../../utils/fetchBjProblems';
 import { GoogleGenAI } from '@google/genai';
 import supabase from '../../../utils/supabase';
 import { notify } from '../../../utils/customAlert';
 import { useAuthStore } from '../../../stores/authStore';
+import { getPost } from '../../../api/postApi';
 
 const APIKEY = import.meta.env.VITE_API_GEMINI_KEY;
 const CHANNELID = 3;
@@ -21,8 +22,33 @@ export default function AlgorithmSolutionEdit() {
   const [problemDesc, setProblemDesc] = useState<string>('');
   const session = useAuthStore((state) => state.session);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const postId = searchParams.get('id');
 
   const ai = new GoogleGenAI({ apiKey: APIKEY });
+
+  useEffect(() => {
+    if (!postId) return;
+    console.log('postId :', postId);
+    const fetchPost = async () => {
+      const post = await getPost(Number(postId));
+      if (!post) {
+        notify('존재하지 않는 게시글입니다.', 'error');
+        navigate('/questions');
+        return;
+      }
+
+      setTags(post.tags ?? []);
+      editTextRef.current?.setPostData({
+        title: post.title!,
+        content: post.content!,
+        imageUrl: post.image,
+        imageFileName: post.image_public_id,
+      });
+    };
+
+    fetchPost();
+  }, [postId]);
 
   const handleAddTag = (tag: string) => {
     if (tags.length >= 5) return;
@@ -56,29 +82,52 @@ export default function AlgorithmSolutionEdit() {
       return;
     }
 
-    if (params) {
-      const { error } = await supabase.from('post').insert([
-        {
+    if (postId) {
+      const { error } = await supabase
+        .from('post')
+        .update({
           title,
           content,
           image: imageUrl,
           image_public_id: imageFileName,
-          channel: CHANNELID,
           tags,
-          is_yn: true,
-          author: authorId,
-          created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          problem_id: parseInt(params, 10),
-        },
-      ]);
+        })
+        .eq('id', Number(postId))
+        .eq('author', authorId);
+
       if (error) {
-        console.error('저장 실패', error);
-        notify('등록 실패', 'error');
-      } else {
-        notify('등록 성공!', 'success');
+        notify('수정 실패', 'error');
+        return;
+      }
+
+      notify('수정 성공', 'success');
+    } else {
+      if (params) {
+        const { error } = await supabase.from('post').insert([
+          {
+            title,
+            content,
+            image: imageUrl,
+            image_public_id: imageFileName,
+            channel: CHANNELID,
+            tags,
+            is_yn: true,
+            author: authorId,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            problem_id: parseInt(params, 10),
+          },
+        ]);
+        if (error) {
+          console.error('저장 실패', error);
+          notify('등록 실패', 'error');
+        } else {
+          notify('등록 성공!', 'success');
+        }
       }
     }
+
     navigate('/solutions/coding');
   };
 

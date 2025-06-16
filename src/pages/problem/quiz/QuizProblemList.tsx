@@ -81,7 +81,7 @@ export default function QuizProblemList() {
       setLogInModal(true);
       return;
     }
-    navigate('/problems/write');
+    navigate('/problems/job/write');
   };
 
   const handleSearch = async () => {

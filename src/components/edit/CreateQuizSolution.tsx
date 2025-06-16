@@ -22,6 +22,10 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
         const imageFileName = imageUrl?.split('/').pop() || null;
         return { title, content, imageUrl, imageFileName, tags };
       },
+      setPostData: ({ title, content }) => {
+        if (titleRef.current) titleRef.current.value = title;
+        editorRef.current?.getInstance().setMarkdown(content);
+      },
     }));
 
     // const currentPos = useRef<HTMLDivElement | null>(null);
