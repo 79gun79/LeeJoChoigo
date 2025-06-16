@@ -1,22 +1,38 @@
 import { ReactTyped } from 'react-typed';
 import logo from '../assets/images/dailyCote.png';
-import {
-  ChevronRight,
-  CircleHelp,
-  NotebookPen,
-  PencilRuler,
-  SquarePen,
-} from 'lucide-react';
-import { useState } from 'react';
+import { CircleHelp, NotebookPen, PencilRuler, SquarePen } from 'lucide-react';
 
 import MainUserInfo from '../components/main/MainUserInfo';
 import { Link } from 'react-router';
-import PopularProblem from '../components/main/PopularProblem';
-import MainNewProblem from '../components/main/MainNewProblem';
+import PopularProblem from '../components/main/MainPopularProblem';
+import MainPopularProblem from '../components/main/MainNewProblem';
+import MainRecommand from '../components/main/MainRecommand';
+import { useAuthStore } from '../stores/authStore';
+import { getUser } from '../api/userApi';
+import { useEffect, useState } from 'react';
+import type { User } from '../types';
 
 export default function HomePage() {
-  const [isActive, setIsActive] = useState(0);
-
+  const session = useAuthStore((state) => state.session);
+  const isLogin = useAuthStore((state) => state.isLogin);
+  const [user, setUser] = useState<User>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const userInfoFetch = async () => {
+      if (!session) return;
+      setIsLoading(true);
+      if (session) {
+        try {
+          const userData = await getUser(session?.user.id);
+          setUser(userData);
+          setIsLoading(false);
+        } catch (error) {
+          console.error('데이터를 불러오는데 실패 했습니다.', error);
+        }
+      }
+    };
+    userInfoFetch();
+  }, [session]);
   return (
     <>
       <div className="bg-main">
@@ -41,7 +57,11 @@ export default function HomePage() {
         <div className="flex flex-col gap-6 md:gap-8 lg:gap-10">
           {/* 사용자 정보 */}
           <div className="md:flex md:h-[180px] md:gap-6 lg:h-[200px]">
-            <MainUserInfo />
+            <MainUserInfo
+              user={user}
+              isLogin={isLogin}
+              isUserLoading={isLoading}
+            />
             {/* 바로가기 메뉴 */}
             <div className="md:order-1 md:h-full md:w-full">
               <div className="mb-3 flex gap-1.5">
@@ -100,129 +120,13 @@ export default function HomePage() {
             </div>
           </div>
           {/* 추천문제 */}
-          <div>
-            <div className="mb-3 flex gap-1.5">
-              ✍️
-              <div>
-                <p className="content-title"> 추천 문제</p>
-                <p className="content-title-sub">랜덤 추천 문제를 풀어보세요</p>
-              </div>
-            </div>
-            <div className="relative flex gap-2.5 pb-[300px] md:gap-6 md:pb-0">
-              <div
-                className={`group w-full ${isActive === 0 && 'active'} rounded-sm border-[#ccc] md:relative md:border`}
-              >
-                <button
-                  onClick={() => setIsActive(0)}
-                  className="bg-gray1 group-[.active]:bg-main w-full rounded-sm py-1.5 text-center text-sm group-[.active]:text-white md:rounded-none md:border-b md:border-[#ccc] md:bg-transparent md:px-7 md:py-4 md:text-left md:text-base md:group-[.active]:bg-transparent md:group-[.active]:text-black lg:text-lg"
-                >
-                  알고리즘 문제
-                </button>
-                <div className="hidden group-[.active]:block md:block md:px-3">
-                  <div className="absolute bottom-0 left-0 flex w-full flex-col gap-2.5 md:static md:gap-0">
-                    <div className="hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:border-b md:py-4">
-                      <p className="text-main line-clamp-1 text-xs font-semibold md:text-sm">
-                        알고리즘 Level
-                      </p>
-                      <p className="hover line-clamp-1 text-sm font-bold md:text-base">
-                        알고리즘 문제 제목
-                      </p>
-                      <p className="line-clamp-1 text-xs md:text-sm">
-                        알고리즘 문제 내용내용내용내용내용내용
-                      </p>
-                    </div>
-                    <div className="hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:border-b md:py-4">
-                      <p className="text-main line-clamp-1 text-xs font-semibold md:text-sm">
-                        알고리즘 Level
-                      </p>
-                      <p className="hover line-clamp-1 text-sm font-bold md:text-base">
-                        알고리즘 문제 제목
-                      </p>
-                      <p className="line-clamp-1 text-xs md:text-sm">
-                        알고리즘 문제 내용내용내용내용내용내용
-                      </p>
-                    </div>
-                    <div className="hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:py-4">
-                      <p className="text-main line-clamp-1 text-xs font-semibold md:text-sm">
-                        알고리즘 Level
-                      </p>
-                      <p className="hover line-clamp-1 text-sm font-bold md:text-base">
-                        알고리즘 문제 제목
-                      </p>
-                      <p className="line-clamp-1 text-xs md:text-sm">
-                        알고리즘 문제 내용내용내용내용내용내용
-                      </p>
-                    </div>
-                  </div>
-                  <Link
-                    to="/problems/coding"
-                    className="absolute -top-[30px] right-0 flex items-center text-[10px] md:top-[18px] md:right-6 md:text-sm lg:top-[20px]"
-                  >
-                    전체보기 <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              </div>
-              <div
-                className={`group w-full ${isActive === 1 && 'active'} rounded-sm border-[#ccc] md:border`}
-              >
-                <button
-                  onClick={() => setIsActive(1)}
-                  className="bg-gray1 group-[.active]:bg-sub1 w-full rounded-sm py-1.5 text-center text-sm group-[.active]:text-white md:rounded-none md:border-b md:border-[#ccc] md:bg-transparent md:px-7 md:py-4 md:text-left md:text-base md:group-[.active]:bg-transparent md:group-[.active]:text-black lg:text-lg"
-                >
-                  개발직군 문제
-                </button>
-                <div className="hidden group-[.active]:block md:block md:px-4">
-                  <div className="absolute bottom-0 left-0 flex w-full flex-col gap-2.5 md:static md:gap-0">
-                    <div className="hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:border-b md:py-4">
-                      <p className="text-sub1 line-clamp-1 text-xs font-semibold md:text-sm">
-                        개발직군 카테고리
-                      </p>
-                      <p className="hover line-clamp-1 text-sm font-bold md:text-base">
-                        개발직군 문제 제목
-                      </p>
-                      <p className="line-clamp-1 text-xs md:text-sm">
-                        개발직군 문제 내용내용내용내용내용내용
-                      </p>
-                    </div>
-                    <div className="hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:border-b md:py-4">
-                      <p className="text-sub1 line-clamp-1 text-xs font-semibold md:text-sm">
-                        개발직군 카테고리
-                      </p>
-                      <p className="hover line-clamp-1 text-sm font-bold md:text-base">
-                        개발직군 문제 제목
-                      </p>
-                      <p className="line-clamp-1 text-xs md:text-sm">
-                        개발직군 문제 내용내용내용내용내용내용
-                      </p>
-                    </div>
-                    <div className="hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:py-4">
-                      <p className="text-sub1 line-clamp-1 text-xs font-semibold md:text-sm">
-                        개발직군 카테고리
-                      </p>
-                      <p className="hover line-clamp-1 text-sm font-bold md:text-base">
-                        개발직군 문제 제목
-                      </p>
-                      <p className="line-clamp-1 text-xs md:text-sm">
-                        개발직군 문제 내용내용내용내용내용내용
-                      </p>
-                    </div>
-                  </div>
-                  <Link
-                    to="/problems/job"
-                    className="absolute -top-[30px] right-0 flex items-center text-[10px] md:top-[18px] md:right-6 md:text-sm lg:top-[20px]"
-                  >
-                    전체보기 <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
+          <MainRecommand user={user} isUserLoading={isLoading} />
           <div className="md:flex md:gap-6">
             {/* 인기문제 */}
             <PopularProblem />
 
             {/* 최신문제 */}
-            <MainNewProblem />
+            <MainPopularProblem />
           </div>
         </div>
       </div>

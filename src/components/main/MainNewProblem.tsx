@@ -6,12 +6,15 @@ import { SquarePen } from 'lucide-react';
 export type NewProblemsType = Awaited<ReturnType<typeof getNewProblems>>;
 export default function MainNewProblem() {
   const [newProblem, setNewProblem] = useState<NewProblemsType>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const newProblemFetch = async () => {
+      setIsLoading(true);
       try {
         const newData = await getNewProblems();
         setNewProblem(newData);
+        setIsLoading(false);
       } catch (error) {
         console.error('데이터를 불러오지 못했습니다.', error);
       }
@@ -31,7 +34,19 @@ export default function MainNewProblem() {
           </div>
         </div>
         <div className="flex flex-col gap-2.5">
-          {newProblem && newProblem.length !== 0 ? (
+          {isLoading ? (
+            [...Array(2)].map((_, i) => (
+              <div
+                key={i}
+                className="rounded-sm border border-[#ccc] p-3 md:p-4"
+              >
+                <div className="mb-3 h-3 w-1/5 animate-pulse rounded-sm bg-gray-200 md:h-4 lg:h-5"></div>
+                <div className="mb-3 h-4 w-3/5 animate-pulse rounded-sm bg-gray-200 md:h-5 lg:h-6"></div>
+                <div className="mb-1 h-3 w-4/5 animate-pulse rounded-sm bg-gray-200 md:h-4 lg:h-5"></div>
+                <div className="h-3 w-2/5 animate-pulse rounded-sm bg-gray-200 md:h-4 lg:h-5"></div>
+              </div>
+            ))
+          ) : newProblem && newProblem.length !== 0 ? (
             newProblem.map((problem, i) => {
               const linkTo =
                 problem.channel === 2

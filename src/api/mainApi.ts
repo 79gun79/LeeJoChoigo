@@ -1,5 +1,6 @@
 import supabase from '../utils/supabase';
 
+// 개인이 푼 정보
 export const getUserChannelPosts = async (
   userId: string,
   channelId: number,
@@ -10,7 +11,37 @@ export const getUserChannelPosts = async (
       .select(`problem_id`)
       .eq('author', userId)
       .eq('channel', channelId)
+      .eq('is_yn', true)
       .not('problem_id', 'is', null);
+
+    return posts;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
+export const getAlgorithmProblems = async () => {
+  try {
+    const { data: posts } = await supabase
+      .from('post')
+      .select(`*`)
+      .eq('channel', 1)
+      .eq('is_yn', true);
+
+    return posts;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+export const getJobProblems = async () => {
+  try {
+    const { data: posts } = await supabase
+      .from('post')
+      .select(`*`)
+      .eq('channel', 2)
+      .eq('is_yn', true);
 
     return posts;
   } catch (e) {
@@ -22,12 +53,13 @@ export const getUserChannelPosts = async (
 export const getPopularPosts = async () => {
   const weekAgoDate = new Date();
   weekAgoDate.setDate(weekAgoDate.getDate() - 7);
-
+  // 일주일 내의 정보 없으면 전체에서 가져오기
   try {
     const { data: posts } = await supabase
       .from('post')
       .select(`*`)
       .in('channel', [3, 4])
+      .eq('is_yn', true)
       .gte('created_at', weekAgoDate.toISOString())
       .not('problem_id', 'is', null);
 
@@ -36,6 +68,7 @@ export const getPopularPosts = async () => {
         .from('post')
         .select(`*`)
         .in('channel', [3, 4])
+        .eq('is_yn', true)
         .not('problem_id', 'is', null);
       return posts;
     }
@@ -47,20 +80,34 @@ export const getPopularPosts = async () => {
   }
 };
 
-export const getPopularPost = async (postId: number) => {
+// 인기 문제 가져오기
+export const getPopularPost = async (postId: number, channelId: number) => {
   try {
-    const { data: post } = await supabase
-      .from('post')
-      .select(`*`)
-      .eq('id', postId)
-      .single();
-
-    return post;
+    if (channelId === 3) {
+      const { data: post } = await supabase
+        .from('post')
+        .select(`*`)
+        .eq('channel', 1)
+        .eq('is_yn', true)
+        .eq('solved_problem_id', postId)
+        .single();
+      return post;
+    } else {
+      const { data: post } = await supabase
+        .from('post')
+        .select(`*`)
+        .eq('channel', 2)
+        .eq('is_yn', true)
+        .eq('id', postId)
+        .single();
+      return post;
+    }
   } catch (e) {
     console.error(e);
   }
 };
 
+//  새로운 문제
 export const getNewProblems = async () => {
   const weekAgoDate = new Date();
   weekAgoDate.setDate(weekAgoDate.getDate() - 7);
@@ -70,6 +117,7 @@ export const getNewProblems = async () => {
       .from('post')
       .select(`*`)
       .in('channel', [1, 2])
+      .eq('is_yn', true)
       .gte('created_at', weekAgoDate.toISOString())
       .order('created_at', { ascending: false })
       .limit(2);
