@@ -48,3 +48,38 @@ export const searchPosts = async (query: string, channelId: number) => {
     console.error(e);
   }
 };
+
+export const getTagList = async (
+  query: string,
+  channelId: number,
+): Promise<string[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('post')
+      .select('tags')
+      .eq('is_yn', true)
+      .eq('channel', channelId)
+      .not('tags', 'is', null);
+
+    if (error) throw error;
+
+    const tags = (data ?? [])
+      .flatMap((post) => {
+        if (Array.isArray(post.tags)) return post.tags;
+        return [];
+      })
+      .filter((tag): tag is string => typeof tag === 'string')
+      .map((tag) => tag.trim())
+      .filter((tag) => {
+        const normalizedTag = tag.toLowerCase().normalize();
+        const normalizedQuery = query.toLowerCase().normalize();
+        const match = normalizedTag.includes(normalizedQuery);
+        return match;
+      });
+
+    return tags;
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
+};
