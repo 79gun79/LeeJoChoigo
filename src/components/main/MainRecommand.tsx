@@ -100,7 +100,7 @@ export default function MainRecommand({
                   : randomAlgorithms &&
                     randomAlgorithms.map((problem, index) => (
                       <Link
-                        to={`/coding/write/${problem.solved_problem_id}`}
+                        to={`/solutions/coding/write/${problem.solved_problem_id}`}
                         key={index}
                         className={`md-hover-none hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:py-4 ${index + 1 !== randomAlgorithms.length && 'md:border-b'}`}
                       >
