@@ -58,7 +58,7 @@ export default function Signup() {
       }
 
       if (data) {
-        notify('이미 등록된 이메일입니다.', 'error');
+        notify('이미 가입된 이메일입니다.', 'info');
         navigate('/login');
         return;
       } else {
@@ -75,7 +75,7 @@ export default function Signup() {
 
         if (error) {
           if (error.code === 'user_already_exists') {
-            notify('이미 등록된 이메일입니다.', 'error');
+            notify('이미 가입된 이메일입니다.', 'info');
           } else if (error.code === 'email_address_invalid') {
             notify('지원하지 않는 이메일 형식입니다.', 'warning');
           }
