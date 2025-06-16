@@ -14,6 +14,7 @@ import { useModalStore } from '../../stores/modalStore';
 import { useAuthStore } from '../../stores/authStore';
 import Loading from '../../components/ui/Loading';
 import Nopost from '../../components/ui/Nopost';
+import { searchPosts } from '../../api/searchApi';
 
 export default function QuestionList() {
   const channel = useLoaderData<ChannelType>();
@@ -21,16 +22,19 @@ export default function QuestionList() {
   const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
 
+  const [initPosts, setInitPosts] = useState<PostsType>([]);
   const [posts, setPosts] = useState<PostsType>([]);
   const [isPending, setPending] = useState(false);
 
   const [sortType, setSortType] = useState<'latest' | 'popular'>('latest');
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       setPending(true);
       try {
         const channelPosts = await getChannelPosts(channel.id);
+        setInitPosts(channelPosts);
         setPosts(channelPosts);
       } catch (e) {
         console.error(e);
@@ -72,6 +76,16 @@ export default function QuestionList() {
     }
     navigate('/questions/write');
   };
+
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      setPosts(initPosts);
+      return;
+    }
+
+    const search = await searchPosts(query, 5);
+    if (search) setPosts(search);
+  };
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -79,7 +93,11 @@ export default function QuestionList() {
           <PageName title={channel.name} />
         </div>
         <div className="mb-[25px] md:mb-[35px]">
-          <SearchBox />
+          <SearchBox
+            query={query}
+            setQuery={setQuery}
+            onSearch={handleSearch}
+          />
           <TagSearch />
         </div>
         <div>
