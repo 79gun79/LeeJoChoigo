@@ -1,8 +1,12 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import styles from '../styles/NotFound.module.css';
-import { Home } from 'lucide-react';
+import { Home, MoveLeft } from 'lucide-react';
 
 export default function NotFound() {
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate(-1);
+  };
   return (
     <>
       <div className={styles.all}>
@@ -22,15 +26,23 @@ export default function NotFound() {
           </svg>
           <h1 className="h1 mx-aut">Page Not Found</h1>
 
-          <p className="h3">
+          <p className="h4 mt-1 grid grid-cols-2 md:grid-cols-1">
             <Link
-              className="rt h4 hover:text-sub3 flex items-center justify-center"
+              className="rt t1 hover:text-sub3 mr-[-25px] flex items-center justify-center md:mr-0"
               to="/"
             >
               <div className="flex-grow"></div>
               <Home size={24} />
-              <span className="ml-1">HOME</span>
+              <span className="ml-1">Home</span>
             </Link>
+            <div
+              className="rt t1 hover:text-sub3 flex cursor-pointer items-center justify-center"
+              onClick={handleBack}
+            >
+              <div className="flex-grow"></div>
+              <MoveLeft size={24} />
+              <span className="ml-2">Back</span>
+            </div>
           </p>
         </div>
         <svg aria-labelledby="Starry sky" className={styles.starrySky}>
