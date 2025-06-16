@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { toggleLike } from '../api/postApi';
 import { useModalStore } from '../stores/modalStore';
 import { useAuthStore } from '../stores/authStore';
+import { useLocation } from 'react-router';
+import { useProblemStore } from '../stores/problemStore';
 
 type UseLikeProps = {
   postId: number;
@@ -11,6 +13,8 @@ type UseLikeProps = {
 export function usePostLike({ postId, initialLikes }: UseLikeProps) {
   const session = useAuthStore((state) => state.session);
   const { setLogInModal } = useModalStore();
+  const updateProblemLike = useProblemStore((state) => state.updateProblemLike);
+  const isBJLists = useLocation().pathname.startsWith('/problems/coding');
 
   const [isLiked, setIsLiked] = useState(false);
   const [likedUsers, setLikedUsers] =
@@ -42,6 +46,18 @@ export function usePostLike({ postId, initialLikes }: UseLikeProps) {
         ? [...prev, { user: userId }]
         : prev.filter((l) => l.user !== userId),
     );
+    if (isBJLists) {
+      const optimisticLikes = optimisticLiked
+        ? [
+            ...likedUsers.map((l) => ({ ...l, post: postId })),
+            { post: postId, user: userId },
+          ]
+        : likedUsers
+            .filter((l) => l.user !== userId)
+            .map((l) => ({ ...l, post: postId }));
+
+      updateProblemLike(postId, optimisticLikes);
+    }
 
     try {
       await toggleLike(postId, userId);
@@ -53,10 +69,22 @@ export function usePostLike({ postId, initialLikes }: UseLikeProps) {
           ? [...prev, { user: userId }]
           : prev.filter((l) => l.user !== userId),
       );
+      if (isBJLists) {
+        const rolledBackLikes = !optimisticLiked
+          ? [
+              ...likedUsers.map((l) => ({ ...l, post: postId })),
+              { post: postId, user: userId },
+            ]
+          : likedUsers
+              .filter((l) => l.user !== userId)
+              .map((l) => ({ ...l, post: postId }));
+
+        updateProblemLike(postId, rolledBackLikes);
+      }
     } finally {
       setIsLiking(false);
     }
   };
 
-  return { isLiked, likedUsers, isLiking, handleLike };
+  return { isLiked, likedUsers, handleLike };
 }

@@ -5,6 +5,7 @@ import type { BJPostType } from '../types';
 type PostStore = {
   problems: { page: number; posts: BJPostType[] }[];
   setProblemsByPage: (page: number) => Promise<void>;
+  updateProblemLike: (postId: number, newLikes: BJPostType['like']) => void;
 };
 
 export const useProblemStore = create<PostStore>((set, get) => ({
@@ -20,5 +21,16 @@ export const useProblemStore = create<PostStore>((set, get) => ({
       }));
     }
     console.log('problem store : ', get().problems.length + '개');
+  },
+
+  updateProblemLike: (postId, newLikes) => {
+    set((state) => ({
+      problems: state.problems.map((pageObj) => ({
+        ...pageObj,
+        posts: pageObj.posts.map((post) =>
+          post.id === postId ? { ...post, like: newLikes } : post,
+        ),
+      })),
+    }));
   },
 }));

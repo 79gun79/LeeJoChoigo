@@ -17,7 +17,7 @@ export default function AlgorithmListCard({
   const session = useAuthStore((state) => state.session);
   const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
-  const { isLiked, likedUsers, isLiking, handleLike } = usePostLike({
+  const { isLiked, likedUsers, handleLike } = usePostLike({
     postId: problem.id,
     initialLikes: problem.like,
   });
