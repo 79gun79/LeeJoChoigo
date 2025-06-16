@@ -10,10 +10,13 @@ import dateFormat from '../../utils/dateFormat';
 import '../../styles/markdown.css';
 import 'highlight.js/styles/github.css';
 import ProblemDescRender from '../common/ProblemDescRender';
+import { toggleLike } from '../../api/postApi';
+import FollowButton from '../atoms/FollowButton';
 import { deletePost, toggleLike } from '../../api/postApi';
 import { useNavigate } from 'react-router';
 import { getChannelPath } from '../../utils/channelPath';
 import { notify } from '../../utils/customAlert';
+
 
 export default function DetailText({ data }: { data: PostDetailType }) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
@@ -110,9 +113,7 @@ export default function DetailText({ data }: { data: PostDetailType }) {
               <p className="text-xs text-[#464646] md:text-sm lg:text-base">
                 {data.author.fullname}
               </p>
-              <button className="rounded-sm bg-[var(--color-gray4)] px-2 py-0.5 text-[10px] text-white md:text-xs lg:text-sm">
-                팔로우
-              </button>
+              <FollowButton targetUserId={data.author.id} />
             </div>
           </div>
           <p className="ml-auto text-right text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
