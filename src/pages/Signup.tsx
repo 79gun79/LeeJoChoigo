@@ -45,28 +45,46 @@ export default function Signup() {
 
   const handleSignUp = async () => {
     try {
-      const { error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            name: name,
-            avatar_url: null,
-          },
-        },
-      });
+      const { data, error: duplicateErr } = await supabase
+        .from('user')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle();
 
-      if (error) {
-        if (error.code === 'user_already_exists') {
-          notify('이미 등록된 이메일입니다.', 'error');
-        } else if (error.code === 'email_address_invalid') {
-          notify('지원하지 않는 이메일 형식입니다.', 'warning');
-        }
-        console.error('[회원가입] 실패', error.code);
+      if (duplicateErr) {
+        notify('예상치 못한 오류가 발생했습니다.', 'error');
+        console.error('[회원가입] 실패', duplicateErr.code);
         return;
       }
 
-      setIsModalOpen(true);
+      if (data) {
+        notify('이미 등록된 이메일입니다.', 'error');
+        navigate('/login');
+        return;
+      } else {
+        const { error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              name: name,
+              avatar_url: null,
+            },
+          },
+        });
+
+        if (error) {
+          if (error.code === 'user_already_exists') {
+            notify('이미 등록된 이메일입니다.', 'error');
+          } else if (error.code === 'email_address_invalid') {
+            notify('지원하지 않는 이메일 형식입니다.', 'warning');
+          }
+          console.error('[회원가입] 실패', error.code);
+          return;
+        }
+
+        setIsModalOpen(true);
+      }
     } catch (e) {
       notify('예상치 못한 오류가 발생했습니다.', 'error');
       console.error('[회원가입] 예상치 못한 오류', e);
