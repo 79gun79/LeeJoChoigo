@@ -64,7 +64,7 @@ export default function FollowModal({
         onClick={onClose}
         aria-label="모달 닫기"
       />
-      <div className="relative z-10 w-full max-w-sm rounded-xl bg-white p-5 shadow-lg">
+      <div className="relative z-10 flex max-h-[55dvh] w-full max-w-sm flex-col rounded-xl bg-white p-5 shadow-lg">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="t3">
             {type === 'follower' ? '팔로워 목록' : '팔로잉 목록'}
@@ -75,32 +75,34 @@ export default function FollowModal({
         </div>
         <hr />
 
-        {loading ? (
-          <p className="text-gray3 t5 text-center">불러오는 중...</p>
-        ) : users.length === 0 ? (
-          <p className="text-gray3 t5 text-center">
-            {type === 'follower'
-              ? '팔로워가 없습니다.'
-              : '팔로잉한 유저가 없습니다.'}
-          </p>
-        ) : (
-          <ul className="divide-y">
-            {users.map((user) => (
-              <li key={user.id} className="flex items-center gap-3 py-2">
-                <img
-                  src={
-                    user.image ||
-                    'https://www.studiopeople.kr/common/img/default_profile.png'
-                  }
-                  alt={user.fullname}
-                  className="h-8 w-8 rounded-full object-cover md:h-10 md:w-10"
-                />
-                <span className="t4">{user.fullname}</span>
-                <FollowButton targetUserId={user.id} />
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="mt-2 flex-1 overflow-y-auto pr-1">
+          {loading ? (
+            <p className="text-gray3 t5 text-center">불러오는 중...</p>
+          ) : users.length === 0 ? (
+            <p className="text-gray3 t5 text-center">
+              {type === 'follower'
+                ? '팔로워가 없습니다.'
+                : '팔로잉한 유저가 없습니다.'}
+            </p>
+          ) : (
+            <ul className="divide-y">
+              {users.map((user) => (
+                <li key={user.id} className="flex items-center gap-3 py-2">
+                  <img
+                    src={
+                      user.image ||
+                      'https://www.studiopeople.kr/common/img/default_profile.png'
+                    }
+                    alt={user.fullname}
+                    className="h-8 w-8 rounded-full object-cover md:h-10 md:w-10"
+                  />
+                  <span className="t4">{user.fullname}</span>
+                  <FollowButton targetUserId={user.id} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </div>,
     document.body,
