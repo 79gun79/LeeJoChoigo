@@ -23,7 +23,10 @@ export default function ProfileLinkNavigation({
   };
 
   return (
-    <button onClick={handleNavigate} className="flex w-full items-center gap-2">
+    <button
+      onClick={handleNavigate}
+      className="flex w-full cursor-pointer items-center gap-2"
+    >
       <img
         src={
           image || 'https://www.studiopeople.kr/common/img/default_profile.png'
