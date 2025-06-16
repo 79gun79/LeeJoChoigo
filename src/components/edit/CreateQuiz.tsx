@@ -35,10 +35,11 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
         const quizData = quizList;
         return { title, content, imageUrl, imageFileName, tags, quizData };
       },
-      setPostData: ({ title, content, quizData }) => {
+      setPostData: ({ title, content, tags, quizData }) => {
         if (titleRef.current) titleRef.current.value = title;
         editorRef.current?.getInstance().setMarkdown(content);
         setQuizList(quizData);
+        setCategory(tags[0]);
       },
     }));
 
@@ -182,12 +183,19 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
                         id="1"
                         title="프론트엔드"
                         onChange={setCategory}
+                        checked={category === '프론트엔드'}
                       />
-                      <CheckItem id="2" title="백엔드" onChange={setCategory} />
+                      <CheckItem
+                        id="2"
+                        title="백엔드"
+                        onChange={setCategory}
+                        checked={category === '백엔드'}
+                      />
                       <CheckItem
                         id="3"
                         title="모바일 앱"
                         onChange={setCategory}
+                        checked={category === '모바일 앱'}
                       />
                       <CheckItem
                         id="4"
