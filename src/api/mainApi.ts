@@ -21,27 +21,14 @@ export const getUserChannelPosts = async (
   }
 };
 
-export const getAlgorithmProblems = async () => {
+// 문제목록
+export const getChannelProblems = async (channel: number) => {
   try {
     const { data: posts } = await supabase
       .from('post')
       .select(`*`)
-      .eq('channel', 1)
-      .eq('is_yn', true);
-
-    return posts;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
-};
-export const getJobProblems = async () => {
-  try {
-    const { data: posts } = await supabase
-      .from('post')
-      .select(`*`)
-      .eq('channel', 2)
-      .eq('is_yn', true);
+      .eq('channel', channel);
+    // .eq('is_yn', true);
 
     return posts;
   } catch (e) {

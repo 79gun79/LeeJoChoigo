@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAlgorithmProblems, getJobProblems } from '../../api/mainApi';
+import { getChannelProblems } from '../../api/mainApi';
 import { Link } from 'react-router';
 import { ChevronRight } from 'lucide-react';
 import type { User } from '../../types';
@@ -23,14 +23,16 @@ export default function MainRecommand({
       setIsLoading(true);
 
       try {
-        const algos = await getAlgorithmProblems();
-        const jobs = await getJobProblems();
+        const algos = await getChannelProblems(1);
+        const jobs = await getChannelProblems(2);
 
         const filterAlgos = algos?.filter(
-          (f) => !user?.solved?.find((item) => item === f.id),
+          (f) =>
+            !user?.solved?.find((item) => item === f.id) && f.is_yn !== false,
         );
         const filterjobs = jobs?.filter(
-          (f) => !user?.solved?.find((item) => item === f.id),
+          (f) =>
+            !user?.solved?.find((item) => item === f.id) && f.is_yn !== false,
         );
 
         const randomAlgos = filterAlgos ? randomArray(filterAlgos) : [];

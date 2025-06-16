@@ -1,12 +1,12 @@
 import { User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '../../stores/authStore';
-import { getUserChannelPosts } from '../../api/mainApi';
-import type { PostsType, User as UserType } from '../../types';
-import { getChannelPosts } from '../../api/postApi';
+import { getChannelProblems, getUserChannelPosts } from '../../api/mainApi';
+import type { User as UserType } from '../../types';
 import { Link, useNavigate } from 'react-router';
 
 type solvedPostType = { problem_id: number | null }[];
+type ProblemsType = Awaited<ReturnType<typeof getChannelProblems>>;
 
 export default function MainUserInfo({
   user,
@@ -20,8 +20,8 @@ export default function MainUserInfo({
   const session = useAuthStore((state) => state.session);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [algorithmPost, setAlgorithmPost] = useState<PostsType>(null);
-  const [jobPost, setJobPost] = useState<PostsType>(null);
+  const [algorithmPost, setAlgorithmPost] = useState<ProblemsType>();
+  const [jobPost, setJobPost] = useState<ProblemsType>();
   const [solvedAlgorithm, setSolvedAlgorithm] = useState<solvedPostType>();
   const [solvedJob, setSolvedJob] = useState<solvedPostType>();
   useEffect(() => {
@@ -30,8 +30,8 @@ export default function MainUserInfo({
       setIsLoading(true);
       if (session) {
         try {
-          const algorithmPostData = await getChannelPosts(1);
-          const jobPostData = await getChannelPosts(2);
+          const algorithmPostData = await getChannelProblems(1);
+          const jobPostData = await getChannelProblems(2);
 
           setAlgorithmPost(algorithmPostData);
           setJobPost(jobPostData);
