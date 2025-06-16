@@ -5,6 +5,7 @@ import { ChevronRight } from 'lucide-react';
 import type { User } from '../../types';
 import type { PostType } from '../../types/post';
 import { calculateLevel } from '../../utils/calculateLevel';
+import { previewMarkdown } from '../../utils/markdown';
 
 export default function MainRecommand({
   user,
@@ -160,7 +161,9 @@ export default function MainRecommand({
                             {problem.title}
                           </p>
                           <p className="line-clamp-1 text-xs md:text-sm">
-                            {problem.content}
+                            {problem.content
+                              ? previewMarkdown(problem.content).slice(0, 100)
+                              : ''}
                           </p>
                         </Link>
                       ))

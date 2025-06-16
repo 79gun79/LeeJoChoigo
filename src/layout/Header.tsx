@@ -8,7 +8,7 @@ import Navigation from '../components/atoms/Navigation';
 import userDefault from '../assets/images/icon-user-default.png';
 import DropdownMenu from '../components/modals/DropdownMenu';
 import { useModalStore } from '../stores/modalStore';
-import logo from '../assets/images/dailyCote.png';
+import logo from '/dailyCote.png';
 import AlarmLayout from './AlarmLayout';
 
 export default function Header() {
