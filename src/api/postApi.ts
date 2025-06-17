@@ -49,6 +49,7 @@ export const getChannelCategoryPosts = async (
       `,
       )
       .eq('channel', channelId)
+      .eq('is_yn', true)
       .contains('tags', [category]);
 
     return posts;

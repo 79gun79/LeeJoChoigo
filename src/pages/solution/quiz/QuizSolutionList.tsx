@@ -47,17 +47,8 @@ export default function QuizSolutionList() {
       return sortedPosts.sort(
         (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at),
       );
-    }
-
-    if (sortType === 'popular') {
-      return sortedPosts.sort((a, b) => {
-        const aLikes = a.like?.length ?? 0;
-        const bLikes = b.like?.length ?? 0;
-
-        if (aLikes !== bLikes) return bLikes - aLikes;
-
-        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
-      });
+    } else if (sortType === 'popular') {
+      return sortedPosts.sort((a, b) => b.like_count - a.like_count);
     }
 
     return sortedPosts;
