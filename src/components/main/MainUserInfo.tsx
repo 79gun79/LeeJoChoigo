@@ -26,7 +26,7 @@ export default function MainUserInfo({
   const [algorithmTotalCount, setAlgorithmTotalCount] = useState(0);
   const [jobTotalCount, setJobTotalCount] = useState(0);
   const [solvedAlgorithm, setSolvedAlgorithm] = useState<solvedPostType>();
-  const [solvedJob, setSolvedJob] = useState(0);
+  const [solvedJob, setSolvedJob] = useState<solvedPostType>();
   useEffect(() => {
     const userInfoFetch = async () => {
       if (!session) return;
@@ -51,20 +51,20 @@ export default function MainUserInfo({
               : [];
             setSolvedAlgorithm(uniqueAlgorithm);
 
+            // 푼 개발직군 문제에서 중복으로 푼거 제외하기
+            const solvedJobData = await getUserChannelPosts(user?.id, 4);
+            const uniqueJob = solvedJobData ? uniquePostId(solvedJobData) : [];
             // 삭제된 개발직군 문제 리스트
             const deleteJobProblems = jobPostData?.filter(
               (f) => f.is_yn === false,
             );
-
             // 삭제 된 문제 있으면 푼 문제 배열에서 제거
-            if (deleteJobProblems) {
-              const solveJob = user.solved?.filter(
-                (f) => !deleteJobProblems.find((item) => item.id === f),
-              );
-              setSolvedJob(solveJob?.length || 0);
-            } else {
-              setSolvedJob(user.solved?.length || 0);
-            }
+            const results = uniqueJob?.filter(
+              (f) =>
+                deleteJobProblems &&
+                !deleteJobProblems.find((item) => item.id === f.problem_id),
+            );
+            setSolvedJob(results);
 
             setIsLoading(false);
           }
@@ -136,7 +136,7 @@ export default function MainUserInfo({
                 >
                   <p className="flex max-w-none min-w-0 flex-wrap items-end gap-0.5 text-sm md:text-base">
                     <span className="text-3xl leading-none font-bold lg:text-4xl">
-                      {solvedJob}
+                      {solvedJob?.length}
                     </span>
                     /<span>{jobTotalCount.toLocaleString()}</span>
                   </p>
