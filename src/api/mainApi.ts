@@ -21,6 +21,21 @@ export const getUserChannelPosts = async (
   }
 };
 
+export const getChannelProblemsCount = async (channel: number) => {
+  try {
+    const { count } = await supabase
+      .from('post')
+      .select(`*`, { count: 'exact' })
+      .eq('channel', channel)
+      .eq('is_yn', true);
+
+    return count;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
 // 문제목록
 export const getChannelProblems = async (channel: number) => {
   try {

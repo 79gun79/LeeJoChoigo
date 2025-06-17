@@ -10,6 +10,8 @@ import type { BJPostType, ChannelType } from '../../../types';
 import { getPopularPosts, getPopularProblem } from '../../../api/mainApi';
 import Loading from '../../../components/ui/Loading';
 import Nopost from '../../../components/ui/Nopost';
+import TopButton from '../../../components/common/TopButton';
+import AlgorithmListCardSkeleton from '../../../components/list/AlgorithmListCardSkeleton';
 
 export default function AlgorithmProblemList() {
   const page = useRef(0);
@@ -24,17 +26,25 @@ export default function AlgorithmProblemList() {
   const [popularProblems, setPopularProblems] = useState<BJPostType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { sortType, setSortType } = useProblemStore();
+  const [isFirstLoading, setIsFirstLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isFetched.current) return;
     isFetched.current = true;
 
-    setProblemsByPage(page.current).then(() => {
+    setIsFirstLoading(true);
+    setProblemsByPage(page.current).finally(() => {
+      setIsFirstLoading(false);
+
       const observer = new IntersectionObserver((entries) => {
         const entry = entries[0];
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !isLoading) {
+          setIsLoading(true);
           page.current += 1;
-          setProblemsByPage(page.current);
+          setProblemsByPage(page.current).finally(() => {
+            setIsLoading(false);
+          });
         }
       });
 
@@ -136,23 +146,37 @@ export default function AlgorithmProblemList() {
               />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {isLoading ? (
-                <div className="col-span-2 text-center">
-                  <Loading />
+              {isFirstLoading &&
+                Array.from({ length: 10 }).map((_, i) => (
+                  <AlgorithmListCardSkeleton key={`first-skeleton-${i}`} />
+                ))}
+
+              {problems &&
+                !isFirstLoading &&
+                problems.map((problem) => (
+                  <AlgorithmListCard key={problem.id} problem={problem} />
+                ))}
+
+              {problems && problems.length === 0 && !isFirstLoading && (
+                <div className="col-span-2 py-12 text-center">
+                  <h3 className="t1 mb-2 font-medium text-black">
+                    포스트가 없습니다.
+                  </h3>
                 </div>
-              ) : problems.length <= 0 ? (
-                <Nopost />
-              ) : (
-                (sortType === 'latest' ? problems : popularProblems).map(
-                  (problem) => (
-                    <AlgorithmListCard key={problem.id} problem={problem} />
-                  ),
-                )
               )}
+
+              {isLoading &&
+                Array.from({ length: 2 }).map((_, i) => (
+                  <AlgorithmListCardSkeleton key={`skeleton-${i}`} />
+                ))}
+
+              {/* <AlgorithmListCard />
+              <AlgorithmListCard /> */}
             </div>
             <div ref={endListRef}></div>
           </div>
         </div>
+        <TopButton className="right-4" />
       </div>
     </>
   );
