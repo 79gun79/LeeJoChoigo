@@ -8,7 +8,6 @@ import { useProblemStore } from '../../../stores/problemStore';
 import { useLoaderData } from 'react-router';
 import type { BJPostType, ChannelType } from '../../../types';
 import { getPopularPosts, getPopularProblem } from '../../../api/mainApi';
-import Loading from '../../../components/ui/Loading';
 import Nopost from '../../../components/ui/Nopost';
 import TopButton from '../../../components/common/TopButton';
 import AlgorithmListCardSkeleton from '../../../components/list/AlgorithmListCardSkeleton';
@@ -24,7 +23,6 @@ export default function AlgorithmProblemList() {
 
   type PopularPostsType = Awaited<ReturnType<typeof getPopularPosts>>;
   const [popularProblems, setPopularProblems] = useState<BJPostType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const { sortType, setSortType } = useProblemStore();
   const [isFirstLoading, setIsFirstLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -153,15 +151,15 @@ export default function AlgorithmProblemList() {
 
               {problems &&
                 !isFirstLoading &&
-                problems.map((problem) => (
-                  <AlgorithmListCard key={problem.id} problem={problem} />
-                ))}
+                (sortType === 'latest' ? problems : popularProblems).map(
+                  (problem) => (
+                    <AlgorithmListCard key={problem.id} problem={problem} />
+                  ),
+                )}
 
               {problems && problems.length === 0 && !isFirstLoading && (
                 <div className="col-span-2 py-12 text-center">
-                  <h3 className="t1 mb-2 font-medium text-black">
-                    포스트가 없습니다.
-                  </h3>
+                  <Nopost />
                 </div>
               )}
 
@@ -169,9 +167,6 @@ export default function AlgorithmProblemList() {
                 Array.from({ length: 2 }).map((_, i) => (
                   <AlgorithmListCardSkeleton key={`skeleton-${i}`} />
                 ))}
-
-              {/* <AlgorithmListCard />
-              <AlgorithmListCard /> */}
             </div>
             <div ref={endListRef}></div>
           </div>
