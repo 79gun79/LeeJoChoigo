@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useProblemStore } from '../../../stores/problemStore';
 import { useLoaderData } from 'react-router';
 import type { ChannelType } from '../../../types';
+import AlgorithmListCardSkeleton from '../../../components/list/AlgorithmListCardSkeleton';
 
 export default function AlgorithmProblemList() {
   const page = useRef(0);
@@ -16,13 +17,17 @@ export default function AlgorithmProblemList() {
   const endListRef = useRef<HTMLDivElement | null>(null);
   const isFetched = useRef(false);
   const channel = useLoaderData<ChannelType>();
+  const [isFirstLoading, setIsFirstLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isFetched.current) return;
     isFetched.current = true;
 
-    setProblemsByPage(page.current).then(() => {
+    setIsFirstLoading(true);
+    setProblemsByPage(page.current).finally(() => {
+      setIsFirstLoading(false);
+
       const observer = new IntersectionObserver((entries) => {
         const entry = entries[0];
         if (entry.isIntersecting && !isLoading) {
@@ -68,12 +73,18 @@ export default function AlgorithmProblemList() {
           <div>
             <div className="mb-1">{/* <SearchListTop /> */}</div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              {isFirstLoading &&
+                Array.from({ length: 10 }).map((_, i) => (
+                  <AlgorithmListCardSkeleton key={`first-skeleton-${i}`} />
+                ))}
+
               {problems &&
+                !isFirstLoading &&
                 problems.map((problem) => (
                   <AlgorithmListCard key={problem.id} problem={problem} />
                 ))}
 
-              {problems && problems.length === 0 && (
+              {problems && problems.length === 0 && !isFirstLoading && (
                 <div className="col-span-2 py-12 text-center">
                   <h3 className="t1 mb-2 font-medium text-black">
                     포스트가 없습니다.
@@ -81,36 +92,15 @@ export default function AlgorithmProblemList() {
                 </div>
               )}
 
+              {isLoading &&
+                Array.from({ length: 2 }).map((_, i) => (
+                  <AlgorithmListCardSkeleton key={`skeleton-${i}`} />
+                ))}
+
               {/* <AlgorithmListCard />
               <AlgorithmListCard /> */}
             </div>
             <div ref={endListRef}></div>
-            {isLoading && (
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                <div className="w-full rounded-sm border border-[#ccc]">
-                  <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
-                    <div className="mb-2.5 h-3.5 w-2/3 bg-gray-200 md:h-4.5 lg:h-5.5"></div>
-                    <div className="mb-1 h-3 w-full bg-gray-200 md:h-4 lg:h-5"></div>
-                    <div className="mb-2.5 h-3 w-4/5 bg-gray-200 md:h-4 lg:h-5"></div>
-                    <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
-                  </div>
-                  <div className="flex w-full border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
-                    <div className="h-3 w-1/2 bg-gray-200 md:h-4 lg:h-5"></div>
-                  </div>
-                </div>
-                <div className="w-full rounded-sm border border-[#ccc]">
-                  <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
-                    <div className="mb-2.5 h-3.5 w-2/3 bg-gray-200 md:h-4.5 lg:h-5.5"></div>
-                    <div className="mb-1 h-3 w-full bg-gray-200 md:h-4 lg:h-5"></div>
-                    <div className="mb-2.5 h-3 w-4/5 bg-gray-200 md:h-4 lg:h-5"></div>
-                    <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
-                  </div>
-                  <div className="flex w-full border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
-                    <div className="h-3 w-1/2 bg-gray-200 md:h-4 lg:h-5"></div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
