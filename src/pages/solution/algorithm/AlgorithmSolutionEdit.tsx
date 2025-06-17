@@ -35,7 +35,7 @@ export default function AlgorithmSolutionEdit() {
       const post = await getPost(Number(postId));
       if (!post) {
         notify('존재하지 않는 게시글입니다.', 'error');
-        navigate('/questions');
+        navigate('/solutions/coding');
         return;
       }
 

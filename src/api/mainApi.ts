@@ -115,3 +115,27 @@ export const getNewProblems = async () => {
     return null;
   }
 };
+
+// 인기 문제 가져오기 (알고리즘 목록에서 사용)
+export const getPopularProblem = async (postId: number) => {
+  try {
+    const { data: post } = await supabase
+      .from('post')
+      .select(
+        `
+        *,
+        like(
+          post,
+          user
+        )
+      `,
+      )
+      .eq('channel', 1)
+      .eq('is_yn', true)
+      .eq('solved_problem_id', postId)
+      .single();
+    return post;
+  } catch (e) {
+    console.error(e);
+  }
+};

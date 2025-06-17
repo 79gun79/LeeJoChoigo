@@ -19,6 +19,7 @@ export const fetchBjProblems = async (page: number) => {
       `,
       )
       .eq('channel', 1)
+      .order('id', { ascending: true })
       .range(from, to);
 
     if (error) {
