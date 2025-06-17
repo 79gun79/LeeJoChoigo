@@ -1,7 +1,6 @@
 import { ReactTyped } from 'react-typed';
-import logo from '../assets/images/dailyCote.png';
+import logo from '/dailyCote.png';
 import { CircleHelp, NotebookPen, PencilRuler, SquarePen } from 'lucide-react';
-
 import MainUserInfo from '../components/main/MainUserInfo';
 import { Link } from 'react-router';
 import PopularProblem from '../components/main/MainPopularProblem';
@@ -105,7 +104,7 @@ export default function HomePage() {
                   </span>
                   <span className="menu-button-effect"></span>
                 </Link>
-                <Link to="/problems/write" className="menu-button group">
+                <Link to="/problems/job/write" className="menu-button group">
                   <span className="icon-bg">
                     <PencilRuler className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>

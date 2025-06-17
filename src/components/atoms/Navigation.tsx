@@ -51,7 +51,7 @@ export default function Navigation({
   const layout =
     direction === 'vertical'
       ? 'h5 flex-col flex gap-4 items-start pt-4 ml-4'
-      : 't4 hidden md:flex md:gap-8 lg:gap-16';
+      : 't4 hidden md:flex md:gap-10 lg:gap-16';
 
   const handleMenuClick = (
     item: MenuItem,
@@ -69,7 +69,9 @@ export default function Navigation({
   };
 
   return (
-    <nav className={`font-medium ${layout} lg:text-[16px] ${className}`}>
+    <nav
+      className={`font-medium ${layout} md:text-base lg:text-lg ${className}`}
+    >
       {menuItems.map((item) => {
         const Icon = item.Icon;
         const isOpen = openMenu === item.name;
