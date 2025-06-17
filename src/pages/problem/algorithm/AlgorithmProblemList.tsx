@@ -3,7 +3,7 @@ import AlgorithmListCard from '../../../components/list/AlgorithmListCard';
 import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
 // import SearchListTop from '../../../components/search/SearchListTop';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useProblemStore } from '../../../stores/problemStore';
 import { useLoaderData } from 'react-router';
 import type { ChannelType } from '../../../types';
@@ -16,6 +16,7 @@ export default function AlgorithmProblemList() {
   const endListRef = useRef<HTMLDivElement | null>(null);
   const isFetched = useRef(false);
   const channel = useLoaderData<ChannelType>();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isFetched.current) return;
@@ -24,9 +25,12 @@ export default function AlgorithmProblemList() {
     setProblemsByPage(page.current).then(() => {
       const observer = new IntersectionObserver((entries) => {
         const entry = entries[0];
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !isLoading) {
+          setIsLoading(true);
           page.current += 1;
-          setProblemsByPage(page.current);
+          setProblemsByPage(page.current).finally(() => {
+            setIsLoading(false);
+          });
         }
       });
 
@@ -81,6 +85,32 @@ export default function AlgorithmProblemList() {
               <AlgorithmListCard /> */}
             </div>
             <div ref={endListRef}></div>
+            {isLoading && (
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <div className="w-full rounded-sm border border-[#ccc]">
+                  <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
+                    <div className="mb-2.5 h-3.5 w-2/3 bg-gray-200 md:h-4.5 lg:h-5.5"></div>
+                    <div className="mb-1 h-3 w-full bg-gray-200 md:h-4 lg:h-5"></div>
+                    <div className="mb-2.5 h-3 w-4/5 bg-gray-200 md:h-4 lg:h-5"></div>
+                    <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
+                  </div>
+                  <div className="flex w-full border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
+                    <div className="h-3 w-1/2 bg-gray-200 md:h-4 lg:h-5"></div>
+                  </div>
+                </div>
+                <div className="w-full rounded-sm border border-[#ccc]">
+                  <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
+                    <div className="mb-2.5 h-3.5 w-2/3 bg-gray-200 md:h-4.5 lg:h-5.5"></div>
+                    <div className="mb-1 h-3 w-full bg-gray-200 md:h-4 lg:h-5"></div>
+                    <div className="mb-2.5 h-3 w-4/5 bg-gray-200 md:h-4 lg:h-5"></div>
+                    <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
+                  </div>
+                  <div className="flex w-full border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
+                    <div className="h-3 w-1/2 bg-gray-200 md:h-4 lg:h-5"></div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
