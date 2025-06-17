@@ -11,21 +11,21 @@ type PostStore = {
   updateProblemLike: (postId: number, newLikes: BJPostType['like']) => void;
   sortType: 'latest' | 'popular';
   setSortType: (sortType: 'latest' | 'popular') => void;
-  query: string;
-  setQuery: (q: string) => void;
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
   resetProblems: () => void;
 };
 
 export const useProblemStore = create<PostStore>((set, get) => ({
   problems: [],
   sortType: 'latest',
-  query: '',
+  searchQuery: '',
 
   setSortType: (sortType) => set({ sortType }),
-  setQuery: (q) => set({ query: q }),
+  setSearchQuery: (q) => set({ searchQuery: q }),
 
   setProblemsByPage: async (page: number, sortType: 'latest' | 'popular') => {
-    const qr = get().query;
+    const qr = get().searchQuery;
     const exists = get().problems.find((p) => p.page === page && qr === '');
     if (exists) return;
 

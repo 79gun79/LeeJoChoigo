@@ -20,10 +20,11 @@ export default function AlgorithmProblemList() {
   const isFetched = useRef(false);
   const channel = useLoaderData<ChannelType>();
 
-  const { query, setQuery, sortType, setSortType, resetProblems } =
+  const { searchQuery, setSearchQuery, sortType, setSortType, resetProblems } =
     useProblemStore();
   const [isFirstLoading, setIsFirstLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     if (isFetched.current) return;
@@ -51,7 +52,7 @@ export default function AlgorithmProblemList() {
         if (current) observer.unobserve(current);
       };
     });
-  }, [query, sortType]);
+  }, [searchQuery, sortType]);
 
   const handleSortChange = (newSort: 'latest' | 'popular') => {
     resetProblems();
@@ -67,7 +68,7 @@ export default function AlgorithmProblemList() {
 
   const handleSearch = async () => {
     resetProblems();
-    setQuery(query);
+    setSearchQuery(query);
     page.current = 0;
     isFetched.current = true;
 
@@ -102,7 +103,7 @@ export default function AlgorithmProblemList() {
           <div>
             <div className="mb-1">
               <SearchListTop
-                query=""
+                query={query}
                 sortType={sortType}
                 setSortType={handleSortChange}
                 isAlgorithm={true}
