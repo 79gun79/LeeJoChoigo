@@ -22,7 +22,7 @@ export default function QuizProblemList() {
 
   const [initPosts, setInitPosts] = useState<PostsType>([]);
   const [posts, setPosts] = useState<PostsType>([]);
-  const [category, setCategory] = useState<string>('');
+  const [category, setCategory] = useState<string>('전체');
   const [isPending, setPending] = useState(false);
 
   const [sortType, setSortType] = useState<'latest' | 'popular'>('latest');
@@ -32,7 +32,7 @@ export default function QuizProblemList() {
     const fetchData = async () => {
       setPending(true);
       try {
-        if (category === '') {
+        if (category === '전체') {
           const channelPosts = await getChannelPosts(channel.id);
           setInitPosts(channelPosts);
           setPosts(channelPosts);
@@ -105,6 +105,7 @@ export default function QuizProblemList() {
             </p>
             <div className="flex flex-wrap gap-2.5">
               <div className="mb-4 flex flex-wrap gap-2.5">
+                <CheckItem id="0" title="전체" onChange={setCategory} />
                 <CheckItem id="1" title="프론트엔드" onChange={setCategory} />
                 <CheckItem id="2" title="백엔드" onChange={setCategory} />
                 <CheckItem id="3" title="모바일 앱" onChange={setCategory} />
