@@ -94,7 +94,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-40 bg-black/30"
+            className="bg-gray4/30 fixed inset-0 z-40"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
