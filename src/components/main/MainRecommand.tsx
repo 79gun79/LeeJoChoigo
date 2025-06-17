@@ -53,14 +53,17 @@ export default function MainRecommand({
 
   const randomArray = (array: PostType[]) => {
     let total = 3;
+    const tempArray = [...array];
     const newArray = [];
 
     if (array.length < 3) {
       total = array.length;
     }
 
+    // 문제 중복 방지
     while (newArray.length < total) {
-      newArray.push(array[Math.floor(Math.random() * array.length)]);
+      const randomIndex = Math.floor(Math.random() * tempArray.length);
+      newArray.push(tempArray.splice(randomIndex, 1)[0]);
     }
     return newArray;
   };
