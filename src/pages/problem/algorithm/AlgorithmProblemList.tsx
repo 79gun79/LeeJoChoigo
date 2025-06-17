@@ -1,12 +1,15 @@
 import AlgorithmListCard from '../../../components/list/AlgorithmListCard';
 // import SearchBox from '../../../components/search/SearchBox';
-import TagSearch from '../../../components/search/SearchTag';
+// import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
-// import SearchListTop from '../../../components/search/SearchListTop';
-import { useEffect, useRef } from 'react';
+import SearchListTop from '../../../components/search/SearchListTop';
+import { useEffect, useRef, useState } from 'react';
 import { useProblemStore } from '../../../stores/problemStore';
 import { useLoaderData } from 'react-router';
 import type { ChannelType } from '../../../types';
+import Nopost from '../../../components/ui/Nopost';
+import TopButton from '../../../components/common/TopButton';
+import AlgorithmListCardSkeleton from '../../../components/list/AlgorithmListCardSkeleton';
 
 export default function AlgorithmProblemList() {
   const page = useRef(0);
@@ -17,16 +20,26 @@ export default function AlgorithmProblemList() {
   const isFetched = useRef(false);
   const channel = useLoaderData<ChannelType>();
 
+  const { sortType, setSortType, resetProblems } = useProblemStore();
+  const [isFirstLoading, setIsFirstLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     if (isFetched.current) return;
     isFetched.current = true;
 
-    setProblemsByPage(page.current).then(() => {
+    setIsFirstLoading(true);
+    setProblemsByPage(page.current, sortType).finally(() => {
+      setIsFirstLoading(false);
+
       const observer = new IntersectionObserver((entries) => {
         const entry = entries[0];
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !isLoading) {
+          setIsLoading(true);
           page.current += 1;
-          setProblemsByPage(page.current);
+          setProblemsByPage(page.current, sortType).finally(() => {
+            setIsLoading(false);
+          });
         }
       });
 
@@ -37,7 +50,19 @@ export default function AlgorithmProblemList() {
         if (current) observer.unobserve(current);
       };
     });
-  }, []);
+  }, [page, sortType]);
+
+  const handleSortChange = (newSort: 'latest' | 'popular') => {
+    resetProblems();
+    setSortType(newSort);
+    page.current = 0;
+    isFetched.current = true;
+
+    setIsFirstLoading(true);
+    setProblemsByPage(0, newSort).finally(() => {
+      setIsFirstLoading(false);
+    });
+  };
 
   return (
     <>
@@ -51,7 +76,7 @@ export default function AlgorithmProblemList() {
             setQuery={setQuery}
             onSearch={handleSearch}
           /> */}
-          <TagSearch />
+          {/* <TagSearch /> */}
         </div>
         <div>
           <div className="mb-2">
@@ -62,27 +87,44 @@ export default function AlgorithmProblemList() {
             </div>
           </div>
           <div>
-            <div className="mb-1">{/* <SearchListTop /> */}</div>
+            <div className="mb-1">
+              <SearchListTop
+                query=""
+                sortType={sortType}
+                setSortType={handleSortChange}
+                isAlgorithm={true}
+              />
+            </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {problems &&
-                problems.map((problem) => (
-                  <AlgorithmListCard key={problem.id} problem={problem} />
+              {isFirstLoading &&
+                Array.from({ length: 10 }).map((_, i) => (
+                  <AlgorithmListCardSkeleton key={`first-skeleton-${i}`} />
                 ))}
 
-              {problems && problems.length === 0 && (
+              {problems &&
+                !isFirstLoading &&
+                problems.map((problem, i) => (
+                  <AlgorithmListCard
+                    key={`${problem.id}-${i}`}
+                    problem={problem}
+                  />
+                ))}
+
+              {problems && problems.length === 0 && !isFirstLoading && (
                 <div className="col-span-2 py-12 text-center">
-                  <h3 className="t1 mb-2 font-medium text-black">
-                    포스트가 없습니다.
-                  </h3>
+                  <Nopost />
                 </div>
               )}
 
-              {/* <AlgorithmListCard />
-              <AlgorithmListCard /> */}
+              {isLoading &&
+                Array.from({ length: 2 }).map((_, i) => (
+                  <AlgorithmListCardSkeleton key={`skeleton-${i}`} />
+                ))}
             </div>
             <div ref={endListRef}></div>
           </div>
         </div>
+        <TopButton className="right-4" />
       </div>
     </>
   );

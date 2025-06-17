@@ -161,7 +161,7 @@ export default function ListCard({
                   </li>
                 ))}
               </ul>
-              <div className="flex items-end">
+              <div className="flex items-end md:mt-auto">
                 <span className="text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
                   {dateFormat(data.created_at)}
                 </span>
@@ -189,6 +189,7 @@ export default function ListCard({
                 </div>
               </div>
             </div>
+
             <div className="border-gray3 flex w-full items-center border-t px-3 py-2 md:px-4 md:py-2.5">
               <Avartar user={data.author} />
               {(me?.solved ?? []).includes(data.id) && (

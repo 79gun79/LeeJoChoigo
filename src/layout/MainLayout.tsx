@@ -10,7 +10,7 @@ export default function MainLayout() {
       <div className="fixed top-0 left-0 z-999 w-full bg-white">
         <Header />
       </div>
-      <main className="pt-[55px] md:pt-[60px]">
+      <main className="pt-[55px] md:pt-[75px]">
         <Outlet />
         {isLogInOpen && (
           <IsLoginModal

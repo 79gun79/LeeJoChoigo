@@ -2,7 +2,11 @@ import supabase from './supabase';
 
 const LIMIT = 50;
 
-export const fetchBjProblems = async (page: number) => {
+export const fetchBjProblems = async (
+  page: number,
+  orderBy: string,
+  ascending: boolean,
+) => {
   try {
     const from = page * LIMIT;
     const to = from + LIMIT - 1;
@@ -19,6 +23,7 @@ export const fetchBjProblems = async (page: number) => {
       `,
       )
       .eq('channel', 1)
+      .order(orderBy, { ascending })
       .range(from, to);
 
     if (error) {

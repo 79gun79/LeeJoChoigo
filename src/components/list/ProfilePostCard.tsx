@@ -3,6 +3,7 @@ import type { ProfilePosts } from '../../pages/profile/Profile';
 import { useAuthStore } from '../../stores/authStore';
 import dateFormat from '../../utils/dateFormat';
 import { Link } from 'react-router';
+import { previewMarkdown } from '../../utils/markdown';
 
 export default function ProfilePostCard({
   data,
@@ -57,7 +58,7 @@ export default function ProfilePostCard({
                   {title}
                 </p>
                 <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-                  {content}
+                  {content ? previewMarkdown(content).slice(0, 100) : ''}
                 </p>
               </div>
               {image && (

@@ -29,7 +29,7 @@ export default function CommentItem({ data, onDelete, isAuthor }: Props) {
     <>
       <div className="border-b border-[#ccc] py-2.5">
         <div className="mb-2.5 flex items-center">
-          <Avartar user={author} />
+          <Avartar user={author} profileLink />
           {isAuthor && (
             <button
               onClick={handleDelete}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getNewProblems } from '../../api/mainApi';
 import { Link } from 'react-router';
 import { SquarePen } from 'lucide-react';
+import { previewMarkdown } from '../../utils/markdown';
 
 export type NewProblemsType = Awaited<ReturnType<typeof getNewProblems>>;
 export default function MainNewProblem() {
@@ -68,7 +69,9 @@ export default function MainNewProblem() {
                     {problem.title}
                   </p>
                   <p className="line-clamp-2 text-xs md:min-h-[2.8em] md:text-sm lg:text-base">
-                    {problem.content}
+                    {problem.content
+                      ? previewMarkdown(problem.content).slice(0, 100)
+                      : ''}
                   </p>
                   {problem.channel === 1 && (
                     <ul className="mb-2.5 flex gap-1.5">

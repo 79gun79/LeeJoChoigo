@@ -3,7 +3,6 @@ import SearchBox from '../../../components/search/SearchBox';
 import SearchListTop from '../../../components/search/SearchListTop';
 import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
-// import TagItem from '../../../components/ui/TagItem';
 import type { ChannelType, PostsType } from '../../../types';
 import { useLoaderData } from 'react-router';
 import { useEffect, useState } from 'react';
@@ -11,6 +10,7 @@ import { getChannelPosts } from '../../../api/postApi';
 import { searchPosts } from '../../../api/searchApi';
 import Loading from '../../../components/ui/Loading';
 import Nopost from '../../../components/ui/Nopost';
+import TagItem from '../../../components/ui/TagItem';
 
 export default function AlgorithmSolutionList() {
   const channel = useLoaderData<ChannelType>();
@@ -20,6 +20,9 @@ export default function AlgorithmSolutionList() {
 
   const [sortType, setSortType] = useState<'latest' | 'popular'>('latest');
   const [query, setQuery] = useState('');
+
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       setPending(true);
@@ -44,17 +47,8 @@ export default function AlgorithmSolutionList() {
       return sortedPosts.sort(
         (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at),
       );
-    }
-
-    if (sortType === 'popular') {
-      return sortedPosts.sort((a, b) => {
-        const aLikes = a.like?.length ?? 0;
-        const bLikes = b.like?.length ?? 0;
-
-        if (aLikes !== bLikes) return bLikes - aLikes;
-
-        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
-      });
+    } else if (sortType === 'popular') {
+      return sortedPosts.sort((a, b) => b.like_count - a.like_count);
     }
 
     return sortedPosts;
@@ -70,6 +64,20 @@ export default function AlgorithmSolutionList() {
     if (search) setPosts(search);
   };
 
+  const handleTagSearch = (tags: string[]) => {
+    setSelectedTags(tags);
+
+    if (tags.length === 0) {
+      setPosts(initPosts);
+      return;
+    }
+
+    const filtered = (initPosts ?? []).filter((post) =>
+      tags.some((tag) => post.tags?.includes(tag)),
+    );
+
+    setPosts(filtered);
+  };
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -82,19 +90,24 @@ export default function AlgorithmSolutionList() {
             setQuery={setQuery}
             onSearch={handleSearch}
           />
-          <TagSearch />
+          <TagSearch onSearch={handleTagSearch} channelId={channel.id} />
         </div>
         <div>
           <div className="mb-2">
             <p className="mb-1.5 text-sm md:text-base">선택한 유형</p>
-            <div className="flex flex-wrap gap-2.5">
-              {/* <TagItem></TagItem>
-              <TagItem></TagItem> */}
-            </div>
+            <ul className="flex flex-wrap gap-2.5">
+              {selectedTags.map((tag) => (
+                <TagItem key={tag} label={tag} />
+              ))}
+            </ul>
           </div>
           <div>
             <div className="mb-1">
-              <SearchListTop sortType={sortType} setSortType={setSortType} />
+              <SearchListTop
+                query={query}
+                sortType={sortType}
+                setSortType={setSortType}
+              />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {isPending ? (

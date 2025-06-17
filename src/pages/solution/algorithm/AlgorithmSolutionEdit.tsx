@@ -9,6 +9,7 @@ import supabase from '../../../utils/supabase';
 import { notify } from '../../../utils/customAlert';
 import { useAuthStore } from '../../../stores/authStore';
 import { getPost } from '../../../api/postApi';
+import { getUser } from '../../../api/userApi';
 
 const APIKEY = import.meta.env.VITE_API_GEMINI_KEY;
 const CHANNELID = 3;
@@ -34,7 +35,7 @@ export default function AlgorithmSolutionEdit() {
       const post = await getPost(Number(postId));
       if (!post) {
         notify('존재하지 않는 게시글입니다.', 'error');
-        navigate('/questions');
+        navigate('/solutions/coding');
         return;
       }
 
@@ -104,6 +105,16 @@ export default function AlgorithmSolutionEdit() {
       notify('수정 성공', 'success');
     } else {
       if (params) {
+        const userData = await getUser(session?.user.id as string);
+        const prevSolved = userData?.solved ?? [];
+        if (!prevSolved.includes(parseInt(params, 10))) {
+          const { data } = await supabase
+            .from('user')
+            .update({ solved: [...prevSolved, parseInt(params, 10)] })
+            .eq('id', userData?.id as string)
+            .select();
+          console.log(data);
+        }
         const { error } = await supabase.from('post').insert([
           {
             title,
@@ -200,7 +211,9 @@ export default function AlgorithmSolutionEdit() {
           }}
         />
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
-          <button className="button-lg gray">취소</button>
+          <button className="button-lg gray" onClick={() => navigate(-1)}>
+            취소
+          </button>
           <button className="button-lg" onClick={handleSubmit}>
             작성하기
           </button>

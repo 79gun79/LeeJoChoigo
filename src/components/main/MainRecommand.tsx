@@ -5,6 +5,7 @@ import { ChevronRight } from 'lucide-react';
 import type { User } from '../../types';
 import type { PostType } from '../../types/post';
 import { calculateLevel } from '../../utils/calculateLevel';
+import { previewMarkdown } from '../../utils/markdown';
 
 export default function MainRecommand({
   user,
@@ -99,7 +100,7 @@ export default function MainRecommand({
                   : randomAlgorithms &&
                     randomAlgorithms.map((problem, index) => (
                       <Link
-                        to={`/coding/write/${problem.solved_problem_id}`}
+                        to={`/solutions/coding/write/${problem.solved_problem_id}`}
                         key={index}
                         className={`md-hover-none hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:py-4 ${index + 1 !== randomAlgorithms.length && 'md:border-b'}`}
                       >
@@ -160,7 +161,9 @@ export default function MainRecommand({
                             {problem.title}
                           </p>
                           <p className="line-clamp-1 text-xs md:text-sm">
-                            {problem.content}
+                            {problem.content
+                              ? previewMarkdown(problem.content).slice(0, 100)
+                              : ''}
                           </p>
                         </Link>
                       ))

@@ -6,6 +6,7 @@ import wallpaper from '../assets/images/nubelson-fernandes-UcYBL5V0xWQ-unsplash.
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
 import { notify } from '../utils/customAlert';
+import logo from '/dailyCote.png';
 
 export default function Signup() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,28 +46,46 @@ export default function Signup() {
 
   const handleSignUp = async () => {
     try {
-      const { error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            name: name,
-            avatar_url: null,
-          },
-        },
-      });
+      const { data, error: duplicateErr } = await supabase
+        .from('user')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle();
 
-      if (error) {
-        if (error.code === 'user_already_exists') {
-          notify('이미 등록된 이메일입니다.', 'error');
-        } else if (error.code === 'email_address_invalid') {
-          notify('지원하지 않는 이메일 형식입니다.', 'warning');
-        }
-        console.error('[회원가입] 실패', error.code);
+      if (duplicateErr) {
+        notify('예상치 못한 오류가 발생했습니다.', 'error');
+        console.error('[회원가입] 실패', duplicateErr.code);
         return;
       }
 
-      setIsModalOpen(true);
+      if (data) {
+        notify('이미 가입된 이메일입니다.', 'info');
+        navigate('/login');
+        return;
+      } else {
+        const { error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              name: name,
+              avatar_url: null,
+            },
+          },
+        });
+
+        if (error) {
+          if (error.code === 'user_already_exists') {
+            notify('이미 가입된 이메일입니다.', 'info');
+          } else if (error.code === 'email_address_invalid') {
+            notify('지원하지 않는 이메일 형식입니다.', 'warning');
+          }
+          console.error('[회원가입] 실패', error.code);
+          return;
+        }
+
+        setIsModalOpen(true);
+      }
     } catch (e) {
       notify('예상치 못한 오류가 발생했습니다.', 'error');
       console.error('[회원가입] 예상치 못한 오류', e);
@@ -89,6 +108,16 @@ export default function Signup() {
       {/* ✅ 오른쪽 폼 영역 */}
       <div className="bg-bg-white relative z-10 flex min-h-screen w-full items-center justify-center rounded-l-[20px] shadow-lg md:ml-auto md:w-2/3">
         <div className="flex w-full max-w-md flex-col items-center px-4">
+          <button
+            className="text-main absolute top-0 left-10 cursor-pointer overflow-hidden"
+            onClick={() => navigate('/')}
+          >
+            <img
+              className="ml-[-8px] w-30 object-cover md:w-34 lg:w-38"
+              src={logo}
+              alt="logo image"
+            />
+          </button>
           <div className="text-main h4 mb-[26px] text-center !font-bold">
             Create Your Account
           </div>
@@ -112,7 +141,7 @@ export default function Signup() {
                 작성해주세요.
               </div>
             ) : (
-              <div className="t6 mb-[10px] text-green-600 md:mb-[14px]">
+              <div className="t5 mb-[10px] text-green-600 md:mb-[14px]">
                 올바른 형식입니다.
               </div>
             )}

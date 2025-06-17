@@ -19,6 +19,7 @@ export default function QuizSolutionDetail() {
   const [quiz, setQuiz] = useState<QuizItem[] | null>(null);
   const [quizTitle, setQuizTitle] = useState<string>('');
   const [quizId, setQuizId] = useState<number>(1);
+  const [hasQuiz, setHasQuiz] = useState(true);
   const navigate = useNavigate();
 
   const [comments, setComments] = useState<CommentType[] | null>(null);
@@ -35,6 +36,7 @@ export default function QuizSolutionDetail() {
     setQuiz((res?.quiz_data || []) as QuizItem[]);
     setQuizTitle(res?.title || '');
     setQuizId(res?.id || 1);
+    setHasQuiz(res?.is_yn || false);
     setLoading(false);
   };
 
@@ -44,6 +46,11 @@ export default function QuizSolutionDetail() {
     fetchQuiz();
     fetchComments();
   }, [id]);
+
+  const gotoProblem = () => {
+    if (!hasQuiz) navigate('/notfound');
+    else navigate(`/problems/job/${quizId}`);
+  };
 
   return (
     <>
@@ -64,10 +71,7 @@ export default function QuizSolutionDetail() {
                 <b>{quizTitle}</b>의 퀴즈
               </p>
               <div className="flex-grow"></div>
-              <button
-                onClick={() => navigate(`/problems/job/${quizId}`)}
-                className="button-sm"
-              >
+              <button onClick={gotoProblem} className="button-sm">
                 <NotebookPen className="h-[14px] w-[12px] shrink-0" />
                 해당 문제로
               </button>
