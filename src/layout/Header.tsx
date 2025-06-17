@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-import { Menu } from 'lucide-react';
+import { Lightbulb, Menu } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
@@ -81,13 +81,14 @@ export default function Header() {
               onClick={() => navigate('/')}
             >
               <img
-                className="ml-[-8px] w-30 object-cover md:w-34 lg:w-38"
+                className="ml-[-8px] w-30 object-cover md:w-34 lg:w-38 dark:brightness-200"
                 src={logo}
               />
             </button>
           </div>
 
           <Navigation onProtectedRoute={isLoginModalHandler} />
+          <Lightbulb />
 
           {isLogin && (
             <div className="relative flex items-start gap-4 pt-2">

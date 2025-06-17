@@ -3,7 +3,6 @@ import TagItem from '../ui/TagItem';
 import type { EditTextProps, EditTextHandle } from './EditText.types';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
-
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 // @ts-expect-error: prismjs has no type declarations
 import Prism from 'prismjs';
