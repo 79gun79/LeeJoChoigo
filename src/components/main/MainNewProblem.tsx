@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import { getNewProblems } from '../../api/mainApi';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { SquarePen } from 'lucide-react';
 import { previewMarkdown } from '../../utils/markdown';
+import { useModalStore } from '../../stores/modalStore';
 
 export type NewProblemsType = Awaited<ReturnType<typeof getNewProblems>>;
-export default function MainNewProblem() {
+export default function MainNewProblem({ isLogin }: { isLogin: boolean }) {
   const [newProblem, setNewProblem] = useState<NewProblemsType>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const { setLogInModal } = useModalStore();
 
   useEffect(() => {
     const newProblemFetch = async () => {
@@ -23,6 +26,15 @@ export default function MainNewProblem() {
 
     newProblemFetch();
   }, []);
+
+  const linkClickHandler = (path: string) => {
+    if (!isLogin) {
+      setLogInModal(true);
+      return;
+    } else {
+      navigate(path);
+    }
+  };
 
   return (
     <>
@@ -54,10 +66,10 @@ export default function MainNewProblem() {
                   ? `/problems/job/${problem.id}`
                   : `/solutions/coding/write/${problem.id}`;
               return (
-                <Link
-                  to={linkTo}
+                <button
+                  onClick={() => linkClickHandler(linkTo)}
                   key={i}
-                  className="hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:p-4"
+                  className="hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 text-left md:p-4"
                 >
                   <p
                     className={`line-clamp-1 text-xs font-semibold md:text-sm lg:text-base ${problem.channel === 1 && 'text-main'} ${problem.channel === 2 && 'text-sub1'} `}
@@ -85,7 +97,7 @@ export default function MainNewProblem() {
                       ))}
                     </ul>
                   )}
-                </Link>
+                </button>
               );
             })
           ) : (

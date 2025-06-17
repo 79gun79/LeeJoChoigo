@@ -2,7 +2,7 @@ import { ReactTyped } from 'react-typed';
 import logo from '/dailyCote.png';
 import { CircleHelp, NotebookPen, PencilRuler, SquarePen } from 'lucide-react';
 import MainUserInfo from '../components/main/MainUserInfo';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import PopularProblem from '../components/main/MainPopularProblem';
 import MainPopularProblem from '../components/main/MainNewProblem';
 import MainRecommand from '../components/main/MainRecommand';
@@ -10,12 +10,25 @@ import { useAuthStore } from '../stores/authStore';
 import { getUser } from '../api/userApi';
 import { useEffect, useState } from 'react';
 import type { User } from '../types';
+import { useModalStore } from '../stores/modalStore';
 
 export default function HomePage() {
   const session = useAuthStore((state) => state.session);
   const isLogin = useAuthStore((state) => state.isLogin);
   const [user, setUser] = useState<User>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const { setLogInModal } = useModalStore();
+
+  const linkClickHandler = (path: string) => {
+    if (!isLogin) {
+      setLogInModal(true);
+      return;
+    } else {
+      navigate(path);
+    }
+  };
+
   useEffect(() => {
     const userInfoFetch = async () => {
       if (!session) return;
@@ -73,7 +86,12 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="flex gap-2 md:h-[calc(100%-56px)] lg:h-[calc(100%-64px)] lg:gap-3">
-                <Link to="/problems/coding" className="menu-button group">
+                <button
+                  onClick={() => {
+                    navigate('/problems/coding');
+                  }}
+                  className="menu-button group"
+                >
                   <span className="icon-bg">
                     <NotebookPen className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>
@@ -83,8 +101,13 @@ export default function HomePage() {
                     문제 풀기
                   </span>
                   <span className="menu-button-effect"></span>
-                </Link>
-                <Link to="/problems/job" className="menu-button group">
+                </button>
+                <button
+                  onClick={() => {
+                    navigate('/problems/job');
+                  }}
+                  className="menu-button group"
+                >
                   <span className="icon-bg">
                     <SquarePen className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>
@@ -94,8 +117,13 @@ export default function HomePage() {
                     문제 풀기
                   </span>
                   <span className="menu-button-effect"></span>
-                </Link>
-                <Link to="/questions/write" className="menu-button group">
+                </button>
+                <button
+                  onClick={() => {
+                    linkClickHandler('/questions/write');
+                  }}
+                  className="menu-button group"
+                >
                   <span className="icon-bg">
                     <CircleHelp className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>
@@ -103,8 +131,13 @@ export default function HomePage() {
                     질문하기
                   </span>
                   <span className="menu-button-effect"></span>
-                </Link>
-                <Link to="/problems/job/write" className="menu-button group">
+                </button>
+                <button
+                  onClick={() => {
+                    linkClickHandler('/problems/job/write');
+                  }}
+                  className="menu-button group"
+                >
                   <span className="icon-bg">
                     <PencilRuler className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>
@@ -114,18 +147,22 @@ export default function HomePage() {
                     문제 만들기
                   </span>
                   <span className="menu-button-effect"></span>
-                </Link>
+                </button>
               </div>
             </div>
           </div>
           {/* 추천문제 */}
-          <MainRecommand user={user} isUserLoading={isLoading} />
+          <MainRecommand
+            user={user}
+            isLogin={isLogin}
+            isUserLoading={isLoading}
+          />
           <div className="md:flex md:gap-6">
             {/* 인기문제 */}
-            <PopularProblem />
+            <PopularProblem isLogin={isLogin} />
 
             {/* 최신문제 */}
-            <MainPopularProblem />
+            <MainPopularProblem isLogin={isLogin} />
           </div>
         </div>
       </div>
