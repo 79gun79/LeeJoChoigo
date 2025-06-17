@@ -4,17 +4,31 @@ import type { BJPostType } from '../types';
 
 type PostStore = {
   problems: { page: number; posts: BJPostType[] }[];
-  setProblemsByPage: (page: number) => Promise<void>;
+  setProblemsByPage: (
+    page: number,
+    sortType: 'latest' | 'popular',
+  ) => Promise<void>;
   updateProblemLike: (postId: number, newLikes: BJPostType['like']) => void;
+  sortType: 'latest' | 'popular';
+  setSortType: (sortType: 'latest' | 'popular') => void;
+  resetProblems: () => void;
 };
 
 export const useProblemStore = create<PostStore>((set, get) => ({
   problems: [],
-  setProblemsByPage: async (page: number) => {
+  sortType: 'latest',
+
+  setSortType: (sortType) => set({ sortType }),
+
+  setProblemsByPage: async (page: number, sortType: 'latest' | 'popular') => {
     const exists = get().problems.find((p) => p.page === page);
     if (exists) return;
 
-    const data = await fetchBjProblems(page);
+    const data =
+      sortType === 'latest'
+        ? await fetchBjProblems(page, 'id', true)
+        : await fetchBjProblems(page, 'like_count', false);
+
     if (data && data.length > 0) {
       set((state) => ({
         problems: [...state.problems, { page, posts: data }],
@@ -33,4 +47,6 @@ export const useProblemStore = create<PostStore>((set, get) => ({
       })),
     }));
   },
+
+  resetProblems: () => set({ problems: [] }),
 }));

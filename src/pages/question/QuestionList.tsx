@@ -30,6 +30,7 @@ export default function QuestionList() {
   const [query, setQuery] = useState('');
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       setPending(true);
@@ -54,17 +55,8 @@ export default function QuestionList() {
       return sortedPosts.sort(
         (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at),
       );
-    }
-
-    if (sortType === 'popular') {
-      return sortedPosts.sort((a, b) => {
-        const aLikes = a.like?.length ?? 0;
-        const bLikes = b.like?.length ?? 0;
-
-        if (aLikes !== bLikes) return bLikes - aLikes;
-
-        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
-      });
+    } else if (sortType === 'popular') {
+      return sortedPosts.sort((a, b) => b.like_count - a.like_count);
     }
 
     return sortedPosts;
@@ -127,7 +119,11 @@ export default function QuestionList() {
           </div>
           <div>
             <div className="mb-1">
-              <SearchListTop sortType={sortType} setSortType={setSortType} />
+              <SearchListTop
+                query={query}
+                sortType={sortType}
+                setSortType={setSortType}
+              />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {isPending ? (

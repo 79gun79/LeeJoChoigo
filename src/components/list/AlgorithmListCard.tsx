@@ -4,19 +4,20 @@ import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore';
 import { useModalStore } from '../../stores/modalStore';
 import { usePostLike } from '../../hooks/usePostLike';
-import type { BJPostType } from '../../types';
+import type { BJPostType, User } from '../../types';
+import { useEffect, useState } from 'react';
+import { getUser } from '../../api/userApi';
 
 // 임시로 지정한 props 입니다
 export default function AlgorithmListCard({
-  solve, //문제 풀이여부 확인
   problem,
 }: {
-  solve?: boolean;
   problem: BJPostType;
 }) {
   const session = useAuthStore((state) => state.session);
   const { setLogInModal } = useModalStore();
   const navigate = useNavigate();
+  const [me, setMe] = useState<User>(null);
   const { isLiked, likedUsers, handleLike } = usePostLike({
     postId: problem.id,
     initialLikes: problem.like,
@@ -25,6 +26,18 @@ export default function AlgorithmListCard({
   let level = '레벨 없음';
   if (problem.solved_problem_level)
     level = calculateLevel(problem.solved_problem_level);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const myData = await getUser(session?.user.id as string);
+        setMe(myData);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchData();
+  }, [session]);
 
   const problemHandler = () => {
     if (!session?.user.id) {
@@ -74,7 +87,8 @@ export default function AlgorithmListCard({
         </div>
         <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
           <p className="text-xs md:text-sm lg:text-base">{level}</p>
-          {solve && (
+
+          {(me?.solved ?? []).includes(problem?.solved_problem_id || 0) && (
             <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
               <Check className="w-4 text-[var(--color-green-info)] md:w-5 lg:w-6" />
               풀이됨

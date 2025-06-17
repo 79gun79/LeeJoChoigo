@@ -60,17 +60,8 @@ export default function QuizProblemList() {
       return sortedPosts.sort(
         (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at),
       );
-    }
-
-    if (sortType === 'popular') {
-      return sortedPosts.sort((a, b) => {
-        const aLikes = a.like?.length ?? 0;
-        const bLikes = b.like?.length ?? 0;
-
-        if (aLikes !== bLikes) return bLikes - aLikes;
-
-        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
-      });
+    } else if (sortType === 'popular') {
+      return sortedPosts.sort((a, b) => b.like_count - a.like_count);
     }
 
     return sortedPosts;
@@ -110,7 +101,7 @@ export default function QuizProblemList() {
         <div>
           <div className="mb-2">
             <p className="mb-1.5 text-sm md:text-base">
-              카테고리 유형 : <b>{category}</b>
+              선택한 유형 : <b>{category || '전체'}</b>
             </p>
             <div className="flex flex-wrap gap-2.5">
               <div className="mb-4 flex flex-wrap gap-2.5">
@@ -123,7 +114,11 @@ export default function QuizProblemList() {
           </div>
           <div>
             <div className="mb-1">
-              <SearchListTop sortType={sortType} setSortType={setSortType} />
+              <SearchListTop
+                query={query}
+                sortType={sortType}
+                setSortType={setSortType}
+              />
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {isPending ? (

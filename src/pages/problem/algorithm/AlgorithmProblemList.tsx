@@ -1,12 +1,13 @@
 import AlgorithmListCard from '../../../components/list/AlgorithmListCard';
 // import SearchBox from '../../../components/search/SearchBox';
-import TagSearch from '../../../components/search/SearchTag';
+// import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
-// import SearchListTop from '../../../components/search/SearchListTop';
+import SearchListTop from '../../../components/search/SearchListTop';
 import { useEffect, useRef, useState } from 'react';
 import { useProblemStore } from '../../../stores/problemStore';
 import { useLoaderData } from 'react-router';
 import type { ChannelType } from '../../../types';
+import Nopost from '../../../components/ui/Nopost';
 import TopButton from '../../../components/common/TopButton';
 import AlgorithmListCardSkeleton from '../../../components/list/AlgorithmListCardSkeleton';
 
@@ -18,6 +19,8 @@ export default function AlgorithmProblemList() {
   const endListRef = useRef<HTMLDivElement | null>(null);
   const isFetched = useRef(false);
   const channel = useLoaderData<ChannelType>();
+
+  const { sortType, setSortType, resetProblems } = useProblemStore();
   const [isFirstLoading, setIsFirstLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,7 +29,7 @@ export default function AlgorithmProblemList() {
     isFetched.current = true;
 
     setIsFirstLoading(true);
-    setProblemsByPage(page.current).finally(() => {
+    setProblemsByPage(page.current, sortType).finally(() => {
       setIsFirstLoading(false);
 
       const observer = new IntersectionObserver((entries) => {
@@ -34,7 +37,7 @@ export default function AlgorithmProblemList() {
         if (entry.isIntersecting && !isLoading) {
           setIsLoading(true);
           page.current += 1;
-          setProblemsByPage(page.current).finally(() => {
+          setProblemsByPage(page.current, sortType).finally(() => {
             setIsLoading(false);
           });
         }
@@ -47,7 +50,19 @@ export default function AlgorithmProblemList() {
         if (current) observer.unobserve(current);
       };
     });
-  }, []);
+  }, [page, sortType]);
+
+  const handleSortChange = (newSort: 'latest' | 'popular') => {
+    resetProblems();
+    setSortType(newSort);
+    page.current = 0;
+    isFetched.current = true;
+
+    setIsFirstLoading(true);
+    setProblemsByPage(0, newSort).finally(() => {
+      setIsFirstLoading(false);
+    });
+  };
 
   return (
     <>
@@ -61,7 +76,7 @@ export default function AlgorithmProblemList() {
             setQuery={setQuery}
             onSearch={handleSearch}
           /> */}
-          <TagSearch />
+          {/* <TagSearch /> */}
         </div>
         <div>
           <div className="mb-2">
@@ -72,7 +87,14 @@ export default function AlgorithmProblemList() {
             </div>
           </div>
           <div>
-            <div className="mb-1">{/* <SearchListTop /> */}</div>
+            <div className="mb-1">
+              <SearchListTop
+                query=""
+                sortType={sortType}
+                setSortType={handleSortChange}
+                isAlgorithm={true}
+              />
+            </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {isFirstLoading &&
                 Array.from({ length: 10 }).map((_, i) => (
@@ -81,15 +103,16 @@ export default function AlgorithmProblemList() {
 
               {problems &&
                 !isFirstLoading &&
-                problems.map((problem) => (
-                  <AlgorithmListCard key={problem.id} problem={problem} />
+                problems.map((problem, i) => (
+                  <AlgorithmListCard
+                    key={`${problem.id}-${i}`}
+                    problem={problem}
+                  />
                 ))}
 
               {problems && problems.length === 0 && !isFirstLoading && (
                 <div className="col-span-2 py-12 text-center">
-                  <h3 className="t1 mb-2 font-medium text-black">
-                    포스트가 없습니다.
-                  </h3>
+                  <Nopost />
                 </div>
               )}
 
@@ -97,9 +120,6 @@ export default function AlgorithmProblemList() {
                 Array.from({ length: 2 }).map((_, i) => (
                   <AlgorithmListCardSkeleton key={`skeleton-${i}`} />
                 ))}
-
-              {/* <AlgorithmListCard />
-              <AlgorithmListCard /> */}
             </div>
             <div ref={endListRef}></div>
           </div>
