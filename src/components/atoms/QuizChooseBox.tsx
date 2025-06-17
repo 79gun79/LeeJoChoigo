@@ -15,19 +15,17 @@ export default function QuizChooseBox({
   onSelectToggle,
   onChangeValue,
 }: QuizChooseProps) {
-  console.log('동일한 URI에 대해 다양한 HTTP 메서드를 활용'.length);
   return (
     <>
       <div
-        onClick={onSelectToggle}
         className={twMerge(
-          'flex h-10 cursor-pointer bg-white px-[10px] py-[10px] shadow-md md:min-w-[140px]',
+          'flex h-10 bg-white px-[10px] py-[10px] shadow-md md:min-w-[140px]',
           `${selected ? 'bg-sub1' : 'bg-white'}`,
         )}
       >
         <div
           className={twMerge(
-            'bg-sub3 text-main flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold lg:text-sm',
+            'bg-sub3 text-main flex h-5 w-5 items-center justify-center rounded-full text-center text-xs font-semibold lg:text-sm',
             `${selected ? 'bg-main text-white' : 'bg-sub3 text-main'}`,
           )}
         >
@@ -44,6 +42,12 @@ export default function QuizChooseBox({
           onChange={(e) => onChangeValue(e.target.value)}
           onClick={(e) => e.stopPropagation()}
           maxLength={28}
+        />
+        <input
+          onClick={onSelectToggle}
+          type="checkbox"
+          checked={selected}
+          className={twMerge('accent-main h-5 w-5 cursor-pointer')}
         />
       </div>
     </>

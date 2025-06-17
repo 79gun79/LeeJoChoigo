@@ -22,6 +22,7 @@ export default function QuizComponent({
 }: JobQuizProps) {
   const { description, quiz } = item;
   const [isShow, setShow] = useState(true);
+  const [valid, setValid] = useState(true);
 
   const isValid = () => {
     const hasDescription = description.trim() !== '';
@@ -47,8 +48,11 @@ export default function QuizComponent({
   const createQuiz = () => {
     if (isValid()) {
       setShow(false);
+      setValid(true);
       notify('퀴즈를 생성했습니다!', 'success');
     } else {
+      setValid(true);
+      if (quiz.filter((v) => v.selected).length < 1) setValid(false);
       notify('퀴즈가 완성되지 않았습니다!', 'warning');
     }
   };
@@ -126,6 +130,11 @@ export default function QuizComponent({
                 />
               ))}
             </div>
+            {!valid && (
+              <p className="t4 text-red-caution">
+                1개 이상의 정답을 체크하세요!
+              </p>
+            )}
             <div className="mt-[10px] flex gap-[14px]">
               <div onClick={resetQuiz} className="button-quiz">
                 <X className="ml-[7px]" size={16} />
