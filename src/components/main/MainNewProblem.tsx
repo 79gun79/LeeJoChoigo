@@ -56,7 +56,7 @@ export default function MainNewProblem() {
                 <Link
                   to={linkTo}
                   key={i}
-                  className="hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:p-4"
+                  className="hover-box dark:bg-bg-white flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:p-4"
                 >
                   <p
                     className={`line-clamp-1 text-xs font-semibold md:text-sm lg:text-base ${problem.channel === 1 && 'text-main'} ${problem.channel === 2 && 'text-sub1'} `}

@@ -74,7 +74,10 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="flex gap-2 md:h-[calc(100%-56px)] lg:h-[calc(100%-64px)]">
-                <Link to="/problems/coding" className="menu-button group">
+                <Link
+                  to="/problems/coding"
+                  className="menu-button group dark:bg-bg-white"
+                >
                   <span className="icon-bg">
                     <NotebookPen className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>
@@ -85,7 +88,10 @@ export default function HomePage() {
                   </span>
                   <span className="menu-button-effect"></span>
                 </Link>
-                <Link to="/problems/job" className="menu-button group">
+                <Link
+                  to="/problems/job"
+                  className="menu-button group dark:bg-bg-white"
+                >
                   <span className="icon-bg">
                     <SquarePen className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>
@@ -96,7 +102,10 @@ export default function HomePage() {
                   </span>
                   <span className="menu-button-effect"></span>
                 </Link>
-                <Link to="/questions/write" className="menu-button group">
+                <Link
+                  to="/questions/write"
+                  className="menu-button group dark:bg-bg-white"
+                >
                   <span className="icon-bg">
                     <CircleHelp className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>
@@ -105,7 +114,10 @@ export default function HomePage() {
                   </span>
                   <span className="menu-button-effect"></span>
                 </Link>
-                <Link to="/problems/write" className="menu-button group">
+                <Link
+                  to="/problems/write"
+                  className="menu-button group dark:bg-bg-white"
+                >
                   <span className="icon-bg">
                     <PencilRuler className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>

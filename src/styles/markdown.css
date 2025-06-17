@@ -157,3 +157,34 @@
   background-color: #f6f8fa;
   font-weight: 600;
 }
+
+/* 다크모드 전용 스타일 */
+html.dark .markdown-body,
+body.dark .markdown-body {
+  background-color: var(--color-white);
+  color: var(--color-gray);
+}
+
+html.dark .markdown-body a {
+  color: #58a6ff;
+}
+
+html.dark .markdown-body blockquote {
+  color: #8b949e;
+  background-color: #161b22;
+  border-left-color: #30363d;
+}
+
+html.dark .markdown-body pre {
+  background-color: #161b22 !important;
+  color: #c9d1d9 !important;
+}
+
+html.dark .markdown-body th {
+  background-color: #21262d;
+}
+
+html.dark .markdown-body th,
+html.dark .markdown-body td {
+  border-color: #30363d;
+}

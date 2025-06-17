@@ -8,7 +8,7 @@ import Navigation from '../components/atoms/Navigation';
 import userDefault from '../assets/images/icon-user-default.png';
 import DropdownMenu from '../components/modals/DropdownMenu';
 import { useModalStore } from '../stores/modalStore';
-import logo from '../assets/images/dailyCote.png';
+import logo from '../assets/images/dailyCote.svg';
 import AlarmLayout from './AlarmLayout';
 
 export default function Header() {
@@ -70,7 +70,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex h-[55px] w-full items-center justify-between overflow-visible border-b border-[#cccccc] px-4 md:h-[60px] md:justify-around md:px-0">
+      <header className="border-gray2 flex h-[55px] w-full items-center justify-between overflow-visible border-b px-4 md:h-[60px] md:justify-around md:px-0">
         <div className="flex gap-3">
           <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
             <Menu className="w-[22px]" />
@@ -80,7 +80,7 @@ export default function Header() {
             onClick={() => navigate('/')}
           >
             <img
-              className="ml-[-8px] h-8 w-28 object-cover md:h-10 md:w-32"
+              className="ml-[-8px] h-8 w-28 object-cover md:h-10 md:w-32 dark:brightness-200"
               src={logo}
             />
           </button>
@@ -117,7 +117,7 @@ export default function Header() {
         {!isLogin && (
           <div className="flex items-center gap-4">
             <button
-              className="t5 rounded-[4px] border border-[#060606] px-3 py-1"
+              className="t5 border-gray4 rounded-[4px] border px-3 py-1"
               onClick={() =>
                 navigate('/login', { state: { from: location.pathname } })
               }

@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import './font.css';
 
+@custom-variant dark (&:where(.dark, .dark *));
 @theme {
   /* Gray Scale */
   --color-black: #000000;

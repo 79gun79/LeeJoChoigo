@@ -129,7 +129,7 @@ export default function ListCard({
         </div>
       ) : (
         <div onClick={handleClick} className="cursor-pointer hover:shadow-md">
-          <div className="w-full rounded-sm border border-[#ccc]">
+          <div className="border-gray2 dark:bg-bg-white w-full rounded-sm border bg-white">
             <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
               <div className="flex gap-2.5">
                 <div className="w-[calc(100%-110px)] md:w-[calc(100%-130px)] lg:w-[calc(100%-150px)]">
@@ -170,9 +170,7 @@ export default function ListCard({
                     <Heart
                       onClick={handleLike}
                       className={`w-3.5 cursor-pointer transition md:w-4 lg:w-4.5 ${
-                        isLiked
-                          ? 'fill-[#E95E5E] text-[#E95E5E]'
-                          : 'text-[#000000]'
+                        isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-black'
                       }`}
                     />
                     <span className="text-[10px] md:text-xs lg:text-sm">
@@ -191,7 +189,7 @@ export default function ListCard({
                 </div>
               </div>
             </div>
-            <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
+            <div className="border-gray3 flex w-full items-center border-t px-3 py-2 md:px-4 md:py-2.5">
               <Avartar user={data.author} />
               {(me?.solved ?? []).includes(data.id) && (
                 <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">

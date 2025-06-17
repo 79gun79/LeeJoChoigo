@@ -51,7 +51,7 @@ export default function AlgorithmListCard({
       </div> */}
 
       <div
-        className="w-full cursor-pointer rounded-sm border border-[#ccc] hover:shadow-md"
+        className="border-gray2 dark:bg-bg-white w-full cursor-pointer rounded-sm border hover:shadow-md"
         onClick={problemHandler}
       >
         <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
@@ -71,7 +71,7 @@ export default function AlgorithmListCard({
               <div className="flex items-center gap-1">
                 <Heart
                   className={`w-3.5 cursor-pointer transition md:w-4 lg:w-4.5 ${
-                    isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-[#000000]'
+                    isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-black'
                   }`}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -85,7 +85,7 @@ export default function AlgorithmListCard({
             </div>
           </div>
         </div>
-        <div className="flex w-full items-center border-t border-[#ccc] px-3 py-2 md:px-4 md:py-2.5">
+        <div className="border-gray2 flex w-full items-center border-t px-3 py-2 md:px-4 md:py-2.5">
           <p className="text-xs md:text-sm lg:text-base">{level}</p>
           {solve && (
             <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">

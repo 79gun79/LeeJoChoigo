@@ -18,7 +18,7 @@ export default function SearchListTop({ sortType, setSortType }: Props) {
               onChange={(e) =>
                 setSortType(e.target.value as 'latest' | 'popular')
               }
-              className="cursor-pointer appearance-none py-1 pr-5.5 pl-1.5 md:pr-6.5"
+              className="cursor-pointer appearance-none bg-white py-1 pr-5.5 pl-1.5 md:pr-6.5"
             >
               <option value="latest">최신순</option>
               <option value="popular">인기순</option>

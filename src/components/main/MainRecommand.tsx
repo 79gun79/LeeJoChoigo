@@ -75,7 +75,7 @@ export default function MainRecommand({
         </div>
         <div className="relative flex gap-2.5 pb-[300px] md:gap-6 md:pb-0">
           <div
-            className={`group w-full ${isActive === 0 && 'active'} rounded-sm border-[#ccc] md:relative md:border`}
+            className={`group w-full ${isActive === 0 && 'active'} dark:bg-bg-white rounded-sm border-[#ccc] md:relative md:border`}
           >
             <button
               onClick={() => setIsActive(0)}
@@ -124,7 +124,7 @@ export default function MainRecommand({
             </div>
           </div>
           <div
-            className={`group w-full ${isActive === 1 && 'active'} rounded-sm border-[#ccc] md:border`}
+            className={`group w-full ${isActive === 1 && 'active'} dark:bg-bg-white rounded-sm border-[#ccc] md:border`}
           >
             <button
               onClick={() => setIsActive(1)}

@@ -14,7 +14,7 @@ export default function Avartar({ user }: { user?: User }) {
           />
         </div>
         <div>
-          <span className="text-[10px] text-[#464646] md:text-xs lg:text-sm">
+          <span className="text-gray3 text-[10px] md:text-xs lg:text-sm">
             {user?.fullname || '익명'}
           </span>
         </div>

@@ -14,6 +14,8 @@ import { PulseLoader } from 'react-spinners';
 import ProblemDescRender from '../common/ProblemDescRender';
 import { useAuthStore } from '../../stores/authStore';
 import { notify } from '../../utils/customAlert';
+import 'prismjs/themes/prism-tomorrow.css';
+
 //import { te } from 'date-fns/locale';
 
 const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
