@@ -54,6 +54,25 @@ export default function ProfilePostCard({
           <div className="flex h-full w-full flex-col px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
             <div className="flex w-full gap-2.5">
               <div className="w-full min-w-0">
+                <p
+                  className={`lg: mb-2 text-sm text-[10px] font-semibold md:text-xs ${
+                    channel === 2
+                      ? 'text-[#014195]'
+                      : channel === 3
+                        ? 'text-main'
+                        : channel === 4
+                          ? 'text-sub1'
+                          : 'text-green-info'
+                  }`}
+                >
+                  {channel === 2
+                    ? '개발직군 문제'
+                    : channel === 3
+                      ? '알고리즘 풀이'
+                      : channel === 4
+                        ? '개발직군 풀이'
+                        : '질문'}
+                </p>
                 <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
                   {title}
                 </p>
