@@ -200,7 +200,9 @@ export default function AlgorithmSolutionEdit() {
           }}
         />
         <div className="mb-[25px] flex gap-3 md:mb-[35px] lg:justify-center">
-          <button className="button-lg gray">취소</button>
+          <button className="button-lg gray" onClick={() => navigate(-1)}>
+            취소
+          </button>
           <button className="button-lg" onClick={handleSubmit}>
             작성하기
           </button>
