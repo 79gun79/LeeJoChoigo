@@ -55,7 +55,7 @@ export default function HomePage() {
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
         <div className="flex flex-col gap-6 md:gap-8 lg:gap-10">
           {/* 사용자 정보 */}
-          <div className="md:flex md:h-[180px] md:gap-6 lg:h-[200px]">
+          <div className="md:flex md:gap-6">
             <MainUserInfo
               user={user}
               isLogin={isLogin}
@@ -72,7 +72,7 @@ export default function HomePage() {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-2 md:h-[calc(100%-56px)] lg:h-[calc(100%-64px)]">
+              <div className="flex gap-2 md:h-[calc(100%-56px)] lg:h-[calc(100%-64px)] lg:gap-3">
                 <Link to="/problems/coding" className="menu-button group">
                   <span className="icon-bg">
                     <NotebookPen className="text-main h-5 w-5 lg:h-6 lg:w-6" />

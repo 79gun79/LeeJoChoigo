@@ -91,11 +91,11 @@ export default function MainUserInfo({
 
   return (
     <>
-      <div className="relative -mt-28 mb-6 box-border h-[150px] rounded-sm bg-white p-5 drop-shadow-md transition-[margin] duration-500 md:order-2 md:mt-0 md:h-full md:w-[320px] md:shrink-0 md:p-6 md:py-7 md:transition-none lg:w-[380px] lg:p-7 lg:py-8">
+      <div className="relative -mt-28 mb-6 box-border rounded-sm bg-white p-5 drop-shadow-md transition-[margin] duration-500 md:order-2 md:mt-0 md:mb-0 md:min-h-[170px] md:w-[320px] md:shrink-0 md:p-6 md:py-7 md:transition-none lg:min-h-[190px] lg:w-[400px] lg:p-7 lg:py-8">
         {isLogin ? (
           isLoading || isUserLoading ? (
             <div className="flex h-full flex-col justify-between">
-              <div className="h-5 w-4/5 animate-pulse rounded-sm bg-gray-200 md:h-6"></div>
+              <div className="mb-7 h-5 w-4/5 animate-pulse rounded-sm bg-gray-200 md:h-6"></div>
               <div className="flex justify-around">
                 <div className="h-17 w-2/5 animate-pulse rounded-sm bg-gray-200"></div>
                 <div className="h-17 w-2/5 animate-pulse rounded-sm bg-gray-200"></div>
@@ -103,7 +103,7 @@ export default function MainUserInfo({
             </div>
           ) : (
             <div className="flex h-full flex-col">
-              <p className="flex flex-wrap items-end gap-1 text-sm md:text-base lg:text-lg">
+              <p className="mb-5 flex flex-wrap items-end gap-1 text-sm md:mb-0 md:text-base lg:text-lg">
                 <User className="h-5 w-5 shrink-0" />
                 <span className="relative line-clamp-1 text-base leading-none font-bold md:text-lg lg:text-xl">
                   {user?.fullname}
@@ -113,14 +113,14 @@ export default function MainUserInfo({
                   님이 진행하신 내용
                 </span>
               </p>
-              <div className="mt-auto flex w-full justify-center gap-7">
+              <div className="mt-auto flex w-full flex-wrap justify-center gap-7">
                 <Link
                   to={`/profile/${session?.user.id}`}
                   state={{ menu: 3 }}
-                  className="flex flex-col items-center gap-2"
+                  className="flex max-w-none min-w-0 shrink-0 flex-col items-center gap-2"
                 >
-                  <p className="flex items-end gap-0.5 md:text-lg">
-                    <span className="text-4xl leading-none font-bold lg:text-5xl">
+                  <p className="flex max-w-none min-w-0 flex-wrap items-end gap-0.5 text-sm md:text-base">
+                    <span className="text-3xl leading-none font-bold lg:text-4xl">
                       {solvedAlgorithm != null ? solvedAlgorithm?.length : 0}
                     </span>
                     /<span>{algorithmTotalCount.toLocaleString()}</span>
@@ -132,10 +132,10 @@ export default function MainUserInfo({
                 <Link
                   to={`/profile/${session?.user.id}`}
                   state={{ menu: 4 }}
-                  className="flex flex-col items-center gap-2"
+                  className="flex max-w-none min-w-0 shrink-0 flex-col items-center gap-2"
                 >
-                  <p className="flex items-end gap-0.5 md:text-lg">
-                    <span className="text-4xl leading-none font-bold lg:text-5xl">
+                  <p className="flex max-w-none min-w-0 flex-wrap items-end gap-0.5 text-sm md:text-base">
+                    <span className="text-3xl leading-none font-bold lg:text-4xl">
                       {solvedJob}
                     </span>
                     /<span>{jobTotalCount.toLocaleString()}</span>
