@@ -4,42 +4,34 @@ import type { BJPostType } from '../types';
 
 type PostStore = {
   problems: { page: number; posts: BJPostType[] }[];
-  setProblemsByPage: (page: number) => Promise<void>;
+  setProblemsByPage: (
+    page: number,
+    sortType: 'latest' | 'popular',
+  ) => Promise<void>;
   updateProblemLike: (postId: number, newLikes: BJPostType['like']) => void;
   sortType: 'latest' | 'popular';
   setSortType: (sortType: 'latest' | 'popular') => void;
+  resetProblems: () => void;
 };
 
 export const useProblemStore = create<PostStore>((set, get) => ({
   problems: [],
   sortType: 'latest',
 
-  setSortType: (sortType) => {
-    set((state) => ({
-      sortType: sortType,
-      problems: state.problems.map((pageObj) => ({
-        ...pageObj,
-        posts: [...pageObj.posts].sort((a, b) =>
-          sortType === 'popular' ? b.like.length - a.like.length : a.id - b.id,
-        ),
-      })),
-    }));
-  },
+  setSortType: (sortType) => set({ sortType }),
 
-  setProblemsByPage: async (page: number) => {
+  setProblemsByPage: async (page: number, sortType: 'latest' | 'popular') => {
     const exists = get().problems.find((p) => p.page === page);
     if (exists) return;
 
-    const data = await fetchBjProblems(page);
-    if (data && data.length > 0) {
-      const { sortType } = get();
-      const sortedData =
-        sortType === 'popular'
-          ? [...data].sort((a, b) => b.like.length - a.like.length)
-          : [...data].sort((a, b) => a.id - b.id);
+    const data =
+      sortType === 'latest'
+        ? await fetchBjProblems(page, 'id', true)
+        : await fetchBjProblems(page, 'like_count', false);
 
+    if (data && data.length > 0) {
       set((state) => ({
-        problems: [...state.problems, { page, posts: sortedData }],
+        problems: [...state.problems, { page, posts: data }],
       }));
     }
     console.log('problem store : ', get().problems.length + '개');
@@ -55,4 +47,6 @@ export const useProblemStore = create<PostStore>((set, get) => ({
       })),
     }));
   },
+
+  resetProblems: () => set({ problems: [] }),
 }));

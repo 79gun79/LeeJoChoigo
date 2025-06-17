@@ -31,9 +31,7 @@ export default function SearchListTop({
               <option value="latest">
                 {isAlgorithm ? '번호순' : '최신순'}
               </option>
-              <option value="popular">
-                {isAlgorithm ? '풀이순' : '인기순'}
-              </option>
+              <option value="popular">인기순</option>
             </select>
             <ArrowDownUp className="top0 absolute top-1/2 right-1 h-[15px] w-[15px] -translate-y-1/2 md:h-[17px] md:w-[17px]" />
           </div>
