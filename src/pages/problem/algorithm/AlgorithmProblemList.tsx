@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useProblemStore } from '../../../stores/problemStore';
 import { useLoaderData } from 'react-router';
 import type { ChannelType } from '../../../types';
+import TopButton from '../../../components/common/TopButton';
 import AlgorithmListCardSkeleton from '../../../components/list/AlgorithmListCardSkeleton';
 
 export default function AlgorithmProblemList() {
@@ -103,6 +104,7 @@ export default function AlgorithmProblemList() {
             <div ref={endListRef}></div>
           </div>
         </div>
+        <TopButton className="right-4" />
       </div>
     </>
   );
