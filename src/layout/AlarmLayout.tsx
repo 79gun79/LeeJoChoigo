@@ -83,7 +83,7 @@ export default function AlarmLayout() {
         className="relative"
         aria-label="알림"
       >
-        <Bell className="hover:bg-gray1 h-8 w-8 rounded-2xl p-1" />
+        <Bell className="hover:bg-gray1 h-7 w-7 rounded-2xl p-1 md:h-8 md:w-8" />
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500" />
         )}

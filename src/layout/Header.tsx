@@ -90,56 +90,55 @@ export default function Header() {
           </div>
 
           <Navigation onProtectedRoute={isLoginModalHandler} />
-          <div className="flex items-center gap-3 md:gap-4">
-            <DarkToggle />
 
-            {isLogin && (
-              <div className="relative flex items-start gap-3 pt-2 md:gap-4">
-                {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
-                <AlarmLayout />
+          {isLogin && (
+            <div className="relative flex items-start gap-3 pt-2 md:gap-4">
+              <DarkToggle />
+              {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
+              <AlarmLayout />
 
-                <img
-                  src={userInfo.avatar_url || userDefault}
-                  alt="프로필"
-                  className="h-7 cursor-pointer rounded-full lg:h-8"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
+              <img
+                src={userInfo.avatar_url || userDefault}
+                alt="프로필"
+                className="h-7 cursor-pointer rounded-full lg:h-8"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              />
+              {dropdownOpen && (
+                <DropdownMenu
+                  items={[
+                    {
+                      name: '마이페이지',
+                      path: `/profile/${session?.user.id}`,
+                    },
+                    { name: '로그아웃', path: '/logout' },
+                  ]}
+                  isOpen={dropdownOpen}
+                  onItemClick={handleDropdownClick}
+                  onClose={() => setDropdownOpen(false)}
+                  className="absolute top-full right-0"
                 />
-                {dropdownOpen && (
-                  <DropdownMenu
-                    items={[
-                      {
-                        name: '마이페이지',
-                        path: `/profile/${session?.user.id}`,
-                      },
-                      { name: '로그아웃', path: '/logout' },
-                    ]}
-                    isOpen={dropdownOpen}
-                    onItemClick={handleDropdownClick}
-                    onClose={() => setDropdownOpen(false)}
-                    className="absolute top-full right-0"
-                  />
-                )}
-              </div>
-            )}
-            {!isLogin && (
-              <div className="flex items-center gap-4">
-                <button
-                  className="t5 border-gray4 rounded-[4px] border px-3 py-1"
-                  onClick={() =>
-                    navigate('/login', { state: { from: location.pathname } })
-                  }
-                >
-                  로그인
-                </button>
-                <button
-                  className="bg-main t5 border-main rounded-[4px] border px-3 py-1 text-white"
-                  onClick={() => navigate('/signup')}
-                >
-                  가입
-                </button>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
+          {!isLogin && (
+            <div className="flex items-center gap-4">
+              <DarkToggle />
+              <button
+                className="t5 border-gray4 rounded-[4px] border px-3 py-1"
+                onClick={() =>
+                  navigate('/login', { state: { from: location.pathname } })
+                }
+              >
+                로그인
+              </button>
+              <button
+                className="bg-main t5 border-main rounded-[4px] border px-3 py-1 text-white"
+                onClick={() => navigate('/signup')}
+              >
+                가입
+              </button>
+            </div>
+          )}
         </div>
       </header>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />

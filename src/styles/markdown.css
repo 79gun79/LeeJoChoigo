@@ -1,6 +1,6 @@
 .markdown-body {
   color: #24292f;
-  background-color: white;
+  background-color: var(--color-white);
   font-size: 16px;
   line-height: 1.6;
   word-wrap: break-word;
@@ -118,7 +118,7 @@
 /* 다크모드 */
 html.dark .markdown-body {
   background-color: var(--color-white);
-  color: var(--color-gray);
+  color: var(--color-gray4);
 }
 
 html.dark .markdown-body a {
