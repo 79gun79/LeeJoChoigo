@@ -50,7 +50,7 @@ button {
 
 html,
 body {
-  @apply bg-white text-black;
+  @apply bg-white text-black transition-colors duration-300;
 }
 
 @layer utilities {

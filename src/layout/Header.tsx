@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-import { Lightbulb, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
@@ -10,10 +10,12 @@ import DropdownMenu from '../components/modals/DropdownMenu';
 import { useModalStore } from '../stores/modalStore';
 import logo from '../assets/images/dailyCote.svg';
 import AlarmLayout from './AlarmLayout';
+import DarkToggle from '../components/atoms/DarkToggle';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const { setLogInModal } = useModalStore();
   const session = useAuthStore((state) => state.session);
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -70,7 +72,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="shadow-sm">
+      <header className="bg-white shadow-sm transition-colors duration-300">
         <div className="border-gray2 flex h-[55px] w-full items-center justify-between overflow-visible px-4 md:h-[75px] md:px-8 lg:px-14 xl:mx-auto xl:max-w-6xl xl:px-0">
           <div className="flex h-full gap-3">
             <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
@@ -88,55 +90,56 @@ export default function Header() {
           </div>
 
           <Navigation onProtectedRoute={isLoginModalHandler} />
-          <Lightbulb />
+          <div className="flex items-center gap-3 md:gap-4">
+            <DarkToggle />
 
-          {isLogin && (
-            <div className="relative flex items-start gap-4 pt-2">
-              {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
-              <AlarmLayout />
+            {isLogin && (
+              <div className="relative flex items-start gap-3 pt-2 md:gap-4">
+                {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
+                <AlarmLayout />
 
-              <img
-                src={userInfo.avatar_url || userDefault}
-                alt="프로필"
-                className="h-7 cursor-pointer rounded-full lg:h-8"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              />
-              {dropdownOpen && (
-                <DropdownMenu
-                  items={[
-                    {
-                      name: '마이페이지',
-                      path: `/profile/${session?.user.id}`,
-                    },
-                    { name: '로그아웃', path: '/logout' },
-                  ]}
-                  isOpen={dropdownOpen}
-                  onItemClick={handleDropdownClick}
-                  onClose={() => setDropdownOpen(false)}
-                  className="absolute top-full right-0"
+                <img
+                  src={userInfo.avatar_url || userDefault}
+                  alt="프로필"
+                  className="h-7 cursor-pointer rounded-full lg:h-8"
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
                 />
-              )}
-            </div>
-          )}
-
-          {!isLogin && (
-            <div className="flex items-center gap-4">
-              <button
-                className="t5 border-gray4 rounded-[4px] border px-3 py-1"
-                onClick={() =>
-                  navigate('/login', { state: { from: location.pathname } })
-                }
-              >
-                로그인
-              </button>
-              <button
-                className="bg-main t5 border-main rounded-[4px] border px-3 py-1 text-white"
-                onClick={() => navigate('/signup')}
-              >
-                가입
-              </button>
-            </div>
-          )}
+                {dropdownOpen && (
+                  <DropdownMenu
+                    items={[
+                      {
+                        name: '마이페이지',
+                        path: `/profile/${session?.user.id}`,
+                      },
+                      { name: '로그아웃', path: '/logout' },
+                    ]}
+                    isOpen={dropdownOpen}
+                    onItemClick={handleDropdownClick}
+                    onClose={() => setDropdownOpen(false)}
+                    className="absolute top-full right-0"
+                  />
+                )}
+              </div>
+            )}
+            {!isLogin && (
+              <div className="flex items-center gap-4">
+                <button
+                  className="t5 border-gray4 rounded-[4px] border px-3 py-1"
+                  onClick={() =>
+                    navigate('/login', { state: { from: location.pathname } })
+                  }
+                >
+                  로그인
+                </button>
+                <button
+                  className="bg-main t5 border-main rounded-[4px] border px-3 py-1 text-white"
+                  onClick={() => navigate('/signup')}
+                >
+                  가입
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
