@@ -47,10 +47,7 @@ export default function QuizChooseBox({
           onClick={onSelectToggle}
           type="checkbox"
           checked={selected}
-          className={
-            (twMerge('accent-main h-5 w-5 cursor-pointer'),
-            `${selected ? 'accent-main' : 'accent-white'}`)
-          }
+          className={twMerge('accent-main h-5 w-5 cursor-pointer')}
         />
       </div>
     </>
