@@ -11,23 +11,28 @@ type PostStore = {
   updateProblemLike: (postId: number, newLikes: BJPostType['like']) => void;
   sortType: 'latest' | 'popular';
   setSortType: (sortType: 'latest' | 'popular') => void;
+  query: string;
+  setQuery: (q: string) => void;
   resetProblems: () => void;
 };
 
 export const useProblemStore = create<PostStore>((set, get) => ({
   problems: [],
   sortType: 'latest',
+  query: '',
 
   setSortType: (sortType) => set({ sortType }),
+  setQuery: (q) => set({ query: q }),
 
   setProblemsByPage: async (page: number, sortType: 'latest' | 'popular') => {
-    const exists = get().problems.find((p) => p.page === page);
+    const qr = get().query;
+    const exists = get().problems.find((p) => p.page === page && qr === '');
     if (exists) return;
 
     const data =
       sortType === 'latest'
-        ? await fetchBjProblems(page, 'id', true)
-        : await fetchBjProblems(page, 'like_count', false);
+        ? await fetchBjProblems(page, 'id', true, qr)
+        : await fetchBjProblems(page, 'like_count', false, qr);
 
     if (data && data.length > 0) {
       set((state) => ({
