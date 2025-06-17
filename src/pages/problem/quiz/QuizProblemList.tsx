@@ -105,7 +105,12 @@ export default function QuizProblemList() {
             </p>
             <div className="flex flex-wrap gap-2.5">
               <div className="mb-4 flex flex-wrap gap-2.5">
-                <CheckItem id="0" title="전체" onChange={setCategory} />
+                <CheckItem
+                  id="0"
+                  title="전체"
+                  onChange={setCategory}
+                  checked={category === '전체'}
+                />
                 <CheckItem id="1" title="프론트엔드" onChange={setCategory} />
                 <CheckItem id="2" title="백엔드" onChange={setCategory} />
                 <CheckItem id="3" title="모바일 앱" onChange={setCategory} />
