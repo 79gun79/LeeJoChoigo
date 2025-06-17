@@ -5,6 +5,7 @@ import wallpaper from '../assets/images/nubelson-fernandes-UcYBL5V0xWQ-unsplash.
 import supabase from '../utils/supabase';
 import { useNavigate } from 'react-router';
 import { notify } from '../utils/customAlert';
+import logo from '/dailyCote.png';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -64,6 +65,16 @@ export default function Login() {
       {/* ✅ 오른쪽 폼 영역 */}
       <div className="bg-bg-white relative z-10 flex min-h-screen w-full items-center justify-center rounded-l-[20px] shadow-lg md:ml-auto md:w-2/3">
         <div className="flex w-full max-w-md flex-col items-center px-4">
+          <button
+            className="text-main absolute top-0 left-10 cursor-pointer overflow-hidden"
+            onClick={() => navigate('/')}
+          >
+            <img
+              className="ml-[-8px] w-30 object-cover md:w-34 lg:w-38"
+              src={logo}
+              alt="logo image"
+            />
+          </button>
           <div className="text-main h4 mb-[30px] text-center !font-bold">
             Login Your Account
           </div>
