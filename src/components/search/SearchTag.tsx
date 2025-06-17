@@ -1,4 +1,4 @@
-import { TextSearch } from 'lucide-react';
+import { Tag, TextSearch } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getTagList } from '../../api/searchApi';
 import TagItem from '../ui/TagItem';
@@ -63,7 +63,7 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
             }}
           >
             <div
-              className={`mb-2 flex rounded-sm border bg-white ${hasText ? 'border-[var(--color-sub1)]' : 'border-gray1'}`}
+              className={`relative mb-2 flex rounded-sm border bg-white ${hasText ? 'border-[var(--color-sub1)]' : 'border-gray1'}`}
             >
               <input
                 type="text"
@@ -74,25 +74,28 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
               {/* <button className="shrink-0 p-2">
                 <Search className="w-[20px] text-[var(--color-main)] md:w-[24px] lg:w-[26px]" />
               </button> */}
+              {query.trim() !== '' && filteredTags.length > 0 && (
+                <div className="border-sub1 border-t-gray1 absolute top-[calc(100%-2px)] -left-[1px] w-[calc(100%+2px)] overflow-hidden rounded-[0_0_4px_4px] border shadow-md">
+                  <ul className="max-h-30 overflow-y-auto bg-white">
+                    {filteredTags.map((tag) => (
+                      <li
+                        key={tag}
+                        onClick={() => addTag(tag)}
+                        className="hover:bg-sub1/10 text-gray4 flex cursor-pointer items-center gap-2 border border-transparent px-3 py-1 text-sm"
+                      >
+                        <Tag className="text-gray4 w-3" />
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
-            {query.trim() !== '' && filteredTags.length > 0 && (
-              <ul className="mb-2 max-h-40 overflow-y-auto rounded-sm bg-white">
-                {filteredTags.map((tag) => (
-                  <li
-                    key={tag}
-                    onClick={() => addTag(tag)}
-                    className="cursor-pointer border border-transparent px-3 py-1 text-sm hover:border-[var(--color-sub1)] hover:bg-white"
-                  >
-                    {tag}
-                  </li>
-                ))}
-              </ul>
-            )}
 
             <p className="mb-2.5 text-right text-[10px] text-[var(--color-gray3)] md:text-xs lg:text-sm">
               최대 다섯개 선택가능합니다
             </p>
-            <div className="mb-4 flex flex-wrap gap-2.5">
+            <div className="mb-4 flex min-h-10 flex-wrap items-start gap-2.5">
               {selectedTags.map((tag) => (
                 <TagItem
                   key={tag}
