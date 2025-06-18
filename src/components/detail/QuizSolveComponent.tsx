@@ -42,38 +42,50 @@ export default function QuizSolveComponent({
           isShow ? 'gap-[14px]' : '',
         )}
       >
-        <div className="flex">
-          <p className="t4 font-bold">문제 {index + 1}</p>
-          {showRes ? (
-            isCorrect ? (
-              <Check className="text-green-info ml-4" size={24} />
+        {isShow ? (
+          <div onClick={() => setShow(false)} className="flex cursor-pointer">
+            <p className="t4 font-bold">문제 {index + 1}</p>
+            {showRes ? (
+              isCorrect ? (
+                <Check className="text-green-info ml-4" size={24} />
+              ) : (
+                <X className="text-red-caution ml-4" size={24} />
+              )
             ) : (
-              <X className="text-red-caution ml-4" size={24} />
-            )
-          ) : (
-            ''
-          )}
-          <div className="flex-grow"></div>
-          {isShow ? (
+              ''
+            )}
+            <div className="flex-grow"></div>
             <ChevronDown
-              onClick={() => setShow(false)}
               className={twMerge(
                 'text-gray4',
-                'mt-[-6px] mr-[-6px] cursor-pointer md:mt-0 md:mr-[-8px]',
+                'mt-[-6px] mr-[-6px] md:mt-0 md:mr-[-8px]',
               )}
               size={24}
             />
-          ) : (
+          </div>
+        ) : (
+          <div onClick={() => setShow(true)} className="flex cursor-pointer">
+            <p className="t4 font-bold">문제 {index + 1}</p>
+            {showRes ? (
+              isCorrect ? (
+                <Check className="text-green-info ml-4" size={24} />
+              ) : (
+                <X className="text-red-caution ml-4" size={24} />
+              )
+            ) : (
+              ''
+            )}
+            <div className="flex-grow"></div>
             <ChevronRight
-              onClick={() => setShow(true)}
               className={twMerge(
                 'text-gray4',
-                'mt-[-6px] mr-[-6px] cursor-pointer md:mt-0 md:mr-[-8px]',
+                'mt-[-6px] mr-[-6px] md:mt-0 md:mr-[-8px]',
               )}
               size={24}
             />
-          )}
-        </div>
+          </div>
+        )}
+
         {isShow && (
           <>
             <div className="t4">{description}</div>

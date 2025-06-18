@@ -18,8 +18,15 @@ import ProfileLinkNavigation from '../atoms/profileLinkNavigation';
 import QuizShowComponent from '../edit/QuizShowComponent';
 import type { QuizItem } from '../../types/quizList';
 import { twMerge } from 'tailwind-merge';
+import QuizSolveComponent from './QuizSolveComponent';
 
-export default function DetailText({ data }: { data: PostDetailType }) {
+export default function DetailText({
+  data,
+  answerConfirm,
+}: {
+  data: PostDetailType;
+  answerConfirm?: boolean;
+}) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
@@ -94,6 +101,25 @@ export default function DetailText({ data }: { data: PostDetailType }) {
       notify('삭제에 실패했습니다.', 'error');
     }
   };
+
+  // 유저가 선택한 답
+  const quizSolveData = (data.quiz_data ?? []) as QuizItem[]; // 문제 가져오기
+  const [userChoose, setUserChoose] = useState<string[][]>(
+    quizSolveData.map(() => []),
+  );
+
+  // 유저가 선택한 답 체크
+  const selectHandler = useCallback((index: number, selectId: string) => {
+    setUserChoose((choose) =>
+      choose.map((v, i) =>
+        i === index
+          ? v.includes(selectId)
+            ? v.filter((id) => id !== selectId)
+            : [...v, selectId]
+          : v,
+      ),
+    );
+  }, []);
 
   const isAuthor = currentUserId === data.author?.id;
 
@@ -204,6 +230,23 @@ export default function DetailText({ data }: { data: PostDetailType }) {
             </ReactMarkdown>
           </div>
         </div>
+        {/* 문제 설명 컴포넌트 */}
+        {data.quiz_data && (
+          <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
+            {/* <p className="t3">{data.title}의 퀴즈</p> */}
+            {quizSolveData.map((v, i) => (
+              <QuizSolveComponent
+                key={i}
+                index={i}
+                item={v}
+                choose={userChoose[i]}
+                onSelect={(id) => selectHandler(i, id)}
+                showRes={answerConfirm!}
+              />
+            ))}
+          </div>
+        )}
+
         <div className="mb-3 flex gap-2">
           <div className="mx-auto flex shrink-0 gap-3">
             <div className="flex flex-col items-center gap-1">
