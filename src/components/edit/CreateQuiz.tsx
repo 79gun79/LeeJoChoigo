@@ -49,14 +49,15 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
     const [validList, setValidList] = useState<boolean[]>([]);
     const currentPos = useRef<HTMLDivElement | null>(null);
     const isDark = useThemeStore().isDark;
-    const [markdown, setMarkdown] = useState('');
+
+    const [markdown, setMarkdown] = useState(' ');
 
     useEffect(() => {
       const editorInstance = editorRef.current?.getInstance();
       if (editorInstance) {
         editorInstance.setMarkdown(markdown);
       }
-    }, [isDark]);
+    }, []);
 
     const addQuiz = () => {
       if (!allValid) {
@@ -149,6 +150,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
                   toolbarItems={toolbarItems}
                   key={isDark ? 'dark' : 'light'}
                   ref={editorRef}
+                  initialValue={markdown}
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}

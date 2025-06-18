@@ -136,7 +136,7 @@ export default function ProfileLikeCard({
           </div>
         </div>
       ) : (
-        <div className="w-full rounded-sm border border-[#ccc]">
+        <div className="bg-bg-white w-full rounded-sm border border-[#ccc]">
           <button
             className="h-full w-full text-left"
             onClick={() =>

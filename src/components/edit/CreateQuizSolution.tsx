@@ -13,13 +13,16 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import supabase from '../../utils/supabase';
 import TagItem from '../ui/TagItem';
+import { useThemeStore } from '../../stores/themeStore';
 import { getToolbarItems } from '../../utils/editorToolbar';
 
 export default forwardRef<EditTextHandle, SolutionQuizProps>(
   function CreateQuizSolution({ pTitle, tags, onAddTag, onRemoveTag }, ref) {
     const editorRef = useRef<Editor>(null);
     const titleRef = useRef<HTMLInputElement>(null);
-    const [markdown, setMarkdown] = useState('');
+
+    const isDark = useThemeStore().isDark;
+    const [markdown, setMarkdown] = useState(' ');
     const toolbarItems = getToolbarItems(window.innerWidth);
 
     useEffect(() => {
@@ -62,14 +65,17 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
               <div className="mb-2.5 flex items-end">
                 <p className="text-sm md:text-base lg:text-lg">내용</p>
               </div>
-              <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
+              <div className="mb-5 min-h-[300px] rounded-sm text-xs md:text-sm lg:text-base">
                 <Editor
-                  toolbarItems={toolbarItems}
+                  key={isDark ? 'dark' : 'light'}
                   ref={editorRef}
+                  initialValue={markdown}
+                  toolbarItems={toolbarItems}
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}
                   plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+                  theme={isDark ? 'dark' : 'light'}
                   onChange={() => {
                     const updated =
                       editorRef.current?.getInstance().getMarkdown() || '';
@@ -111,7 +117,7 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
               </div>
               <p className="mb-2.5 text-sm md:text-base lg:text-lg">태그</p>
               <input
-                className="edit-input mb-2.5"
+                className="edit-input mb-2.5 text-black"
                 type="text"
                 placeholder="태그를 입력하세요"
                 onKeyDown={(e) => {
