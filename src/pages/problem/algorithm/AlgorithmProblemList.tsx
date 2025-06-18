@@ -138,7 +138,7 @@ export default function AlgorithmProblemList() {
             <div ref={endListRef}></div>
           </div>
         </div>
-        <TopButton className="right-4" />
+        <TopButton />
       </div>
     </>
   );
