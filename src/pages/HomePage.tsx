@@ -2,7 +2,7 @@ import { ReactTyped } from 'react-typed';
 import logo from '/dailyCote.png';
 import { CircleHelp, NotebookPen, PencilRuler, SquarePen } from 'lucide-react';
 import MainUserInfo from '../components/main/MainUserInfo';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import PopularProblem from '../components/main/MainPopularProblem';
 import MainPopularProblem from '../components/main/MainNewProblem';
 import MainRecommand from '../components/main/MainRecommand';
@@ -91,8 +91,7 @@ export default function HomePage() {
                   onClick={() => {
                     navigate('/problems/coding');
                   }}
-                  className="menu-button group dark:bg-bg-white""
-
+                  className="menu-button group dark:bg-bg-white"
                 >
                   <span className="icon-bg">
                     <NotebookPen className="text-main h-5 w-5 lg:h-6 lg:w-6" />
@@ -103,13 +102,13 @@ export default function HomePage() {
                     문제 풀기
                   </span>
                   <span className="menu-button-effect"></span>
-
                 </button>
                 <button
                   onClick={() => {
                     navigate('/problems/job');
                   }}
-                  className="menu-button group dark:bg-bg-white"                >
+                  className="menu-button group dark:bg-bg-white"
+                >
                   <span className="icon-bg">
                     <SquarePen className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>
@@ -119,14 +118,12 @@ export default function HomePage() {
                     문제 풀기
                   </span>
                   <span className="menu-button-effect"></span>
-                                                                   
                 </button>
                 <button
                   onClick={() => {
                     linkClickHandler('/questions/write');
                   }}
                   className="menu-button group dark:bg-bg-white"
-
                 >
                   <span className="icon-bg">
                     <CircleHelp className="text-main h-5 w-5 lg:h-6 lg:w-6" />
@@ -135,14 +132,12 @@ export default function HomePage() {
                     질문하기
                   </span>
                   <span className="menu-button-effect"></span>
-
                 </button>
                 <button
                   onClick={() => {
                     linkClickHandler('/problems/job/write');
                   }}
                   className="menu-button group dark:bg-bg-white"
-
                 >
                   <span className="icon-bg">
                     <PencilRuler className="text-main h-5 w-5 lg:h-6 lg:w-6" />
