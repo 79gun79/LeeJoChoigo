@@ -52,6 +52,18 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     avatar_url?: string | null;
   }>({});
 
+  // 스크롤 비활성화
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     // 로그인 상태일 때 supabase에서 유저 정보 가져오기
     const fetchUser = async () => {
