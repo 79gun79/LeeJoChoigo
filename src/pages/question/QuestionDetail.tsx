@@ -37,7 +37,7 @@ export default function QuestionDetail() {
         <div className="mb-[25px] md:mb-[35px]">
           {post && (
             <p className="mb-2.5 text-xs md:text-sm lg:text-base">
-             {comments?.length ?? 0}개의 댓글
+              {comments?.length ?? 0}개의 댓글
             </p>
           )}
           {post && (

@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import DetailText from '../../../components/detail/DetailText';
 import PageName from '../../../components/ui/PageName';
 import Button from '../../../components/ui/Button';
-import QuizSolveComponent from '../../../components/detail/QuizSolveComponent';
 import { useLoaderData, useNavigate } from 'react-router';
 import type { PostDetailType } from '../../../types';
-import type { QuizItem } from '../../../types/quizList';
 import supabase from '../../../utils/supabase';
 import { useAuthStore } from '../../../stores/authStore';
 import { getUser } from '../../../api/userApi';
@@ -15,26 +13,7 @@ export default function JobDetailedPage() {
   const post = useLoaderData<PostDetailType>();
   const navigate = useNavigate();
 
-  const quizSolveData = (post.quiz_data ?? []) as QuizItem[]; // 문제 가져오기
   const session = useAuthStore((state) => state.session);
-
-  // 유저가 선택한 답
-  const [userChoose, setUserChoose] = useState<string[][]>(
-    quizSolveData.map(() => []),
-  );
-
-  // 유저가 선택한 답 체크
-  const selectHandler = useCallback((index: number, selectId: string) => {
-    setUserChoose((choose) =>
-      choose.map((v, i) =>
-        i === index
-          ? v.includes(selectId)
-            ? v.filter((id) => id !== selectId)
-            : [...v, selectId]
-          : v,
-      ),
-    );
-  }, []);
 
   // 푼 상태 갱신
   useEffect(() => {
@@ -73,22 +52,7 @@ export default function JobDetailedPage() {
 
         {/* 문제 상세 설명 */}
         <div className="mb-[25px] md:mb-[35px]">
-          <DetailText data={post} />
-        </div>
-
-        {/* 문제 설명 컴포넌트 */}
-        <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
-          <p className="t3">퀴즈</p>
-          {quizSolveData.map((v, i) => (
-            <QuizSolveComponent
-              key={i}
-              index={i}
-              item={v}
-              choose={userChoose[i]}
-              onSelect={(id) => selectHandler(i, id)}
-              showRes={answerConfirm}
-            />
-          ))}
+          <DetailText data={post} answerConfirm={answerConfirm} />
         </div>
 
         {/* 정답 확인 버튼 */}

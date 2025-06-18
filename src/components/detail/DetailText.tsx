@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Heart } from 'lucide-react';
+import { ChevronDown, ChevronRight, Heart, NotebookPen } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -6,7 +6,6 @@ import type { CommentType, PostDetailType } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
 import supabase from '../../utils/supabase';
 import dateFormat from '../../utils/dateFormat';
-
 import '../../styles/markdown.css';
 import 'highlight.js/styles/github.css';
 import ProblemDescRender from '../common/ProblemDescRender';
@@ -16,8 +15,18 @@ import { useNavigate } from 'react-router';
 import { getChannelPath } from '../../utils/channelPath';
 import { notify } from '../../utils/customAlert';
 import ProfileLinkNavigation from '../atoms/profileLinkNavigation';
+import QuizShowComponent from '../edit/QuizShowComponent';
+import type { QuizItem } from '../../types/quizList';
+import { twMerge } from 'tailwind-merge';
+import QuizSolveComponent from './QuizSolveComponent';
 
-export default function DetailText({ data }: { data: PostDetailType }) {
+export default function DetailText({
+  data,
+  answerConfirm,
+}: {
+  data: PostDetailType;
+  answerConfirm?: boolean;
+}) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
   const [isLiked, setIsLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
@@ -93,6 +102,26 @@ export default function DetailText({ data }: { data: PostDetailType }) {
     }
   };
 
+  // 유저가 선택한 답
+  const quizSolveData = (data.quiz_data ?? []) as QuizItem[]; // 문제 가져오기
+  const [userChoose, setUserChoose] = useState<string[][]>(
+    quizSolveData.map(() => []),
+  );
+
+  // 유저가 선택한 답 체크
+  const selectHandler = useCallback((index: number, selectId: string) => {
+    setUserChoose((choose) =>
+      choose.map((v, i) =>
+        i === index
+          ? v.includes(selectId)
+            ? v.filter((id) => id !== selectId)
+            : [...v, selectId]
+          : v,
+      ),
+    );
+  }, []);
+  const [forceShow, setForceShow] = useState(false);
+
   const isAuthor = currentUserId === data.author?.id;
 
   return (
@@ -133,24 +162,51 @@ export default function DetailText({ data }: { data: PostDetailType }) {
                       {data.parent.title}" 문제 보기
                     </div>{' '}
                     {!isShow && (
-                      <ChevronRight
-                        size={24}
-                        className="mr-[20px]"
-                      />
+                      <ChevronRight size={24} className="mr-[20px]" />
                     )}
-                    {isShow && (
-                      <ChevronDown
-                        size={24}
-                        className="mr-[20px]"
-                      />
-                    )}
+                    {isShow && <ChevronDown size={24} className="mr-[20px]" />}
                   </li>
-                  <li className={`pr-[25px] list-none ${!isShow && 'hidden'}`}>
+                  <li className={`list-none pr-[25px] ${!isShow && 'hidden'}`}>
                     <ProblemDescRender isHeadingHidden={true}>
                       {data.parent.content}
                     </ProblemDescRender>
                   </li>
                 </ul>
+              )}
+            {data.parent &&
+              data.parent.quiz_data &&
+              data.parent.title &&
+              data.parent.id && (
+                <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
+                  <div className="flex gap-[10px]">
+                    <div className="flex-grow"></div>
+                    <button
+                      onClick={() => setForceShow(!forceShow)}
+                      className={
+                        forceShow ? 'button-sm gray2 h-6' : 'button-sm h-6'
+                      }
+                    >
+                      {forceShow ? '모두 닫기' : '모두 열기'}
+                    </button>
+                    <button
+                      onClick={() =>
+                        navigate(`/problems/job/${data.parent?.id}`)
+                      }
+                      className={twMerge('button-sm', 'h-6')}
+                    >
+                      <NotebookPen className="h-[14px] w-[12px] shrink-0" />
+                      문제 풀러가기
+                    </button>
+                  </div>
+                  {(data.parent.quiz_data as QuizItem[]).map((v, i) => (
+                    <QuizShowComponent
+                      key={i}
+                      index={i}
+                      item={v}
+                      forceShow={forceShow}
+                    />
+                  ))}
+                </div>
               )}
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
@@ -187,6 +243,34 @@ export default function DetailText({ data }: { data: PostDetailType }) {
             </ReactMarkdown>
           </div>
         </div>
+        {/* 문제 설명 컴포넌트 */}
+        {data.quiz_data && (
+          <>
+            <div className="mb-[10px] flex justify-end md:mb-[15px]">
+              <button
+                onClick={() => setForceShow(!forceShow)}
+                className={forceShow ? 'button-sm gray2 h-6' : 'button-sm h-6'}
+              >
+                {forceShow ? '모두 닫기' : '모두 열기'}
+              </button>
+            </div>
+            <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
+              {/* <p className="t3">{data.title}의 퀴즈</p> */}
+              {quizSolveData.map((v, i) => (
+                <QuizSolveComponent
+                  key={i}
+                  index={i}
+                  item={v}
+                  choose={userChoose[i]}
+                  onSelect={(id) => selectHandler(i, id)}
+                  showRes={answerConfirm!}
+                  forceShow={forceShow}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
         <div className="mb-3 flex gap-2">
           <div className="mx-auto flex shrink-0 gap-3">
             <div className="flex flex-col items-center gap-1">
