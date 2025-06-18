@@ -4,6 +4,7 @@ import supabase from '../../utils/supabase';
 import FollowButton from '../atoms/FollowButton';
 import ProfileLinkNavigation from '../atoms/profileLinkNavigation';
 import type { fetchProfile } from '../../loader/profile.loader';
+import { useFollowStore } from '../../stores/followStore';
 
 interface FollowModalProps {
   userId: string;
