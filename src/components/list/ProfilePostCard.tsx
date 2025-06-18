@@ -1,29 +1,35 @@
 import { Heart, MessageSquare } from 'lucide-react';
-import type { ProfilePosts } from '../../pages/profile/Profile';
-import { useAuthStore } from '../../stores/authStore';
 import dateFormat from '../../utils/dateFormat';
-import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
 import { previewMarkdown } from '../../utils/markdown';
+import type { ProfilePosts } from '../profile/ProfileList';
+import { useModalStore } from '../../stores/modalStore';
+import { useAuthStore } from '../../stores/authStore';
+import { useEffect, useState } from 'react';
+import { toggleLike } from '../../api/postApi';
 
 export default function ProfilePostCard({
   data,
 }: {
   data: ProfilePosts[number];
 }) {
-  const session = useAuthStore((state) => state.session);
   const {
     id,
     image,
     created_at,
+    like_count,
     title,
     content,
     tags,
-    like,
     comment,
     channel,
   } = data;
-
-  const isLiked = like?.some((f) => f.user === session?.user.id);
+  const session = useAuthStore((state) => state.session);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likedUsers, setLikedUsers] = useState<{ user: string }[]>([]);
+  const [isLiking, setIsLiking] = useState(false);
+  const { setLogInModal } = useModalStore();
+  const navigate = useNavigate();
 
   const channelLocation = (channel: number) => {
     switch (channel) {
@@ -37,20 +43,64 @@ export default function ProfilePostCard({
         return '/questions';
     }
   };
+
+  const problemHandler = (path: string) => {
+    if (!session?.user) {
+      setLogInModal(true);
+      return;
+    }
+    navigate(path);
+  };
+
+  useEffect(() => {
+    if (!session?.user?.id || !data.like) return;
+
+    const liked = data.like.some((l) => l.user === session.user.id);
+    setIsLiked(liked);
+    setLikedUsers(data.like);
+  }, [session, data]);
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!session?.user?.id) {
+      setLogInModal(true);
+      return;
+    }
+    if (isLiking) return;
+
+    setIsLiking(true);
+    const userId = session.user.id;
+    const optimisticLiked = !isLiked;
+
+    setIsLiked(optimisticLiked);
+    setLikedUsers((prev) =>
+      optimisticLiked
+        ? [...prev, { user: userId }]
+        : prev.filter((l) => l.user !== userId),
+    );
+
+    try {
+      await toggleLike(data.id, userId);
+    } catch (e) {
+      console.error('좋아요 실패:', e);
+      setIsLiked(!optimisticLiked);
+      setLikedUsers((prev) =>
+        !optimisticLiked
+          ? [...prev, { user: userId }]
+          : prev.filter((l) => l.user !== userId),
+      );
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
   return (
     <>
-      {/* 스켈레톤 */}
-
-      {/* <div className="w-full rounded-sm border border-[#ccc]">
-          <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
-            <div className="mb-2.5 h-3.5 w-2/3 bg-gray-200 md:h-4.5 lg:h-5.5"></div>
-            <div className="mb-1 h-3 w-full bg-gray-200 md:h-4 lg:h-5"></div>
-            <div className="mb-2.5 h-3 w-4/5 bg-gray-200 md:h-4 lg:h-5"></div>
-            <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
-          </div>
-        </div> */}
       <div className="w-full rounded-sm border border-[#ccc]">
-        <Link to={`${channelLocation(channel)}/${id}`}>
+        <button
+          onClick={() => problemHandler(`${channelLocation(channel)}/${id}`)}
+          className="h-full w-full text-left"
+        >
           <div className="flex h-full w-full flex-col px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
             <div className="flex w-full gap-2.5">
               <div className="w-full min-w-0">
@@ -103,26 +153,24 @@ export default function ProfilePostCard({
               </span>
               <div className="ml-auto flex shrink-0 gap-3">
                 <div className="flex items-center gap-1">
-                  {isLiked ? (
-                    <Heart className="w-3.5 fill-[#E95E5E] text-[#E95E5E] md:w-4 lg:w-4.5" />
-                  ) : (
-                    <Heart className="w-3.5 md:w-4 lg:w-4.5" />
-                  )}
-
+                  <Heart
+                    onClick={handleLike}
+                    className={`w-3.5 md:w-4 lg:w-4.5 ${isLiked && 'cursor-pointer fill-[#E95E5E] text-[#E95E5E]'}`}
+                  />
                   <span className="text-[10px] md:text-xs lg:text-sm">
-                    {like.length}
+                    {session?.user ? likedUsers.length : like_count}
                   </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
                   <span className="text-[10px] md:text-xs lg:text-sm">
-                    {comment.length}
+                    {comment?.length || 0}
                   </span>
                 </div>
               </div>
             </div>
           </div>
-        </Link>
+        </button>
       </div>
     </>
   );
