@@ -7,6 +7,7 @@ export const fetchBjProblems = async (
   orderBy: string,
   ascending: boolean,
   query?: string,
+  tags?: string[],
 ) => {
   try {
     const from = page * LIMIT;
@@ -27,6 +28,11 @@ export const fetchBjProblems = async (
 
     if (query) {
       bjProblems = bjProblems.ilike('title', `%${query}%`);
+    }
+
+    if (tags && tags.length > 0) {
+      const allTags = tags.map((v) => `tags.cs.{${v}}`).join(',');
+      bjProblems = bjProblems.or(allTags);
     }
 
     const { data: post, error } = await bjProblems

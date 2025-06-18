@@ -22,6 +22,7 @@ export default function Avartar({ user, profileLink = false }: AvartarProps) {
           className={`${profileLink ? 'cursor-pointer' : ''} h-[24px] w-[24px] overflow-hidden rounded-full border border-[#eee] md:h-[26px] md:w-[26px] lg:h-[28px] lg:w-[28px]`}
         >
           <img
+            alt={user?.image || '프로필'}
             className="h-full w-full object-cover"
             src={
               user?.image ||

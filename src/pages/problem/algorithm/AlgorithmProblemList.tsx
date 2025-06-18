@@ -10,6 +10,8 @@ import type { ChannelType } from '../../../types';
 import Nopost from '../../../components/ui/Nopost';
 import TopButton from '../../../components/common/TopButton';
 import AlgorithmListCardSkeleton from '../../../components/list/AlgorithmListCardSkeleton';
+import AlgotrithmTag from '../../../components/search/AlgorithmTag';
+import TagItem from '../../../components/ui/TagItem';
 
 export default function AlgorithmProblemList() {
   const page = useRef(0);
@@ -20,11 +22,19 @@ export default function AlgorithmProblemList() {
   const isFetched = useRef(false);
   const channel = useLoaderData<ChannelType>();
 
-  const { searchQuery, setSearchQuery, sortType, setSortType, resetProblems } =
-    useProblemStore();
+  const {
+    searchTags,
+    setSearchTags,
+    searchQuery,
+    setSearchQuery,
+    sortType,
+    setSortType,
+    resetProblems,
+  } = useProblemStore();
   const [isFirstLoading, setIsFirstLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
     if (isFetched.current) return;
@@ -52,7 +62,7 @@ export default function AlgorithmProblemList() {
         if (current) observer.unobserve(current);
       };
     });
-  }, [searchQuery, sortType]);
+  }, [searchTags, searchQuery, sortType]);
 
   const handleSortChange = (newSort: 'latest' | 'popular') => {
     resetProblems();
@@ -78,6 +88,18 @@ export default function AlgorithmProblemList() {
     });
   };
 
+  const handleTag = async () => {
+    resetProblems();
+    setSearchTags(tags);
+    page.current = 0;
+    isFetched.current = true;
+
+    setIsFirstLoading(true);
+    setProblemsByPage(0, sortType).finally(() => {
+      setIsFirstLoading(false);
+    });
+  };
+
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -90,14 +112,15 @@ export default function AlgorithmProblemList() {
             setQuery={setQuery}
             onSearch={handleSearch}
           />
-          {/* <TagSearch /> */}
+          <AlgotrithmTag tags={tags} setTags={setTags} onTag={handleTag} />
         </div>
         <div>
           <div className="mb-2">
             <p className="mb-1.5 text-sm md:text-base">선택한 유형</p>
             <div className="flex flex-wrap gap-2.5">
-              {/* <TagItem></TagItem>
-              <TagItem></TagItem> */}
+              {tags.map((tag) => (
+                <TagItem key={tag} label={tag} />
+              ))}
             </div>
           </div>
           <div>
