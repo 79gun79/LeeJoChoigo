@@ -11,6 +11,7 @@ import ListCard from '../../../components/list/ListCard';
 import { searchPosts } from '../../../api/searchApi';
 import TagItem from '../../../components/ui/TagItem';
 import Nopost from '../../../components/ui/Nopost';
+import TopButton from '../../../components/common/TopButton';
 
 export default function QuizSolutionList() {
   const channel = useLoaderData<ChannelType>();
@@ -127,6 +128,7 @@ export default function QuizSolutionList() {
             <Plus className="h-5 w-5 lg:h-7 lg:w-7" />
           </button> */}
         </div>
+        <TopButton />
       </div>
     </>
   );
