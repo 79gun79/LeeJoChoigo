@@ -21,6 +21,8 @@ export default function QuizSolutionEdit() {
   const [searchParams] = useSearchParams();
   const postId = searchParams.get('id');
 
+  const [forceShow, setForceShow] = useState(false);
+
   useEffect(() => {
     if (!postId) return;
     console.log('postId :', postId);
@@ -123,10 +125,25 @@ export default function QuizSolutionEdit() {
           <PageName title="개발직군 풀이" />
         </div>
         <div className="md:grid md:grid-cols-2 md:gap-12">
-          <div className="flex flex-col gap-[10px]">
-            <p className="text-sm md:text-base lg:text-lg">문제 모음</p>
+          <div className="mb-3 flex flex-col gap-[10px]">
+            <div className="flex items-center">
+              <p className="text-sm md:text-base lg:text-lg">문제 모음</p>
+              <div className="flex-grow"></div>
+              <button
+                onClick={() => setForceShow(!forceShow)}
+                className={forceShow ? 'button-sm gray2 h-6' : 'button-sm h-6'}
+              >
+                {forceShow ? '모두 닫기' : '모두 열기'}
+              </button>
+            </div>
             {quizData.map((v, i) => (
-              <QuizShowComponent key={i} index={i} item={v} />
+              <QuizShowComponent
+                key={i}
+                index={i}
+                item={v}
+                hasCreate={true}
+                forceShow={forceShow}
+              />
             ))}
           </div>
           <CreateQuizSolution

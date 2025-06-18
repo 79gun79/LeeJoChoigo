@@ -1,48 +1,60 @@
 import { twMerge } from 'tailwind-merge';
 import type { QuizItem } from '../../types/quizList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import QuizShowBox from '../atoms/QuizShowBox';
 
 export default function QuizShowComponent({
   index,
   item,
+  hasCreate,
+  forceShow,
 }: {
   index: number;
   item: QuizItem;
+  hasCreate?: boolean;
+  forceShow: boolean;
 }) {
-  const [isShow, setShow] = useState(true);
+  const [isShow, setShow] = useState(false);
+
+  useEffect(() => {
+    setShow(forceShow);
+  }, [forceShow]);
+
   return (
     <>
       <div
         className={twMerge(
           'flex w-full flex-col rounded-sm border border-[#DEDEDE] p-[14px] md:p-4',
-          isShow ? 'gap-[14px]' : '',
+          isShow ? 'gap-[14px]' : hasCreate ? '' : 'pb-0 md:pb-1',
         )}
       >
-        <div className="flex">
-          <p className="t4 font-bold">문제 {index + 1}</p>
-          <div className="flex-grow"></div>
-          {isShow ? (
+        {isShow ? (
+          <div onClick={() => setShow(false)} className="flex cursor-pointer">
+            <p className="t4 font-bold">문제 {index + 1}</p>
+            <div className="flex-grow"></div>
             <ChevronDown
-              onClick={() => setShow(false)}
               className={twMerge(
                 'text-gray4',
                 'mt-[-6px] mr-[-6px] cursor-pointer md:mt-0 md:mr-[-8px]',
               )}
               size={24}
             />
-          ) : (
+          </div>
+        ) : (
+          <div onClick={() => setShow(true)} className="flex cursor-pointer">
+            <p className="t4 font-bold">문제 {index + 1}</p>
+            <div className="flex-grow"></div>
             <ChevronRight
-              onClick={() => setShow(true)}
               className={twMerge(
                 'text-gray4',
                 'mt-[-6px] mr-[-6px] cursor-pointer md:mt-0 md:mr-[-8px]',
               )}
               size={24}
             />
-          )}
-        </div>
+          </div>
+        )}
+
         {isShow && (
           <>
             <div className="t4">{item.description}</div>
