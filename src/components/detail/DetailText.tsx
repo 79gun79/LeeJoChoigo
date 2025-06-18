@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Heart } from 'lucide-react';
+import { ChevronDown, ChevronRight, Heart, NotebookPen } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -6,7 +6,6 @@ import type { CommentType, PostDetailType } from '../../types';
 import { useCallback, useEffect, useState } from 'react';
 import supabase from '../../utils/supabase';
 import dateFormat from '../../utils/dateFormat';
-
 import '../../styles/markdown.css';
 import 'highlight.js/styles/github.css';
 import ProblemDescRender from '../common/ProblemDescRender';
@@ -16,6 +15,9 @@ import { useNavigate } from 'react-router';
 import { getChannelPath } from '../../utils/channelPath';
 import { notify } from '../../utils/customAlert';
 import ProfileLinkNavigation from '../atoms/profileLinkNavigation';
+import QuizShowComponent from '../edit/QuizShowComponent';
+import type { QuizItem } from '../../types/quizList';
+import { twMerge } from 'tailwind-merge';
 
 export default function DetailText({ data }: { data: PostDetailType }) {
   const [likedUsers, setLikedUsers] = useState<CommentType>(data.like || []);
@@ -141,6 +143,31 @@ export default function DetailText({ data }: { data: PostDetailType }) {
                     </ProblemDescRender>
                   </li>
                 </ul>
+              )}
+            {data.parent &&
+              data.parent.quiz_data &&
+              data.parent.title &&
+              data.parent.id && (
+                <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
+                  <div className="flex">
+                    <p className="text-sm md:text-base lg:text-lg">
+                      <b>{data.parent.title}</b>의 퀴즈
+                    </p>
+                    <div className="flex-grow"></div>
+                    <button
+                      onClick={() =>
+                        navigate(`/problems/job/${data.parent?.id}`)
+                      }
+                      className={twMerge('button-sm', 'h-6 md:h-8')}
+                    >
+                      <NotebookPen className="h-[14px] w-[12px] shrink-0" />
+                      문제 풀러가기
+                    </button>
+                  </div>
+                  {(data.parent.quiz_data as QuizItem[]).map((v, i) => (
+                    <QuizShowComponent key={i} index={i} item={v} />
+                  ))}
+                </div>
               )}
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}

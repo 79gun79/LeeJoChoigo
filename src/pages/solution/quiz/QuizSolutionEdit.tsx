@@ -126,7 +126,7 @@ export default function QuizSolutionEdit() {
           <div className="flex flex-col gap-[10px]">
             <p className="text-sm md:text-base lg:text-lg">문제 모음</p>
             {quizData.map((v, i) => (
-              <QuizShowComponent key={i} index={i} item={v} />
+              <QuizShowComponent key={i} index={i} item={v} hasCreate={true} />
             ))}
           </div>
           <CreateQuizSolution
