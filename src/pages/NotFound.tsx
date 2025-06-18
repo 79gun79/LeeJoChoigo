@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router';
 import styles from '../styles/NotFound.module.css';
-import { Home, MoveLeft } from 'lucide-react';
+import { CodeXmlIcon, MoveLeft } from 'lucide-react';
 
 export default function NotFound() {
   const navigate = useNavigate();
@@ -26,24 +26,22 @@ export default function NotFound() {
           </svg>
           <h1 className="h1 mx-aut">Page Not Found</h1>
 
-          <p className="h4 mt-1 grid grid-cols-2 md:grid-cols-1">
+          <div className="h4 mt-1 grid grid-cols-2 md:grid-cols-1">
             <Link
-              className="rt t1 hover:text-sub3 mr-[-25px] flex items-center justify-center md:mr-0"
+              className="rt t1 hover:text-sub3 mr-[-10px] flex items-center justify-end md:mr-0"
               to="/"
             >
-              <div className="flex-grow"></div>
-              <Home size={24} />
-              <span className="ml-1">Home</span>
+              <CodeXmlIcon size={20} className="rounded-sm border-2 p-0.5" />
+              <span className="ml-2">홈페이지</span>
             </Link>
             <div
-              className="rt t1 hover:text-sub3 flex cursor-pointer items-center justify-center"
+              className="rt t1 hover:text-sub3 ml-2 flex cursor-pointer items-center justify-end"
               onClick={handleBack}
             >
-              <div className="flex-grow"></div>
               <MoveLeft size={24} />
-              <span className="ml-2">Back</span>
+              <span className="ml-2">뒤로가기</span>
             </div>
-          </p>
+          </div>
         </div>
         <svg aria-labelledby="Starry sky" className={styles.starrySky}>
           <g className={styles.allStars} fill="#F6F5BC">
