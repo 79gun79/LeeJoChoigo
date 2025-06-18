@@ -128,9 +128,12 @@ export default function ListCard({
           </div>
         </div>
       ) : (
-        <div onClick={handleClick} className="cursor-pointer hover:shadow-md">
-          <div className="border-gray2 dark:bg-bg-white w-full rounded-sm border bg-white">
-            <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
+        <div
+          onClick={handleClick}
+          className="h-full cursor-pointer hover:shadow-md"
+        >
+          <div className="border-gray2 dark:bg-bg-white grid h-full w-full grid-rows-[1fr_auto] rounded-sm border bg-white">
+            <div className="flex h-full flex-col px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
               <div className="flex gap-2.5">
                 <div className="w-[calc(100%-110px)] md:w-[calc(100%-130px)] lg:w-[calc(100%-150px)]">
                   <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
@@ -151,7 +154,7 @@ export default function ListCard({
                   </div>
                 )}
               </div>
-              <ul className="mb-2.5 flex gap-3">
+              <ul className="mb-2.5 flex flex-wrap gap-3">
                 {data.tags?.map((tag) => (
                   <li
                     key={tag}
@@ -190,7 +193,7 @@ export default function ListCard({
               </div>
             </div>
 
-            <div className="border-gray3 flex w-full items-center border-t px-3 py-2 md:px-4 md:py-2.5">
+            <div className="border-gray3 mt-auto flex w-full items-center border-t px-3 py-2 md:px-4 md:py-2.5">
               <Avartar user={data.author} />
               {(me?.solved ?? []).includes(data.id) && (
                 <p className="ml-auto flex items-center gap-1 text-[10px] md:text-xs lg:text-sm">
