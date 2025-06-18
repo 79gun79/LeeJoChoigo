@@ -32,7 +32,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   // const problemDescRef = useRef<Editor>(null);
   const editorRef = useRef<Editor>(null);
   const titleRef = useRef<HTMLInputElement>(null);
-  const [markdown, setMarkdown] = useState('내용을 입력하세요.');
+  const [markdown, setMarkdown] = useState('');
 
   const userId = useAuthStore((state) => state.session)?.user.id;
   const isDark = useThemeStore().isDark;
@@ -291,6 +291,10 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
               type="text"
               placeholder="태그를 입력하세요"
               onKeyDown={(e) => {
+                if (e.nativeEvent.isComposing) {
+                  return;
+                }
+
                 if (e.key === 'Enter') {
                   e.preventDefault();
                   const value = e.currentTarget.value.trim();

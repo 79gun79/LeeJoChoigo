@@ -1,43 +1,81 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getChannelProblems } from '../../api/mainApi';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { ChevronRight } from 'lucide-react';
 import type { User } from '../../types';
 import type { PostType } from '../../types/post';
 import { calculateLevel } from '../../utils/calculateLevel';
 import { previewMarkdown } from '../../utils/markdown';
+import { useModalStore } from '../../stores/modalStore';
 
 export default function MainRecommand({
   user,
+  isLogin,
   isUserLoading,
 }: {
   user: User;
+  isLogin: boolean;
   isUserLoading: boolean;
 }) {
   const [isActive, setIsActive] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+
   const [randomAlgorithms, setRandomAlgorithms] = useState<PostType[]>();
   const [randomJobs, setRandomJobs] = useState<PostType[]>();
 
-  useEffect(() => {
-    const postsFetch = async () => {
-      setIsLoading(true);
+  const navigate = useNavigate();
+  const { setLogInModal } = useModalStore();
 
+  const filterPosts = useCallback(
+    (array: PostType[]) => {
+      const filterArray = array?.filter(
+        (f) =>
+          !user?.solved?.find((item) => item === f.id) && f.is_yn !== false,
+      );
+      const newArrays = filterArray ? randomArray(filterArray) : [];
+
+      return newArrays;
+    },
+    [user?.solved],
+  );
+
+  const randomArray = (array: PostType[]) => {
+    let total = 3;
+    const tempArray = [...array];
+    const newArray = [];
+
+    if (array.length < 3) {
+      total = array.length;
+    }
+
+    // 문제 중복 방지
+    while (newArray.length < total) {
+      const randomIndex = Math.floor(Math.random() * tempArray.length);
+      newArray.push(tempArray.splice(randomIndex, 1)[0]);
+    }
+    return newArray;
+  };
+
+  const linkClickHandler = (path: string) => {
+    if (!isLogin) {
+      setLogInModal(true);
+      return;
+    } else {
+      navigate(path);
+    }
+  };
+
+  useEffect(() => {
+    if (isLogin && isUserLoading) return;
+
+    setIsLoading(true);
+    const postsFetch = async () => {
       try {
         const algos = await getChannelProblems(1);
         const jobs = await getChannelProblems(2);
 
-        const filterAlgos = algos?.filter(
-          (f) =>
-            !user?.solved?.find((item) => item === f.id) && f.is_yn !== false,
-        );
-        const filterjobs = jobs?.filter(
-          (f) =>
-            !user?.solved?.find((item) => item === f.id) && f.is_yn !== false,
-        );
-
-        const randomAlgos = filterAlgos ? randomArray(filterAlgos) : [];
-        const randomJobs = filterjobs ? randomArray(filterjobs) : [];
+        const randomAlgos = filterPosts(algos || []);
+        const randomJobs = filterPosts(jobs || []);
 
         setRandomAlgorithms(randomAlgos);
         setRandomJobs(randomJobs);
@@ -48,22 +86,8 @@ export default function MainRecommand({
       }
     };
     // User 로딩이 끝났을때
-    if (!isUserLoading) postsFetch();
-  }, [user?.solved, isUserLoading]);
-
-  const randomArray = (array: PostType[]) => {
-    let total = 3;
-    const newArray = [];
-
-    if (array.length < 3) {
-      total = array.length;
-    }
-
-    while (newArray.length < total) {
-      newArray.push(array[Math.floor(Math.random() * array.length)]);
-    }
-    return newArray;
-  };
+    postsFetch();
+  }, [isLogin, isUserLoading, filterPosts]);
   return (
     <>
       <div>
@@ -86,7 +110,7 @@ export default function MainRecommand({
             </button>
             <div className="hidden group-[.active]:block md:block md:px-3">
               <div className="absolute top-[44px] left-0 flex w-full flex-col gap-2.5 md:static md:gap-0">
-                {isLoading || isUserLoading
+                {isLoading
                   ? [...Array(3)].map((_, i) => (
                       <div
                         key={i}
@@ -99,10 +123,14 @@ export default function MainRecommand({
                     ))
                   : randomAlgorithms &&
                     randomAlgorithms.map((problem, index) => (
-                      <Link
-                        to={`/solutions/coding/write/${problem.solved_problem_id}`}
+                      <button
+                        onClick={() =>
+                          linkClickHandler(
+                            `/solutions/coding/write/${problem.solved_problem_id}`,
+                          )
+                        }
                         key={index}
-                        className={`md-hover-none hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:py-4 ${index + 1 !== randomAlgorithms.length && 'md:border-b'}`}
+                        className={`md-hover-none hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 text-left md:rounded-none md:border-0 md:py-4 ${index + 1 !== randomAlgorithms.length && 'md:border-b'}`}
                       >
                         <p className="text-main line-clamp-1 text-xs font-semibold md:text-sm">
                           {calculateLevel(Number(problem.solved_problem_level))}
@@ -113,7 +141,7 @@ export default function MainRecommand({
                         <p className="line-clamp-1 text-xs md:text-sm">
                           {problem.tags}
                         </p>
-                      </Link>
+                      </button>
                     ))}
               </div>
               <Link
@@ -135,7 +163,7 @@ export default function MainRecommand({
             </button>
             <div className="hidden group-[.active]:block md:block md:px-4">
               <div className="absolute top-[44px] left-0 flex w-full flex-col gap-2.5 md:static md:gap-0">
-                {isLoading || isUserLoading
+                {isLoading
                   ? [...Array(3)].map((_, i) => (
                       <div
                         key={i}
@@ -149,10 +177,12 @@ export default function MainRecommand({
                   : randomJobs &&
                     (randomJobs.length !== 0 ? (
                       randomJobs.map((problem, index) => (
-                        <Link
-                          to={`/problems/job/${problem?.id}`}
+                        <button
+                          onClick={() =>
+                            linkClickHandler(`/problems/job/${problem?.id}`)
+                          }
                           key={index}
-                          className={`md-hover-none hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 md:rounded-none md:border-0 md:py-4 ${index + 1 !== randomJobs.length && 'md:border-b'}`}
+                          className={`md-hover-none hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 text-left md:rounded-none md:border-0 md:py-4 ${index + 1 !== randomJobs.length && 'md:border-b'}`}
                         >
                           <p className="text-sub1 line-clamp-1 text-xs font-semibold md:text-sm">
                             {problem.tags}
@@ -165,7 +195,7 @@ export default function MainRecommand({
                               ? previewMarkdown(problem.content).slice(0, 100)
                               : ''}
                           </p>
-                        </Link>
+                        </button>
                       ))
                     ) : (
                       <div className="text-gray3 flex h-[300px] w-full flex-col items-center justify-center gap-3 text-center text-sm md:col-span-2">

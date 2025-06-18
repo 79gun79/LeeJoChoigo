@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import { getPopularPost, getPopularPosts } from '../../api/mainApi';
-import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
+import { useModalStore } from '../../stores/modalStore';
 
 type PopularPostsType = Awaited<ReturnType<typeof getPopularPosts>>;
 type PopularPostType = Awaited<ReturnType<typeof getPopularPost>>;
 
-export default function MainPopularProblem() {
+export default function MainPopularProblem({ isLogin }: { isLogin: boolean }) {
   const [popularProblems, setPopularProblems] = useState<PopularPostType[]>();
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const { setLogInModal } = useModalStore();
+
   useEffect(() => {
     const popularPosts = async () => {
       setIsLoading(true);
@@ -69,7 +73,14 @@ export default function MainPopularProblem() {
       {} as Record<number, { problem: number; channel: number; count: number }>,
     );
   };
-
+  const linkClickHandler = (path: string) => {
+    if (!isLogin) {
+      setLogInModal(true);
+      return;
+    } else {
+      navigate(path);
+    }
+  };
   return (
     <>
       <div className="mb-6 md:w-full">
@@ -105,11 +116,13 @@ export default function MainPopularProblem() {
                     ? `/problems/job/${problem?.id}`
                     : `/solutions/coding/write/${problem?.solved_problem_id}`;
                 return (
-                  <Link
-                    to={linkTo}
+                  <button
+                    onClick={() => linkClickHandler(linkTo)}
                     key={problem?.id}
                     id={problem?.id.toString()}
-                    className="hover-box dark:bg-bg-white flex items-center gap-5 rounded-sm border border-[#ccc] px-5 py-3 md:py-4"
+
+                    className="hover-box dark:bg-bg-white flex items-center gap-5 rounded-sm border border-[#ccc] px-5 py-3 text-left md:py-4"
+
                   >
                     <p className="text-sm font-semibold md:text-base lg:text-lg">
                       {i + 1}
@@ -125,7 +138,7 @@ export default function MainPopularProblem() {
                         {problem?.title}
                       </p>
                     </div>
-                  </Link>
+                  </button>
                 );
               })}
         </div>

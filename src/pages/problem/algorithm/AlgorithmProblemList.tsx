@@ -1,5 +1,5 @@
 import AlgorithmListCard from '../../../components/list/AlgorithmListCard';
-// import SearchBox from '../../../components/search/SearchBox';
+import SearchBox from '../../../components/search/SearchBox';
 // import TagSearch from '../../../components/search/SearchTag';
 import PageName from '../../../components/ui/PageName';
 import SearchListTop from '../../../components/search/SearchListTop';
@@ -20,9 +20,11 @@ export default function AlgorithmProblemList() {
   const isFetched = useRef(false);
   const channel = useLoaderData<ChannelType>();
 
-  const { sortType, setSortType, resetProblems } = useProblemStore();
+  const { searchQuery, setSearchQuery, sortType, setSortType, resetProblems } =
+    useProblemStore();
   const [isFirstLoading, setIsFirstLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     if (isFetched.current) return;
@@ -50,7 +52,7 @@ export default function AlgorithmProblemList() {
         if (current) observer.unobserve(current);
       };
     });
-  }, [page, sortType]);
+  }, [searchQuery, sortType]);
 
   const handleSortChange = (newSort: 'latest' | 'popular') => {
     resetProblems();
@@ -64,6 +66,18 @@ export default function AlgorithmProblemList() {
     });
   };
 
+  const handleSearch = async () => {
+    resetProblems();
+    setSearchQuery(query);
+    page.current = 0;
+    isFetched.current = true;
+
+    setIsFirstLoading(true);
+    setProblemsByPage(0, sortType).finally(() => {
+      setIsFirstLoading(false);
+    });
+  };
+
   return (
     <>
       <div className="px-4 py-[25px] md:px-8 md:py-[35px] lg:px-14 lg:py-[45px] xl:mx-auto xl:max-w-6xl xl:px-0">
@@ -71,11 +85,11 @@ export default function AlgorithmProblemList() {
           <PageName title={channel.name} />
         </div>
         <div className="mb-[25px] md:mb-[35px]">
-          {/* <SearchBox
+          <SearchBox
             query={query}
             setQuery={setQuery}
             onSearch={handleSearch}
-          /> */}
+          />
           {/* <TagSearch /> */}
         </div>
         <div>
@@ -89,7 +103,7 @@ export default function AlgorithmProblemList() {
           <div>
             <div className="mb-1">
               <SearchListTop
-                query=""
+                query={query}
                 sortType={sortType}
                 setSortType={handleSortChange}
                 isAlgorithm={true}

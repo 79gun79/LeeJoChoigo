@@ -6,12 +6,13 @@ export const fetchBjProblems = async (
   page: number,
   orderBy: string,
   ascending: boolean,
+  query?: string,
 ) => {
   try {
     const from = page * LIMIT;
     const to = from + LIMIT - 1;
 
-    const { data: post, error } = await supabase
+    let bjProblems = supabase
       .from('post')
       .select(
         `
@@ -22,7 +23,13 @@ export const fetchBjProblems = async (
         )
       `,
       )
-      .eq('channel', 1)
+      .eq('channel', 1);
+
+    if (query) {
+      bjProblems = bjProblems.ilike('title', `%${query}%`);
+    }
+
+    const { data: post, error } = await bjProblems
       .order(orderBy, { ascending })
       .range(from, to);
 
