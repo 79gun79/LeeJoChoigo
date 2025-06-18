@@ -89,7 +89,6 @@ export default function CommentEdit({ postId, onCommentAdd }: Props) {
       >
         <div className="mb-2.5">
           {user && <Avartar user={user} />}
-          {!user && <Avartar />}
         </div>
         <form onSubmit={handleCommentSubmit}>
           <textarea
