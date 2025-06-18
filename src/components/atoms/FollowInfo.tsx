@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import supabase from '../../utils/supabase';
 import FollowModal from '../modals/FollowModal';
+import { useFollowStore } from '../../stores/followStore';
 
 interface FollowInfoProps {
   userId: string;
@@ -12,6 +13,7 @@ export default function FollowInfo({ userId }: FollowInfoProps) {
   const [followingCount, setFollowingCount] = useState(0);
   const [openFollower, setOpenFollower] = useState(false);
   const [openFollowing, setOpenFollowing] = useState(false);
+  const { followMap } = useFollowStore();
 
   useEffect(() => {
     if (!userId) return;
@@ -33,7 +35,7 @@ export default function FollowInfo({ userId }: FollowInfoProps) {
     };
 
     fetchFollowCounts();
-  }, [userId]);
+  }, [userId, followMap]);
 
   return (
     <>

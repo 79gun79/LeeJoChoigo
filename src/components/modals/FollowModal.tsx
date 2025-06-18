@@ -25,24 +25,25 @@ export default function FollowModal({
 
     const fetchFollows = async () => {
       setLoading(true);
+
+      // 관계명 명확히 지정
       const relationColumn =
         type === 'follower'
-          ? 'follower:follow_follower_fkey'
-          : 'user:follow_user_fkey';
+          ? 'user!follower(id, fullname, image, email)'
+          : 'user!user(id, fullname, image, email)';
       const filterColumn = type === 'follower' ? 'user' : 'follower';
 
       const { data, error } = await supabase
         .from('follow')
-        .select(`${relationColumn}(id, fullname, image, email)`)
+        .select(`${relationColumn}`)
         .eq(filterColumn, userId);
 
       if (error) {
         console.error(`${type} 목록을 불러오는데 실패했습니다:`, error);
         setUsers([]);
       } else {
-        const extracted = data.map((item: any) =>
-          type === 'follower' ? item.follower : item.user,
-        );
+        // 타입 명확히
+        const extracted = (data as { user: User }[]).map((item) => item.user);
         setUsers(extracted);
       }
 
