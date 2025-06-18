@@ -84,6 +84,7 @@ export const getPopularPosts = async () => {
 
 // 인기 문제 가져오기
 export const getPopularPost = async (postId: number, channelId: number) => {
+  console.log(channelId, postId, '인기문제 가져오기')
   try {
     if (channelId === 3) {
       const { data: post } = await supabase
@@ -91,7 +92,7 @@ export const getPopularPost = async (postId: number, channelId: number) => {
         .select(`*`)
         .eq('channel', 1)
         .eq('is_yn', true)
-        .eq('solved_problem_id', postId)
+        .eq('id', postId)
         .single();
       return post;
     } else {

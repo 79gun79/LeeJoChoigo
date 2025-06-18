@@ -45,7 +45,7 @@ export default function AlgorithmListCard({
       return;
     }
 
-    navigate(`/solutions/coding/write/${problem.solved_problem_id}`);
+    navigate(`/solutions/coding/write/${problem.id}`);
   };
 
   return (

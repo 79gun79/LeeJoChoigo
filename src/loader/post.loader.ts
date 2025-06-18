@@ -37,7 +37,7 @@ export const getPostDetail = async ({ params }: LoaderFunctionArgs) => {
           .from('post')
           .select('channel, solved_problem_id, title, content, quiz_data, id')
           .eq('channel', 1)
-          .eq('solved_problem_id', data.problem_id)
+          .eq('id', data.problem_id)
           .single());
       } else if (data.channel === 4) {
         ({ data: parentPost, error: parentError } = await supabase
