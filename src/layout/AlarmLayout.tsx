@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, MailOpen } from 'lucide-react';
 import AlarmListItems from '../components/atoms/AlarmListItems';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
 import type { Notification } from '../types/notification';
-import { fetchNotifications, markAsRead } from '../utils/notifications';
+import {
+  fetchNotifications,
+  markAllAsRead,
+  markAsRead,
+} from '../utils/notifications';
 
 export default function AlarmLayout() {
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -102,16 +106,38 @@ export default function AlarmLayout() {
                 {unreadCount}
               </span>
             </span>
-            <button
-              className="text-gray3 hover:text-black"
-              onClick={async () => {
-                await deleteReadNotifications();
-                setOpen(false);
-              }}
-              aria-label="알림 닫기"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-6">
+              <div className="group relative w-fit">
+                <MailOpen
+                  className="text-gray3 w-5 cursor-pointer hover:text-black"
+                  onClick={async () => {
+                    const {
+                      data: { user },
+                    } = await supabase.auth.getUser();
+                    if (user) {
+                      await markAllAsRead(user.id);
+                      setNotifications((prev) =>
+                        prev.map((n) => ({ ...n, is_seen: true })),
+                      );
+                    }
+                  }}
+                />
+                <span className="absolute top-full left-1/2 z-10 -translate-x-1/2 rounded bg-black px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100">
+                  모두 읽음
+                </span>
+              </div>
+
+              <button
+                className="text-gray3 hover:text-black"
+                onClick={async () => {
+                  await deleteReadNotifications();
+                  setOpen(false);
+                }}
+                aria-label="알림 닫기"
+              >
+                ✕
+              </button>
+            </div>
           </div>
           <div className="max-h-[400px] overflow-y-auto">
             <AlarmListItems

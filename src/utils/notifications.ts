@@ -7,9 +7,9 @@ export const getChannelPath = (channelId: number) => {
     case 2:
       return '/problems/job';
     case 3:
-      return '/solution/coding';
+      return '/solutions/coding';
     case 4:
-      return '/solution/job';
+      return '/solutions/job';
     case 5:
       return '/questions';
     default:
@@ -41,6 +41,16 @@ export const getNotificationMessage = (n: Notification): string => {
 
 export const markAsRead = async (id: number) => {
   await supabase.from('notification').update({ is_seen: true }).eq('id', id);
+};
+
+/**
+ * 해당 유저의 모든 알림을 읽음 처리
+ */
+export const markAllAsRead = async (userId: string) => {
+  await supabase
+    .from('notification')
+    .update({ is_seen: true })
+    .eq('recipient', userId);
 };
 
 export const fetchNotifications = async (userId: string) => {
