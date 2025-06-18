@@ -52,7 +52,10 @@ export default function AlgorithmSolutionEdit() {
   }, [postId]);
 
   const handleAddTag = (tag: string) => {
-    if (tags.length >= 5) return;
+    if (tags.length >= 5) {
+      notify('최대 5개까지 선택 가능합니다.', 'error');
+      return;
+    }
     if (!tags.includes(tag)) {
       setTags((prev) => [...prev, tag]);
     }
@@ -75,6 +78,16 @@ export default function AlgorithmSolutionEdit() {
     if (!postData) return;
 
     const { title, content, imageUrl, imageFileName } = postData;
+
+    if (!title.trim()) {
+      notify('제목을 입력해주세요.', 'warning');
+      return;
+    }
+
+    if (!content.trim()) {
+      notify('내용을 입력해주세요.', 'warning');
+      return;
+    }
 
     const authorId = session?.user.id;
 

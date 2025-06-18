@@ -153,17 +153,27 @@ export default function DetailText({
               data.parent.content && (
                 <ul className="rounded-sm border border-[#DEDEDE] py-[20px]">
                   <li
-                    className={`flex cursor-pointer list-none items-center gap-[5px] pt-[4px] ${isShow && 'pb-[16px]'}`}
+                    className={`flex cursor-pointer list-none items-center justify-between pt-[4px] ${isShow && 'pb-[16px]'}`}
                     onClick={() => setIsShow(!isShow)}
                   >
-                    {!isShow && <ChevronRight size={22} />}
-                    {isShow && <ChevronDown size={22} />}
-                    <div className="">
+                    <div className="t4 font-bold">
                       "백준 {data.parent.solved_problem_id}번 :{' '}
                       {data.parent.title}" 문제 보기
-                    </div>
+                    </div>{' '}
+                    {!isShow && (
+                      <ChevronRight
+                        size={24}
+                        className="mr-[20px]"
+                      />
+                    )}
+                    {isShow && (
+                      <ChevronDown
+                        size={24}
+                        className="mr-[20px]"
+                      />
+                    )}
                   </li>
-                  <li className={`list-none px-[30px] ${!isShow && 'hidden'}`}>
+                  <li className={`pr-[25px] list-none ${!isShow && 'hidden'}`}>
                     <ProblemDescRender isHeadingHidden={true}>
                       {data.parent.content}
                     </ProblemDescRender>
