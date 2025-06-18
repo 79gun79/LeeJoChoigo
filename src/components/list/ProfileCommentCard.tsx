@@ -47,7 +47,7 @@ export default function ProfileCommentCard({
           </div>
         </div> */}
       {data.post && (
-        <div className="w-full rounded-sm border border-[#ccc]">
+        <div className="border-gray2 dark:bg-bg-white w-full rounded-sm border">
           <button
             className="h-full w-full text-left"
             onClick={() =>

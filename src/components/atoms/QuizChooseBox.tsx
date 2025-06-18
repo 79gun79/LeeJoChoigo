@@ -25,8 +25,10 @@ export default function QuizChooseBox({
       >
         <div
           className={twMerge(
+
             'bg-sub3 text-main flex h-5 w-5 items-center justify-center rounded-full text-center text-xs font-semibold lg:text-sm',
-            `${selected ? 'bg-main text-white' : 'bg-sub3 text-main'}`,
+            `${selected ? 'bg-main text-white' : 'bg-sub3 text-main dark:text-bg-white'}`,
+
           )}
         >
           {id}

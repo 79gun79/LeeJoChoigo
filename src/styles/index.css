@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import './font.css';
 
+@custom-variant dark (&:where(.dark, .dark *));
 @theme {
   /* Gray Scale */
   --color-black: #000000;
@@ -22,8 +23,34 @@
   --color-green-info: #5da92e;
 }
 
+.dark {
+  /* Gray Scale - Dark Theme */
+  --color-black: #ffffff; /* 텍스트용 밝은 색상 */
+  --color-gray4: #e0e0e0; /* 밝은 회색 텍스트 */
+  --color-gray3: #aaaaaa;
+  --color-gray2: #555555;
+  --color-gray1: #2c2c2c; /* 입력창 배경 등 */
+  --color-white: #121212; /* 가장 어두운 배경 */
+
+  /* Main Colors - 어두운 배경에 어울리는 약간 더 선명한 톤 */
+  --color-main: #25d9c7; /* 밝은 청록 */
+  --color-sub1: #1bbfbf;
+  --color-sub2: #26e3d0;
+  --color-sub3: #99f2e9;
+  --color-bg-white: #1a1a1a; /* 전체 배경용 */
+
+  /* Etc */
+  --color-red-caution: #ff6b6b; /* 좀 더 밝은 경고색 */
+  --color-green-info: #a3e635; /* 눈에 잘 띄는 초록 */
+}
+
 button {
   cursor: pointer;
+}
+
+html,
+body {
+  @apply bg-white text-black transition-colors duration-300;
 }
 
 @layer utilities {

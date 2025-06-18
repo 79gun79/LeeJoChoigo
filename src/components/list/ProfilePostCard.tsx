@@ -96,7 +96,7 @@ export default function ProfilePostCard({
 
   return (
     <>
-      <div className="w-full rounded-sm border border-[#ccc]">
+      <div className="border-gray2 dark:bg-bg-white w-full rounded-sm border">
         <button
           onClick={() => problemHandler(`${channelLocation(channel)}/${id}`)}
           className="h-full w-full text-left"

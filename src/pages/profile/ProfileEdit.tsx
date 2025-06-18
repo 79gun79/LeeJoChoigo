@@ -198,7 +198,7 @@ export default function ProfileEdit({
 
   return (
     <>
-      <div className="fixed top-0 left-0 z-10 flex h-dvh w-dvw items-center justify-center bg-black/50 px-4">
+      <div className="fixed top-0 left-0 z-10 flex h-dvh w-dvw items-center justify-center bg-[#000]/50 px-4">
         <div
           ref={popupRef}
           className="h-[600px] max-h-11/12 w-full max-w-[400px] overflow-hidden rounded-sm bg-white md:h-[630px] lg:h-[730px] lg:max-w-[500px]"

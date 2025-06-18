@@ -12,6 +12,11 @@
   position: relative;
 }
 
+@media (prefers-color-scheme: dark) {
+  .all {
+    background-color: #184d59;
+  }
+}
 .starrySky {
   display: block;
   width: 100vw;

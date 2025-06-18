@@ -1,5 +1,5 @@
 import { Tag, TextSearch } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getTagList } from '../../api/searchApi';
 import TagItem from '../ui/TagItem';
 import { notify } from '../../utils/customAlert';
@@ -16,6 +16,12 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
 
   const [tagList, setTagList] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [highlightIndex, setHighlightIndex] = useState<number>(-1);
+  const [lastInputType, setLastInputType] = useState<
+    'keyboard' | 'mouse' | null
+  >(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   useEffect(() => {
     if (!query.trim()) return;
@@ -27,6 +33,15 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
 
     return () => clearTimeout(timer);
   }, [query]);
+
+  useEffect(() => {
+    if (highlightIndex >= 0 && itemRefs.current[highlightIndex]) {
+      itemRefs.current[highlightIndex]?.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }, [highlightIndex]);
 
   const filteredTags = tagList.filter((tag) => !selectedTags.includes(tag));
 
@@ -45,6 +60,28 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
     setSelectedTags(selectedTags.filter((t) => t !== tag));
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!hasText || filteredTags.length === 0) return;
+
+    setLastInputType('keyboard');
+    setHoverIndex(null);
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightIndex((prev) => (prev + 1) % filteredTags.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightIndex((prev) =>
+        prev <= 0 ? filteredTags.length - 1 : prev - 1,
+      );
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (highlightIndex >= 0 && highlightIndex < filteredTags.length) {
+        addTag(filteredTags[highlightIndex]);
+      }
+    }
+  };
+
   return (
     <>
       <button
@@ -55,7 +92,7 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
       </button>
       {open && (
         <div
-          className={`mt-2.5 rounded-sm bg-[#F2F2F2] px-2.5 py-3 md:px-3.5 md:py-4 lg:px-4.5 lg:py-4.5`}
+          className={`bg-gray1 mt-2.5 rounded-sm px-2.5 py-3 md:px-3.5 md:py-4 lg:px-4.5 lg:py-4.5`}
         >
           <form
             onSubmit={(e) => {
@@ -69,7 +106,12 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
                 type="text"
                 placeholder="태그를 검색하세요"
                 className="w-full p-2.5 text-sm outline-none md:text-base lg:text-lg"
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setHighlightIndex(-1);
+                  setLastInputType('keyboard');
+                }}
+                onKeyDown={handleKeyDown}
               />
               {/* <button className="shrink-0 p-2">
                 <Search className="w-[20px] text-[var(--color-main)] md:w-[24px] lg:w-[26px]" />
@@ -77,11 +119,26 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
               {query.trim() !== '' && filteredTags.length > 0 && (
                 <div className="border-sub1 border-t-gray1 absolute top-[calc(100%-2px)] -left-[1px] w-[calc(100%+2px)] overflow-hidden rounded-[0_0_4px_4px] border shadow-md">
                   <ul className="max-h-30 overflow-y-auto bg-white">
-                    {filteredTags.map((tag) => (
+                    {filteredTags.map((tag, index) => (
                       <li
                         key={tag}
+                        ref={(el: HTMLLIElement | null) =>
+                          void (itemRefs.current[index] = el)
+                        }
+                        onMouseEnter={() => {
+                          setLastInputType('mouse');
+                          setHoverIndex(index);
+                        }}
+                        onMouseLeave={() => setHoverIndex(null)}
                         onClick={() => addTag(tag)}
-                        className="hover:bg-sub1/10 text-gray4 flex cursor-pointer items-center gap-2 border border-transparent px-3 py-1 text-sm"
+                        className={`text-gray4 flex cursor-pointer items-center gap-2 border border-transparent px-3 py-1 text-sm ${
+                          lastInputType === 'keyboard' &&
+                          highlightIndex === index
+                            ? 'bg-sub1/10'
+                            : lastInputType === 'mouse' && hoverIndex === index
+                              ? 'bg-sub1/10'
+                              : ''
+                        } `}
                       >
                         <Tag className="text-gray4 w-3" />
                         {tag}

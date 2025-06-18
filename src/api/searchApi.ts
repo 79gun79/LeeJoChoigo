@@ -77,7 +77,7 @@ export const getTagList = async (
         return match;
       });
 
-    return tags;
+    return Array.from(new Set(tags));
   } catch (e) {
     console.error(e);
     return [];

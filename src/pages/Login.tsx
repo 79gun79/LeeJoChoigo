@@ -70,7 +70,7 @@ export default function Login() {
             onClick={() => navigate('/')}
           >
             <img
-              className="ml-[-8px] w-30 object-cover md:w-34 lg:w-38"
+              className="ml-[-8px] w-30 object-cover md:w-34 lg:w-38 dark:brightness-200"
               src={logo}
               alt="logo image"
             />
