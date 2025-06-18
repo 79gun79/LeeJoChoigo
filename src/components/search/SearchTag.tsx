@@ -106,6 +106,7 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
                 type="text"
                 placeholder="태그를 검색하세요"
                 className="w-full p-2.5 text-sm outline-none md:text-base lg:text-lg"
+                value={query}
                 onChange={(e) => {
                   setQuery(e.target.value);
                   setHighlightIndex(-1);
