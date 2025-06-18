@@ -220,7 +220,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
             <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
               <Editor
                 ref={editorRef}
-                initialValue="내용을 입력하세요."
+                initialValue=" "
                 previewStyle="tab"
                 initialEditType="markdown"
                 useCommandShortcut={true}
