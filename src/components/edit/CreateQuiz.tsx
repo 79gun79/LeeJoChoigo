@@ -57,7 +57,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
       if (editorInstance) {
         editorInstance.setMarkdown(markdown);
       }
-    }, [isDark]);
+    }, []);
 
     const addQuiz = () => {
       if (!allValid) {
@@ -150,6 +150,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
                   toolbarItems={toolbarItems}
                   key={isDark ? 'dark' : 'light'}
                   ref={editorRef}
+                  initialValue={markdown}
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}

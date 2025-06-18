@@ -43,7 +43,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
     if (editorInstance) {
       editorInstance.setMarkdown(markdown);
     }
-  }, [isDark]);
+  }, []);
 
   // useEffect(() => {
   //   if (!isLoading && problemDescRef.current && problemId && problemDesc) {
