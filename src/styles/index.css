@@ -96,7 +96,7 @@ body {
     @apply bg-gray1 flex h-9 w-9 items-center justify-center rounded-full lg:h-12 lg:w-12;
   }
   .menu-button {
-    @apply hover:border-main relative flex w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-sm border border-[#ccc] px-2 py-3 transition-colors duration-500 md:py-4 lg:gap-5;
+    @apply hover:border-main relative z-1 flex w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-sm border border-[#ccc] px-2 py-3 transition-colors duration-500 md:py-4 lg:gap-5;
   }
   .menu-button-effect {
     @apply bg-main absolute -bottom-1/2 -z-1 h-0 w-full origin-center rounded-full transition-all duration-800 ease-out group-hover:h-[200%] group-hover:w-[200%];
@@ -110,5 +110,15 @@ body {
   }
   .hover-box:hover .hover {
     @apply underline;
+  }
+
+  .dark .menu-button {
+    @apply border-gray2;
+  }
+  .dark .border-\[\#ccc\] {
+    @apply border-gray2;
+  }
+  .dark .md\:border-\[\#ccc\] {
+    @apply border-gray2;
   }
 }

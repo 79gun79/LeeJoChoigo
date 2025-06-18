@@ -91,7 +91,7 @@ export default function MainUserInfo({
 
   return (
     <>
-      <div className="dark:bg-bg-white relative -mt-28 mb-6 box-border h-[150px] rounded-sm bg-white p-5 drop-shadow-md transition-[margin] duration-500 md:order-2 md:mt-0 md:h-full md:w-[320px] md:shrink-0 md:p-6 md:py-7 md:transition-none lg:w-[380px] lg:p-7 lg:py-8">
+      <div className="dark:bg-bg-white md: relative -mt-28 mb-6 box-border rounded-sm bg-white p-5 drop-shadow-md transition-[margin] duration-500 md:order-2 md:mt-0 md:mb-0 md:w-[320px] md:shrink-0 md:p-6 md:py-7 md:transition-none lg:w-[380px] lg:p-7 lg:py-8">
         {isLogin ? (
           isLoading || isUserLoading ? (
             <div className="flex h-full flex-col justify-between">
@@ -102,8 +102,8 @@ export default function MainUserInfo({
               </div>
             </div>
           ) : (
-            <div className="flex h-full flex-col">
-              <p className="mb-5 flex flex-wrap items-end gap-1 text-sm md:mb-0 md:text-base lg:text-lg">
+            <div className="flex h-full flex-col gap-6">
+              <p className="flex flex-wrap items-end gap-1 text-sm md:mb-0 md:text-base lg:text-lg">
                 <User className="h-5 w-5 shrink-0" />
                 <span className="relative line-clamp-1 text-base leading-none font-bold md:text-lg lg:text-xl">
                   {user?.fullname}
