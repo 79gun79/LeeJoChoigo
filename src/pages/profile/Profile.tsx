@@ -93,7 +93,7 @@ export default function Profile() {
                 className={`w-full border-b border-[var(--color-gray1)] py-1.5 text-center text-sm font-medium text-[var(--color-gray3)] md:text-base lg:text-lg ${currentTab === index && 'border-black text-black'}`}
               >
                 <button
-                  className="h-full w-full"
+                  className="h-full w-full cursor-pointer!"
                   onClick={() => setCurrentTab(index)}
                 >
                   {tab.title}

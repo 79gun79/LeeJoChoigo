@@ -42,10 +42,6 @@ export default function ProfileList({
   >();
   const filterModalRef = useRef<HTMLUListElement>(null);
 
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const listEndRef = useRef<HTMLDivElement>(null);
-
   const filterMenu = [
     { title: '전체', id: 0 },
     { title: '개발직군 문제', id: 2 },
@@ -55,78 +51,31 @@ export default function ProfileList({
   ];
 
   useEffect(() => {
-    setPage(0);
-    setDiaplayPosts([]);
-    setHasMore(true);
-  }, [currentTab, selectFilterMenu]);
-  useEffect(() => {
     setIsLoading(true);
-
-    const from = page * 5;
-    const to = from + 5 - 1;
-
     const fetchDatas = async () => {
       try {
         let resultDatas: ProfilePosts | ProfileComments | ProfileLikes;
         if (selectFilterMenu === 0) {
           if (currentTab === 0) {
-            resultDatas = (await fetchUserPosts(userId, from, to)) || [];
+            resultDatas = (await fetchUserPosts(userId)) || [];
           } else if (currentTab === 1) {
-            resultDatas = (await fetchUserComments(userId, from, to)) || [];
+            resultDatas = (await fetchUserComments(userId)) || [];
           } else {
-            resultDatas = (await fetchUserLikes(userId, from, to)) || [];
+            resultDatas = (await fetchUserLikes(userId)) || [];
           }
         } else {
           if (currentTab === 0) {
             resultDatas =
-              (await fetchUserChannelPosts(
-                userId,
-                selectFilterMenu,
-                from,
-                to,
-              )) || [];
+              (await fetchUserChannelPosts(userId, selectFilterMenu)) || [];
           } else if (currentTab === 1) {
             resultDatas =
-              (await fetchUserChannelComments(
-                userId,
-                selectFilterMenu,
-                from,
-                to,
-              )) || [];
+              (await fetchUserChannelComments(userId, selectFilterMenu)) || [];
           } else {
             resultDatas =
-              (await fetchUserChannelLikes(
-                userId,
-                selectFilterMenu,
-                from,
-                to,
-              )) || [];
+              (await fetchUserChannelLikes(userId, selectFilterMenu)) || [];
           }
         }
-
-        if (page !== 0 && resultDatas.length === 0) {
-          setIsLoading(false);
-          setHasMore(false);
-          return;
-        }
-
-        if (page === 0) {
-          setDiaplayPosts(resultDatas);
-        } else {
-          if (currentTab === 0) {
-            setDiaplayPosts(
-              (prev) => [...(prev || []), ...resultDatas] as ProfilePosts,
-            );
-          } else if (currentTab === 1) {
-            setDiaplayPosts(
-              (prev) => [...(prev || []), ...resultDatas] as ProfileComments,
-            );
-          } else {
-            setDiaplayPosts(
-              (prev) => [...(prev || []), ...resultDatas] as ProfileLikes,
-            );
-          }
-        }
+        setDiaplayPosts(resultDatas);
         setIsLoading(false);
       } catch (error) {
         console.error('데이터를 불러오지 못했습니다.', error);
@@ -134,24 +83,7 @@ export default function ProfileList({
     };
 
     fetchDatas();
-  }, [selectFilterMenu, currentTab, userId, page]);
-
-  useEffect(() => {
-    if (!listEndRef.current || isLoading || !hasMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setPage((prev) => prev + 1);
-        }
-      },
-      { threshold: 1 },
-    );
-
-    observer.observe(listEndRef.current);
-
-    return () => observer.disconnect();
-  }, [isLoading, hasMore]);
+  }, [selectFilterMenu, currentTab, userId]);
 
   // 정렬
   const sortHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -265,29 +197,13 @@ export default function ProfileList({
         </div>
         {/* 목록 */}
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          {page === 0 && isLoading ? ( // 첫로딩 => 스켈레톤만
-            Array.from({ length: displayPosts?.length || 3 }).map(
-              (_, index) => (
-                <div
-                  key={index}
-                  className="w-full rounded-sm border border-[#ccc]"
-                >
-                  <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
-                    <div className="mb-2.5 h-3.5 w-2/3 bg-gray-200 md:h-4.5 lg:h-5.5"></div>
-                    <div className="mb-1 h-3 w-full bg-gray-200 md:h-4 lg:h-5"></div>
-                    <div className="mb-2.5 h-3 w-4/5 bg-gray-200 md:h-4 lg:h-5"></div>
-                    <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
-                  </div>
-                </div>
-              ),
-            )
-          ) : displayPosts && displayPosts.length > 0 ? (
-            <>
-              {displayPosts?.map((data, index) => {
+          {!isLoading ? (
+            displayPosts?.length !== 0 ? (
+              displayPosts?.map((data, index) => {
                 if (currentTab === 0) {
                   return (
                     <ProfilePostCard
-                      key={data.id}
+                      key={index}
                       data={data as ProfilePosts[number]}
                     />
                   );
@@ -311,27 +227,27 @@ export default function ProfileList({
                     return;
                   }
                 }
-              })}
-              {isLoading &&
-                Array.from({ length: 3 }).map((_, index) => (
-                  <div
-                    key={`more-skeleton-${index}`}
-                    className="w-full rounded-sm border border-[#ccc]"
-                  >
-                    <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
-                      <div className="mb-2.5 h-3.5 w-2/3 bg-gray-200 md:h-4.5 lg:h-5.5"></div>
-                      <div className="mb-1 h-3 w-full bg-gray-200 md:h-4 lg:h-5"></div>
-                      <div className="mb-2.5 h-3 w-4/5 bg-gray-200 md:h-4 lg:h-5"></div>
-                      <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
-                    </div>
-                  </div>
-                ))}
-            </>
+              })
+            ) : (
+              <NoList />
+            )
           ) : (
-            !isLoading && <NoList />
+            Array.from({ length: displayPosts?.length || 5 }).map(
+              (_, index) => (
+                <div
+                  key={index}
+                  className="w-full rounded-sm border border-[#ccc]"
+                >
+                  <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
+                    <div className="mb-2.5 h-3.5 w-2/3 bg-gray-200 md:h-4.5 lg:h-5.5"></div>
+                    <div className="mb-1 h-3 w-full bg-gray-200 md:h-4 lg:h-5"></div>
+                    <div className="mb-2.5 h-3 w-4/5 bg-gray-200 md:h-4 lg:h-5"></div>
+                    <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
+                  </div>
+                </div>
+              ),
+            )
           )}
-
-          <div ref={listEndRef}></div>
         </div>
       </div>
     </>

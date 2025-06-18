@@ -24,13 +24,9 @@ export const fetchProfile = async ({ params }: LoaderFunctionArgs) => {
   }
 };
 
-export const fetchUserPosts = async (
-  userId: string,
-  from: number,
-  to: number,
-) => {
+export const fetchUserPosts = async (userId: string) => {
   try {
-    const { data } = await supabase
+    const { data: post } = await supabase
       .from('post')
       .select(
         `
@@ -45,10 +41,9 @@ export const fetchUserPosts = async (
       )
       .eq('author', userId)
       .eq('is_yn', true)
-      .order('created_at', { ascending: false })
-      .range(from, to);
+      .order('created_at', { ascending: false });
 
-    return data;
+    return post;
   } catch (e) {
     console.error(e);
   }
@@ -56,11 +51,9 @@ export const fetchUserPosts = async (
 export const fetchUserChannelPosts = async (
   userId: string,
   channel: number,
-  from: number,
-  to: number,
 ) => {
   try {
-    const { data } = await supabase
+    const { data: post } = await supabase
       .from('post')
       .select(
         `
@@ -76,22 +69,17 @@ export const fetchUserChannelPosts = async (
       .eq('author', userId)
       .eq('is_yn', true)
       .eq('channel', channel)
-      .order('created_at', { ascending: false })
-      .range(from, to);
+      .order('created_at', { ascending: false });
 
-    return data;
+    return post;
   } catch (e) {
     console.error(e);
   }
 };
 
-export const fetchUserComments = async (
-  userId: string,
-  from: number,
-  to: number,
-) => {
+export const fetchUserComments = async (userId: string) => {
   try {
-    const { data } = await supabase
+    const { data: comments } = await supabase
       .from('comment')
       .select(
         `
@@ -101,10 +89,9 @@ export const fetchUserComments = async (
       )
       .eq('author', userId)
       .eq('is_yn', true)
-      .order('created_at', { ascending: false })
-      .range(from, to);
+      .order('created_at', { ascending: false });
 
-    return data;
+    return comments;
   } catch (e) {
     console.error(e);
   }
@@ -112,11 +99,9 @@ export const fetchUserComments = async (
 export const fetchUserChannelComments = async (
   userId: string,
   channel: number,
-  from: number,
-  to: number,
 ) => {
   try {
-    const { data } = await supabase
+    const { data: comments } = await supabase
       .from('comment')
       .select(
         `
@@ -127,23 +112,18 @@ export const fetchUserChannelComments = async (
       .eq('author', userId)
       .eq('is_yn', true)
       .eq('post.channel', channel)
-      .order('created_at', { ascending: false })
-      .range(from, to);
+      .order('created_at', { ascending: false });
 
-    return data;
+    return comments;
   } catch (e) {
     console.error(e);
   }
 };
 
 // 특정유저의 모든채널 좋아요
-export const fetchUserLikes = async (
-  userId: string,
-  from: number,
-  to: number,
-) => {
+export const fetchUserLikes = async (userId: string) => {
   try {
-    const { data } = await supabase
+    const { data: likes } = await supabase
       .from('like')
       .select(
         `
@@ -152,10 +132,9 @@ export const fetchUserLikes = async (
         `,
       )
       .eq('user', userId)
-      .order('created_at', { ascending: false })
-      .range(from, to);
+      .order('created_at', { ascending: false });
 
-    return data;
+    return likes;
   } catch (e) {
     console.error(e);
   }
@@ -164,11 +143,9 @@ export const fetchUserLikes = async (
 export const fetchUserChannelLikes = async (
   userId: string,
   channel: number,
-  from: number,
-  to: number,
 ) => {
   try {
-    const { data } = await supabase
+    const { data: likes } = await supabase
       .from('like')
       .select(
         `
@@ -178,10 +155,9 @@ export const fetchUserChannelLikes = async (
       )
       .eq('user', userId)
       .eq('post.channel', channel)
-      .order('created_at', { ascending: false })
-      .range(from, to);
+      .order('created_at', { ascending: false });
 
-    return data;
+    return likes;
   } catch (e) {
     console.error(e);
   }
