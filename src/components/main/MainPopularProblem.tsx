@@ -120,7 +120,9 @@ export default function MainPopularProblem({ isLogin }: { isLogin: boolean }) {
                     onClick={() => linkClickHandler(linkTo)}
                     key={problem?.id}
                     id={problem?.id.toString()}
-                    className="hover-box flex items-center gap-5 rounded-sm border border-[#ccc] px-5 py-3 text-left md:py-4"
+
+                    className="hover-box dark:bg-bg-white flex items-center gap-5 rounded-sm border border-[#ccc] px-5 py-3 text-left md:py-4"
+
                   >
                     <p className="text-sm font-semibold md:text-base lg:text-lg">
                       {i + 1}

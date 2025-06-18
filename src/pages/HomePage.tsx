@@ -85,12 +85,14 @@ export default function HomePage() {
                   </p>
                 </div>
               </div>
+
               <div className="flex gap-2 md:h-[calc(100%-56px)] lg:h-[calc(100%-64px)] lg:gap-3">
                 <button
                   onClick={() => {
                     navigate('/problems/coding');
                   }}
-                  className="menu-button group"
+                  className="menu-button group dark:bg-bg-white""
+
                 >
                   <span className="icon-bg">
                     <NotebookPen className="text-main h-5 w-5 lg:h-6 lg:w-6" />
@@ -101,13 +103,13 @@ export default function HomePage() {
                     문제 풀기
                   </span>
                   <span className="menu-button-effect"></span>
+
                 </button>
                 <button
                   onClick={() => {
                     navigate('/problems/job');
                   }}
-                  className="menu-button group"
-                >
+                  className="menu-button group dark:bg-bg-white"                >
                   <span className="icon-bg">
                     <SquarePen className="text-main h-5 w-5 lg:h-6 lg:w-6" />
                   </span>
@@ -117,12 +119,14 @@ export default function HomePage() {
                     문제 풀기
                   </span>
                   <span className="menu-button-effect"></span>
+                                                                   
                 </button>
                 <button
                   onClick={() => {
                     linkClickHandler('/questions/write');
                   }}
-                  className="menu-button group"
+                  className="menu-button group dark:bg-bg-white"
+
                 >
                   <span className="icon-bg">
                     <CircleHelp className="text-main h-5 w-5 lg:h-6 lg:w-6" />
@@ -131,12 +135,14 @@ export default function HomePage() {
                     질문하기
                   </span>
                   <span className="menu-button-effect"></span>
+
                 </button>
                 <button
                   onClick={() => {
                     linkClickHandler('/problems/job/write');
                   }}
-                  className="menu-button group"
+                  className="menu-button group dark:bg-bg-white"
+
                 >
                   <span className="icon-bg">
                     <PencilRuler className="text-main h-5 w-5 lg:h-6 lg:w-6" />

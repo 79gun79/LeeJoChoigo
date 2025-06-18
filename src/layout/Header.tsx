@@ -8,12 +8,14 @@ import Navigation from '../components/atoms/Navigation';
 import userDefault from '../assets/images/icon-user-default.png';
 import DropdownMenu from '../components/modals/DropdownMenu';
 import { useModalStore } from '../stores/modalStore';
-import logo from '/dailyCote.png';
+import logo from '../assets/images/dailyCote.svg';
 import AlarmLayout from './AlarmLayout';
+import DarkToggle from '../components/atoms/DarkToggle';
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const { setLogInModal } = useModalStore();
   const session = useAuthStore((state) => state.session);
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -70,8 +72,8 @@ export default function Header() {
 
   return (
     <>
-      <header className="shadow-sm">
-        <div className="flex h-[55px] w-full items-center justify-between overflow-visible px-4 md:h-[75px] md:px-8 lg:px-14 xl:mx-auto xl:max-w-6xl xl:px-0">
+      <header className="bg-white shadow-sm transition-colors duration-300">
+        <div className="border-gray2 flex h-[55px] w-full items-center justify-between overflow-visible px-4 md:h-[75px] md:px-8 lg:px-14 xl:mx-auto xl:max-w-6xl xl:px-0">
           <div className="flex h-full gap-3">
             <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
               <Menu className="w-[22px]" />
@@ -81,7 +83,7 @@ export default function Header() {
               onClick={() => navigate('/')}
             >
               <img
-                className="ml-[-8px] w-30 object-cover md:w-34 lg:w-38"
+                className="ml-[-8px] w-30 object-cover md:w-34 lg:w-38 dark:brightness-200"
                 src={logo}
               />
             </button>
@@ -90,7 +92,10 @@ export default function Header() {
           <Navigation onProtectedRoute={isLoginModalHandler} />
 
           {isLogin && (
-            <div className="relative flex items-start gap-4 pt-2">
+            <div className="relative flex items-start gap-3 pt-2 md:gap-4">
+              <div className="hidden md:block">
+                <DarkToggle />
+              </div>
               {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
               <AlarmLayout />
 
@@ -117,11 +122,13 @@ export default function Header() {
               )}
             </div>
           )}
-
           {!isLogin && (
             <div className="flex items-center gap-4">
+              <div className="hidden md:block">
+                <DarkToggle />
+              </div>
               <button
-                className="t5 rounded-[4px] border border-[#060606] px-3 py-1"
+                className="t5 border-gray4 rounded-[4px] border px-3 py-1"
                 onClick={() =>
                   navigate('/login', { state: { from: location.pathname } })
                 }

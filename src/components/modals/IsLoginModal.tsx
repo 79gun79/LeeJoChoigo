@@ -52,7 +52,7 @@ export default function IsLoginModal({ isOpen, onClose }: IsLoginModalProps) {
     <>
       <div
         onClick={onClose}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-[#000]/50"
       >
         <div
           ref={modalRef}

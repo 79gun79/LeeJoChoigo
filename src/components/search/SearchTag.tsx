@@ -92,7 +92,7 @@ export default function TagSearch({ channelId, onSearch }: TagSearchProps) {
       </button>
       {open && (
         <div
-          className={`mt-2.5 rounded-sm bg-[#F2F2F2] px-2.5 py-3 md:px-3.5 md:py-4 lg:px-4.5 lg:py-4.5`}
+          className={`bg-gray1 mt-2.5 rounded-sm px-2.5 py-3 md:px-3.5 md:py-4 lg:px-4.5 lg:py-4.5`}
         >
           <form
             onSubmit={(e) => {
