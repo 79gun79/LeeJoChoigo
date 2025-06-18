@@ -91,9 +91,7 @@ export default function HomePage() {
                   onClick={() => {
                     navigate('/problems/coding');
                   }}
-
                   className="menu-button group dark:bg-bg-white"
-
                 >
                   <span className="icon-bg">
                     <NotebookPen className="text-main h-5 w-5 lg:h-6 lg:w-6" />
