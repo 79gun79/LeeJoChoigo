@@ -26,9 +26,12 @@ export default function ProfileLikeCard({
   const [likedUsers, setLikedUsers] = useState<{ user: string }[]>([]);
   const [isLiking, setIsLiking] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  console.log(id);
 
   const channelLocation = (channel: number) => {
     switch (channel) {
+      case 1:
+        return '/solutions/coding/write';
       case 2:
         return '/problems/job';
       case 3:
@@ -136,11 +139,11 @@ export default function ProfileLikeCard({
           </div>
         </div>
       ) : (
-        <div className="bg-bg-white w-full rounded-sm border border-[#ccc]">
+        <div className="w-full rounded-sm border border-[#ccc] bg-white">
           <button
             className="h-full w-full text-left"
             onClick={() =>
-              problemHandler(`${channelLocation(post.channel)}/${id}`)
+              problemHandler(`${channelLocation(post.channel)}/${post.id}`)
             }
           >
             <div className="flex h-full w-full flex-col px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
@@ -148,30 +151,36 @@ export default function ProfileLikeCard({
                 <div className="w-full min-w-0">
                   <p
                     className={`lg: mb-2 text-sm text-[10px] font-semibold md:text-xs ${
-                      post.channel === 2
-                        ? 'text-[#014195]'
-                        : post.channel === 3
-                          ? 'text-main'
-                          : post.channel === 4
-                            ? 'text-sub1'
-                            : 'text-green-info'
+                      post.channel === 1
+                        ? 'text-red-caution'
+                        : post.channel === 2
+                          ? 'text-[#014195]'
+                          : post.channel === 3
+                            ? 'text-main'
+                            : post.channel === 4
+                              ? 'text-sub1'
+                              : 'text-green-info'
                     }`}
                   >
-                    {post.channel === 2
-                      ? '개발직군 문제'
-                      : post.channel === 3
-                        ? '알고리즘 풀이'
-                        : post.channel === 4
-                          ? '개발직군 풀이'
-                          : '질문'}
+                    {post.channel === 1
+                      ? '알고리즘 문제'
+                      : post.channel === 2
+                        ? '개발직군 문제'
+                        : post.channel === 3
+                          ? '알고리즘 풀이'
+                          : post.channel === 4
+                            ? '개발직군 풀이'
+                            : '질문'}
                   </p>
                   <p className="mb-2.5 text-sm font-semibold md:text-base lg:text-lg">
                     {post.title}
                   </p>
                   <p className="mb-2.5 line-clamp-2 text-xs md:text-sm lg:text-base">
-                    {post.content
-                      ? previewMarkdown(post.content).slice(0, 100)
-                      : ''}
+                    {post.channel === 1
+                      ? ''
+                      : post.content
+                        ? previewMarkdown(post.content).slice(0, 100)
+                        : ''}
                   </p>
                 </div>
                 {post.image && (
@@ -208,12 +217,16 @@ export default function ProfileLikeCard({
                       {session?.user ? likedUsers.length : post.like_count}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
-                    <span className="text-[10px] md:text-xs lg:text-sm">
-                      {commentCount}
-                    </span>
-                  </div>
+                  {post.channel !== 1 ? (
+                    <div className="flex items-center gap-1">
+                      <MessageSquare className="w-3.5 md:w-4 lg:w-4.5" />
+                      <span className="text-[10px] md:text-xs lg:text-sm">
+                        {commentCount}
+                      </span>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </div>

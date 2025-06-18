@@ -12,8 +12,6 @@ export default function MainPopularProblem({ isLogin }: { isLogin: boolean }) {
   const navigate = useNavigate();
   const { setLogInModal } = useModalStore();
 
-  console.log(popularProblems);
-
   useEffect(() => {
     const popularPosts = async () => {
       setIsLoading(true);
