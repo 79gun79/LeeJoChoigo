@@ -13,12 +13,14 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import supabase from '../../utils/supabase';
 import TagItem from '../ui/TagItem';
+import { getToolbarItems } from '../../utils/editorToolbar';
 
 export default forwardRef<EditTextHandle, SolutionQuizProps>(
   function CreateQuizSolution({ pTitle, tags, onAddTag, onRemoveTag }, ref) {
     const editorRef = useRef<Editor>(null);
     const titleRef = useRef<HTMLInputElement>(null);
     const [markdown, setMarkdown] = useState('');
+    const toolbarItems = getToolbarItems(window.innerWidth);
 
     useEffect(() => {
       const editorInstance = editorRef.current?.getInstance();
@@ -62,6 +64,7 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
               </div>
               <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
                 <Editor
+                  toolbarItems={toolbarItems}
                   ref={editorRef}
                   previewStyle="tab"
                   initialEditType="markdown"

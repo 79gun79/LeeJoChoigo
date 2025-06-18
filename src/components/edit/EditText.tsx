@@ -22,6 +22,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { notify } from '../../utils/customAlert';
 import 'prismjs/themes/prism-tomorrow.css';
 import { useThemeStore } from '../../stores/themeStore';
+import { getToolbarItems } from '../../utils/editorToolbar';
 
 //import { te } from 'date-fns/locale';
 
@@ -119,6 +120,8 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
       console.error('템플릿 불러오기에 실패했습니다', e);
     }
   };
+
+  const toolbarItems = getToolbarItems(window.innerWidth);
 
   return (
     <>
@@ -237,6 +240,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
 
             <div className="mb-5 min-h-[300px] rounded-sm text-xs md:text-sm lg:text-base">
               <Editor
+                toolbarItems={toolbarItems}
                 key={isDark ? 'dark' : 'light'}
                 ref={editorRef}
                 initialValue={markdown}
