@@ -45,7 +45,7 @@ export default function EmailVerificationModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000]/50">
       <div
         ref={modalRef}
         className="relative flex w-[280px] flex-col items-center rounded-[4px] bg-white p-6 drop-shadow-md md:w-[420px]"

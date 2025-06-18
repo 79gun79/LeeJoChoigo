@@ -34,7 +34,7 @@ export default function LoginButton() {
           <img
             src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg"
             alt="Github"
-            className="ml-3 h-5 w-5"
+            className="ml-3 h-5 w-5 dark:invert"
           />
           <span className="ml-2 flex-1">Log in with Github</span>
         </button>

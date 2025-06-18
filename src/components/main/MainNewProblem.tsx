@@ -69,7 +69,9 @@ export default function MainNewProblem({ isLogin }: { isLogin: boolean }) {
                 <button
                   onClick={() => linkClickHandler(linkTo)}
                   key={i}
-                  className="hover-box flex flex-col gap-1.5 rounded-sm border border-[#ccc] p-3 text-left md:p-4"
+
+                  className="hover-box dark:bg-bg-white flex flex-col gap-1.5 rounded-sm border text-left border-[#ccc] p-3 md:p-4"
+
                 >
                   <p
                     className={`line-clamp-1 text-xs font-semibold md:text-sm lg:text-base ${problem.channel === 1 && 'text-main'} ${problem.channel === 2 && 'text-sub1'} `}

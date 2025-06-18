@@ -3,17 +3,26 @@ import TagItem from '../ui/TagItem';
 import type { EditTextProps, EditTextHandle } from './EditText.types';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
-
+import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 // @ts-expect-error: prismjs has no type declarations
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import supabase from '../../utils/supabase';
 import { PulseLoader } from 'react-spinners';
 import ProblemDescRender from '../common/ProblemDescRender';
 import { useAuthStore } from '../../stores/authStore';
 import { notify } from '../../utils/customAlert';
+import 'prismjs/themes/prism-tomorrow.css';
+import { useThemeStore } from '../../stores/themeStore';
+
 //import { te } from 'date-fns/locale';
 
 const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
@@ -23,8 +32,17 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   // const problemDescRef = useRef<Editor>(null);
   const editorRef = useRef<Editor>(null);
   const titleRef = useRef<HTMLInputElement>(null);
+  const [markdown, setMarkdown] = useState('');
 
   const userId = useAuthStore((state) => state.session)?.user.id;
+  const isDark = useThemeStore().isDark;
+
+  useEffect(() => {
+    const editorInstance = editorRef.current?.getInstance();
+    if (editorInstance) {
+      editorInstance.setMarkdown(markdown);
+    }
+  }, [isDark]);
 
   // useEffect(() => {
   //   if (!isLoading && problemDescRef.current && problemId && problemDesc) {
@@ -186,7 +204,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
           <div className="mb-[25px] md:mb-[35px]">
             <p className="mb-2.5 text-sm md:text-base lg:text-lg">제목</p>
             <input
-              className="edit-input mb-5"
+              className="edit-input mb-5 text-black"
               type="text"
               placeholder="제목을 입력하세요"
               name="title"
@@ -217,14 +235,21 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
               )}
             </div>
 
-            <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
+            <div className="mb-5 min-h-[300px] rounded-sm text-xs md:text-sm lg:text-base">
               <Editor
+                key={isDark ? 'dark' : 'light'}
                 ref={editorRef}
-                initialValue=" "
+                initialValue={markdown}
                 previewStyle="tab"
                 initialEditType="markdown"
                 useCommandShortcut={true}
                 plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+                onChange={() => {
+                  const updated =
+                    editorRef.current?.getInstance().getMarkdown() || '';
+                  setMarkdown(updated);
+                }}
+                theme={isDark ? 'dark' : 'light'}
                 hooks={{
                   addImageBlobHook: async (
                     blob: Blob,
@@ -262,7 +287,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
 
             <p className="mb-2.5 text-sm md:text-base lg:text-lg">태그</p>
             <input
-              className="edit-input mb-2.5"
+              className="edit-input mb-2.5 text-black"
               type="text"
               placeholder="태그를 입력하세요"
               onKeyDown={(e) => {

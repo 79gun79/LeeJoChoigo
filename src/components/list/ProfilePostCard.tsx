@@ -49,7 +49,7 @@ export default function ProfilePostCard({
             <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
           </div>
         </div> */}
-      <div className="w-full rounded-sm border border-[#ccc]">
+      <div className="border-gray2 dark:bg-bg-white w-full rounded-sm border">
         <Link to={`${channelLocation(channel)}/${id}`}>
           <div className="flex h-full w-full flex-col px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
             <div className="flex w-full gap-2.5">

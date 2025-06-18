@@ -34,7 +34,7 @@ export default function ProfileCommentCard({
           </div>
         </div> */}
 
-      <div className="w-full rounded-sm border border-[#ccc]">
+      <div className="border-gray2 dark:bg-bg-white w-full rounded-sm border">
         <Link to={`${channelLocation(post.channel)}/${post.id}`}>
           <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
             <div className="flex gap-2.5">

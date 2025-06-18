@@ -17,7 +17,7 @@ export default function QuizShowBox({
           `${correct ? 'bg-green-info/50' : 'bg-white'}`,
         )}
       >
-        <div className="bg-sub3 text-main flex h-5 w-5 items-center justify-center rounded-full text-sm font-semibold">
+        <div className="bg-sub3 text-main flex h-5 w-5 items-center justify-center rounded-full text-sm font-semibold dark:text-white">
           {id}
         </div>
         <label className="text-main w-full px-[10px] text-sm md:text-xs lg:text-sm">

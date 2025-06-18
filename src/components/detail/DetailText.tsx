@@ -98,7 +98,7 @@ export default function DetailText({ data }: { data: PostDetailType }) {
   return (
     <>
       {/* 게시글 상단 */}
-      <div className="border-b border-[#ccc]">
+      <div className="border-b-gray2 border-b">
         <p className="mb-2.5 text-lg font-semibold md:text-xl lg:text-2xl">
           {data.title}
         </p>
@@ -123,7 +123,7 @@ export default function DetailText({ data }: { data: PostDetailType }) {
               data.parent.solved_problem_id &&
               data.parent.title &&
               data.parent.content && (
-                <ul className="rounded-sm border border-[#DEDEDE] py-[20px]">
+                <ul className="border-b-gray4 rounded-sm border py-[20px]">
                   <li
                     className={`flex cursor-pointer list-none items-center justify-between pt-[4px] ${isShow && 'pb-[16px]'}`}
                     onClick={() => setIsShow(!isShow)}
@@ -194,7 +194,7 @@ export default function DetailText({ data }: { data: PostDetailType }) {
                 size={20}
                 onClick={handleLike}
                 className={`cursor-pointer transition ${
-                  isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-[#000000]'
+                  isLiked ? 'fill-[#E95E5E] text-[#E95E5E]' : 'text-black'
                 }`}
               />
               <span className="text-[10px] md:text-xs lg:text-sm">

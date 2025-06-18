@@ -17,6 +17,7 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import supabase from '../../utils/supabase';
 import { notify } from '../../utils/customAlert';
+import { useThemeStore } from '../../stores/themeStore';
 
 export default forwardRef<CreateQuizHandle, CreateQuizProps>(
   function CreateQuiz({ quizValid }, ref) {
@@ -46,6 +47,15 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
     const [quizList, setQuizList] = useState<QuizItem[]>([]);
     const [validList, setValidList] = useState<boolean[]>([]);
     const currentPos = useRef<HTMLDivElement | null>(null);
+    const isDark = useThemeStore().isDark;
+    const [markdown, setMarkdown] = useState('내용을 입력하세요.');
+
+    useEffect(() => {
+      const editorInstance = editorRef.current?.getInstance();
+      if (editorInstance) {
+        editorInstance.setMarkdown(markdown);
+      }
+    }, [isDark]);
 
     const addQuiz = () => {
       if (!allValid) {
@@ -124,7 +134,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
             <div className="mb-[25px] md:mb-[35px]">
               <p className="mb-2.5 text-sm md:text-base lg:text-lg">제목</p>
               <input
-                className="edit-input mb-5"
+                className="edit-input mb-5 text-black"
                 type="text"
                 placeholder="제목을 입력하세요"
                 ref={titleRef}
@@ -132,14 +142,21 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
               <div className="mb-2.5 flex items-end">
                 <p className="text-sm md:text-base lg:text-lg">내용</p>
               </div>
-              <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
+              <div className="mb-5 min-h-[300px] rounded-sm text-xs md:text-sm lg:text-base">
                 <Editor
+                  key={isDark ? 'dark' : 'light'}
                   ref={editorRef}
-                  initialValue="내용을 입력하세요"
+                  initialValue={markdown}
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}
                   plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+                  theme={isDark ? 'dark' : 'light'}
+                  onChange={() => {
+                    const updated =
+                      editorRef.current?.getInstance().getMarkdown() || '';
+                    setMarkdown(updated);
+                  }}
                   hooks={{
                     addImageBlobHook: async (
                       blob: Blob,
