@@ -111,11 +111,11 @@ export default function AlgorithmSolutionEdit() {
         .eq('author', authorId);
 
       if (error) {
-        notify('게시글 등록 실패', 'error');
+        notify('수정 실패', 'error');
         return;
       }
 
-      notify('게시글 등록 성공', 'success');
+      notify('수정 성공', 'success');
     } else {
       if (params) {
         const userData = await getUser(session?.user.id as string);
