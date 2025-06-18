@@ -66,6 +66,9 @@ body {
   .button-sm.gray {
     @apply hover:bg-gray1 bg-[var(--color-bg-white)] text-[var(--color-gray4)];
   }
+  .button-sm.gray2 {
+    @apply hover:bg-gray3 bg-gray4 text-white;
+  }
   .button-lg {
     @apply hover:bg-sub1 w-full cursor-pointer rounded-sm bg-[var(--color-main)] p-2.5 text-center text-xs text-white md:text-sm lg:text-base;
   }
