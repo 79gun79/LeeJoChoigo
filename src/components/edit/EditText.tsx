@@ -32,7 +32,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
   // const problemDescRef = useRef<Editor>(null);
   const editorRef = useRef<Editor>(null);
   const titleRef = useRef<HTMLInputElement>(null);
-  const [markdown, setMarkdown] = useState('');
+  const [markdown, setMarkdown] = useState(' ');
 
   const userId = useAuthStore((state) => state.session)?.user.id;
   const isDark = useThemeStore().isDark;

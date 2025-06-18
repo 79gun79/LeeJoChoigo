@@ -1,4 +1,10 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import type { EditTextHandle, SolutionQuizProps } from './EditText.types';
 import { Editor } from '@toast-ui/react-editor';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
@@ -7,11 +13,21 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import supabase from '../../utils/supabase';
 import TagItem from '../ui/TagItem';
+import { useThemeStore } from '../../stores/themeStore';
 
 export default forwardRef<EditTextHandle, SolutionQuizProps>(
   function CreateQuizSolution({ pTitle, tags, onAddTag, onRemoveTag }, ref) {
     const editorRef = useRef<Editor>(null);
     const titleRef = useRef<HTMLInputElement>(null);
+    const isDark = useThemeStore().isDark;
+    const [markdown, setMarkdown] = useState(' ');
+
+    useEffect(() => {
+      const editorInstance = editorRef.current?.getInstance();
+      if (editorInstance) {
+        editorInstance.setMarkdown(markdown);
+      }
+    }, [isDark]);
 
     useImperativeHandle(ref, () => ({
       getPostData: () => {
@@ -46,14 +62,21 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
               <div className="mb-2.5 flex items-end">
                 <p className="text-sm md:text-base lg:text-lg">내용</p>
               </div>
-              <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
+              <div className="mb-5 min-h-[300px] rounded-sm text-xs md:text-sm lg:text-base">
                 <Editor
+                  key={isDark ? 'dark' : 'light'}
                   ref={editorRef}
-                  initialValue="내용을 입력하세요"
+                  initialValue={markdown}
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}
                   plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+                  theme={isDark ? 'dark' : 'light'}
+                  onChange={() => {
+                    const updated =
+                      editorRef.current?.getInstance().getMarkdown() || '';
+                    setMarkdown(updated);
+                  }}
                   hooks={{
                     addImageBlobHook: async (
                       blob: Blob,
@@ -90,7 +113,7 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
               </div>
               <p className="mb-2.5 text-sm md:text-base lg:text-lg">태그</p>
               <input
-                className="edit-input mb-2.5"
+                className="edit-input mb-2.5 text-black"
                 type="text"
                 placeholder="태그를 입력하세요"
                 onKeyDown={(e) => {
