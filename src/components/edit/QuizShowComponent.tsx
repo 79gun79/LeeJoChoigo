@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import type { QuizItem } from '../../types/quizList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import QuizShowBox from '../atoms/QuizShowBox';
 
@@ -13,7 +13,13 @@ export default function QuizShowComponent({
   item: QuizItem;
   hasCreate?: boolean;
 }) {
-  const [isShow, setShow] = useState(hasCreate);
+  const [isShow, setShow] = useState(false);
+
+  useEffect(() => {
+    if (hasCreate) {
+      setShow(true);
+    }
+  }, [hasCreate]);
 
   return (
     <>

@@ -161,19 +161,11 @@ export default function DetailText({
                       {data.parent.title}" 문제 보기
                     </div>{' '}
                     {!isShow && (
-                      <ChevronRight
-                        size={24}
-                        className="mr-[20px]"
-                      />
+                      <ChevronRight size={24} className="mr-[20px]" />
                     )}
-                    {isShow && (
-                      <ChevronDown
-                        size={24}
-                        className="mr-[20px]"
-                      />
-                    )}
+                    {isShow && <ChevronDown size={24} className="mr-[20px]" />}
                   </li>
-                  <li className={`pr-[25px] list-none ${!isShow && 'hidden'}`}>
+                  <li className={`list-none pr-[25px] ${!isShow && 'hidden'}`}>
                     <ProblemDescRender isHeadingHidden={true}>
                       {data.parent.content}
                     </ProblemDescRender>
@@ -186,9 +178,6 @@ export default function DetailText({
               data.parent.id && (
                 <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
                   <div className="flex">
-                    <p className="text-sm md:text-base lg:text-lg">
-                      <b>{data.parent.title}</b>의 퀴즈
-                    </p>
                     <div className="flex-grow"></div>
                     <button
                       onClick={() =>

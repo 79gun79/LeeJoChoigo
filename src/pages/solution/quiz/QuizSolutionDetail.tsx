@@ -44,12 +44,7 @@ export default function QuizSolutionDetail() {
           <div className="mb-[25px] md:mb-[35px]">
             {post && (
               <p className="mb-2.5 text-xs md:text-sm lg:text-base">
-                {
-                  post.comment.filter(
-                    (c: { is_yn: boolean }) => c.is_yn !== false,
-                  ).length
-                }
-                개의 댓글
+                {comments?.length ?? 0}개의 댓글
               </p>
             )}
             {post && (
