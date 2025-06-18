@@ -8,25 +8,25 @@ export default function QuizShowComponent({
   index,
   item,
   hasCreate,
+  forceShow,
 }: {
   index: number;
   item: QuizItem;
   hasCreate?: boolean;
+  forceShow: boolean;
 }) {
   const [isShow, setShow] = useState(false);
 
   useEffect(() => {
-    if (hasCreate) {
-      setShow(true);
-    }
-  }, [hasCreate]);
+    setShow(forceShow);
+  }, [forceShow]);
 
   return (
     <>
       <div
         className={twMerge(
           'flex w-full flex-col rounded-sm border border-[#DEDEDE] p-[14px] md:p-4',
-          isShow ? 'gap-[14px]' : 'pb-0 md:pb-1',
+          isShow ? 'gap-[14px]' : hasCreate ? '' : 'pb-0 md:pb-1',
         )}
       >
         {isShow ? (

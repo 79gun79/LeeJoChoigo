@@ -1,6 +1,6 @@
 import { Check, ChevronDown, ChevronRight, X } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { QuizItem } from '../../types/quizList';
 import QuizSolveBox from '../atoms/QuizSolveBox';
 
@@ -10,14 +10,20 @@ export default function QuizSolveComponent({
   choose,
   onSelect,
   showRes,
+  forceShow,
 }: {
   index: number;
   item: QuizItem;
   choose: string[];
   onSelect: (optId: string) => void;
   showRes: boolean;
+  forceShow: boolean;
 }) {
   const [isShow, setShow] = useState(false);
+  useEffect(() => {
+    setShow(forceShow);
+  }, [forceShow]);
+
   const { description, quiz } = item;
 
   const clickHandler = (id: string) => {

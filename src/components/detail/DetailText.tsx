@@ -120,6 +120,7 @@ export default function DetailText({
       ),
     );
   }, []);
+  const [forceShow, setForceShow] = useState(false);
 
   const isAuthor = currentUserId === data.author?.id;
 
@@ -177,20 +178,33 @@ export default function DetailText({
               data.parent.title &&
               data.parent.id && (
                 <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
-                  <div className="flex">
+                  <div className="flex gap-[10px]">
                     <div className="flex-grow"></div>
+                    <button
+                      onClick={() => setForceShow(!forceShow)}
+                      className={
+                        forceShow ? 'button-sm gray2 h-6' : 'button-sm h-6'
+                      }
+                    >
+                      {forceShow ? '모두 닫기' : '모두 열기'}
+                    </button>
                     <button
                       onClick={() =>
                         navigate(`/problems/job/${data.parent?.id}`)
                       }
-                      className={twMerge('button-sm', 'h-6 md:h-8')}
+                      className={twMerge('button-sm', 'h-6')}
                     >
                       <NotebookPen className="h-[14px] w-[12px] shrink-0" />
                       문제 풀러가기
                     </button>
                   </div>
                   {(data.parent.quiz_data as QuizItem[]).map((v, i) => (
-                    <QuizShowComponent key={i} index={i} item={v} />
+                    <QuizShowComponent
+                      key={i}
+                      index={i}
+                      item={v}
+                      forceShow={forceShow}
+                    />
                   ))}
                 </div>
               )}
@@ -231,19 +245,30 @@ export default function DetailText({
         </div>
         {/* 문제 설명 컴포넌트 */}
         {data.quiz_data && (
-          <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
-            {/* <p className="t3">{data.title}의 퀴즈</p> */}
-            {quizSolveData.map((v, i) => (
-              <QuizSolveComponent
-                key={i}
-                index={i}
-                item={v}
-                choose={userChoose[i]}
-                onSelect={(id) => selectHandler(i, id)}
-                showRes={answerConfirm!}
-              />
-            ))}
-          </div>
+          <>
+            <div className="mb-[10px] flex justify-end md:mb-[15px]">
+              <button
+                onClick={() => setForceShow(!forceShow)}
+                className={forceShow ? 'button-sm gray2 h-6' : 'button-sm h-6'}
+              >
+                {forceShow ? '모두 닫기' : '모두 열기'}
+              </button>
+            </div>
+            <div className="mb-[25px] flex flex-col gap-[10px] md:mb-[35px]">
+              {/* <p className="t3">{data.title}의 퀴즈</p> */}
+              {quizSolveData.map((v, i) => (
+                <QuizSolveComponent
+                  key={i}
+                  index={i}
+                  item={v}
+                  choose={userChoose[i]}
+                  onSelect={(id) => selectHandler(i, id)}
+                  showRes={answerConfirm!}
+                  forceShow={forceShow}
+                />
+              ))}
+            </div>
+          </>
         )}
 
         <div className="mb-3 flex gap-2">
