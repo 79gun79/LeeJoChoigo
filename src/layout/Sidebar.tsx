@@ -55,22 +55,27 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   useEffect(() => {
     // 로그인 상태일 때 supabase에서 유저 정보 가져오기
     const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        setUserInfo({
-          name: user.user_metadata?.name || '사용자',
-          email: user.email,
-          avatar_url: user.user_metadata?.avatar_url || null,
-        });
+      if (session) {
+        const { data: user } = await supabase
+          .from('user')
+          .select(`*`)
+          .eq('id', session?.user.id)
+          .single();
+
+        if (user) {
+          setUserInfo({
+            name: user.fullname || '사용자',
+            email: user.email,
+            avatar_url: user.image || null,
+          });
+        }
       } else {
         setUserInfo({});
       }
     };
     if (isLogin) fetchUser();
     else setUserInfo({});
-  }, [isLogin]);
+  }, [isLogin, session]);
 
   const isLoginModalHandler = (
     e: React.MouseEvent<HTMLElement, MouseEvent>,
