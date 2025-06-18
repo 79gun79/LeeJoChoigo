@@ -14,20 +14,23 @@ import 'prismjs/themes/prism.css';
 import supabase from '../../utils/supabase';
 import TagItem from '../ui/TagItem';
 import { useThemeStore } from '../../stores/themeStore';
+import { getToolbarItems } from '../../utils/editorToolbar';
 
 export default forwardRef<EditTextHandle, SolutionQuizProps>(
   function CreateQuizSolution({ pTitle, tags, onAddTag, onRemoveTag }, ref) {
     const editorRef = useRef<Editor>(null);
     const titleRef = useRef<HTMLInputElement>(null);
+
     const isDark = useThemeStore().isDark;
     const [markdown, setMarkdown] = useState(' ');
+    const toolbarItems = getToolbarItems(window.innerWidth);
 
     useEffect(() => {
       const editorInstance = editorRef.current?.getInstance();
       if (editorInstance) {
         editorInstance.setMarkdown(markdown);
       }
-    }, [isDark]);
+    }, []);
 
     useImperativeHandle(ref, () => ({
       getPostData: () => {
@@ -67,6 +70,7 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
                   key={isDark ? 'dark' : 'light'}
                   ref={editorRef}
                   initialValue={markdown}
+                  toolbarItems={toolbarItems}
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}

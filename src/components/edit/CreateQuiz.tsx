@@ -18,6 +18,7 @@ import 'prismjs/themes/prism.css';
 import supabase from '../../utils/supabase';
 import { notify } from '../../utils/customAlert';
 import { useThemeStore } from '../../stores/themeStore';
+import { getToolbarItems } from '../../utils/editorToolbar';
 
 export default forwardRef<CreateQuizHandle, CreateQuizProps>(
   function CreateQuiz({ quizValid }, ref) {
@@ -48,6 +49,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
     const [validList, setValidList] = useState<boolean[]>([]);
     const currentPos = useRef<HTMLDivElement | null>(null);
     const isDark = useThemeStore().isDark;
+
     const [markdown, setMarkdown] = useState(' ');
 
     useEffect(() => {
@@ -104,6 +106,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
       quizValid?.(allValid);
     }, [quizValid, allValid]);
 
+    const toolbarItems = getToolbarItems(window.innerWidth);
     return (
       <>
         <form className="md:grid md:grid-cols-2 md:gap-12">
@@ -144,9 +147,9 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
               </div>
               <div className="mb-5 min-h-[300px] rounded-sm text-xs md:text-sm lg:text-base">
                 <Editor
+                  toolbarItems={toolbarItems}
                   key={isDark ? 'dark' : 'light'}
                   ref={editorRef}
-                  initialValue={markdown}
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}
