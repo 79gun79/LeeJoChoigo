@@ -57,7 +57,7 @@ export default function FollowModal({
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center">
       <div
-        className="fixed inset-0 bg-black/30"
+        className="fixed inset-0 bg-[#000]/30"
         onClick={onClose}
         aria-label="모달 닫기"
       />

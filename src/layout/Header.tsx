@@ -93,7 +93,9 @@ export default function Header() {
 
           {isLogin && (
             <div className="relative flex items-start gap-3 pt-2 md:gap-4">
-              <DarkToggle />
+              <div className="hidden md:block">
+                <DarkToggle />
+              </div>
               {/* 알림 버튼과 알림 모달을 AlarmLayout에서 모두 관리 */}
               <AlarmLayout />
 
@@ -122,7 +124,9 @@ export default function Header() {
           )}
           {!isLogin && (
             <div className="flex items-center gap-4">
-              <DarkToggle />
+              <div className="hidden md:block">
+                <DarkToggle />
+              </div>
               <button
                 className="t5 border-gray4 rounded-[4px] border px-3 py-1"
                 onClick={() =>

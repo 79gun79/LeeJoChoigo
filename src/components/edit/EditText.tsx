@@ -244,12 +244,12 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
                 initialEditType="markdown"
                 useCommandShortcut={true}
                 plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
-                theme={isDark ? 'dark' : 'light'}
                 onChange={() => {
                   const updated =
                     editorRef.current?.getInstance().getMarkdown() || '';
                   setMarkdown(updated);
                 }}
+                theme={isDark ? 'dark' : 'light'}
                 hooks={{
                   addImageBlobHook: async (
                     blob: Blob,

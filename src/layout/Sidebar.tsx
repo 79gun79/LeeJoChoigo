@@ -7,6 +7,7 @@ import Navigation from '../components/atoms/Navigation';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { useAuthStore } from '../stores/authStore';
 import supabase from '../utils/supabase';
+import DarkToggle from '../components/atoms/DarkToggle';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -94,7 +95,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="bg-gray4/30 fixed inset-0 z-40"
+            className="fixed inset-0 z-40 bg-[#000]/30"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -108,7 +109,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <AnimatePresence>
         {isOpen && (
           <motion.aside
-            className="fixed top-[50px] left-2 z-50 w-[210px] overflow-hidden rounded-xl bg-white shadow-md"
+            className="bg-bg-white fixed top-[50px] left-2 z-50 w-[210px] overflow-hidden rounded-xl shadow-md"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -128,6 +129,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <button onClick={onClose}>
                   <ChevronLeft className="ml-2" />
                 </button>
+                <DarkToggle />
               </motion.div>
 
               <motion.div
