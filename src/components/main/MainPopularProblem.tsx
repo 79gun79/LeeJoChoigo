@@ -12,6 +12,8 @@ export default function MainPopularProblem({ isLogin }: { isLogin: boolean }) {
   const navigate = useNavigate();
   const { setLogInModal } = useModalStore();
 
+  console.log(popularProblems);
+
   useEffect(() => {
     const popularPosts = async () => {
       setIsLoading(true);
@@ -114,15 +116,13 @@ export default function MainPopularProblem({ isLogin }: { isLogin: boolean }) {
                 const linkTo =
                   problem?.channel === 2
                     ? `/problems/job/${problem?.id}`
-                    : `/solutions/coding/write/${problem?.solved_problem_id}`;
+                    : `/solutions/coding/write/${problem?.id}`;
                 return (
                   <button
                     onClick={() => linkClickHandler(linkTo)}
                     key={problem?.id}
                     id={problem?.id.toString()}
-
                     className="hover-box dark:bg-bg-white flex items-center gap-5 rounded-sm border border-[#ccc] px-5 py-3 text-left md:py-4"
-
                   >
                     <p className="text-sm font-semibold md:text-base lg:text-lg">
                       {i + 1}

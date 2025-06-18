@@ -126,7 +126,7 @@ export default function MainRecommand({
                       <button
                         onClick={() =>
                           linkClickHandler(
-                            `/solutions/coding/write/${problem.solved_problem_id}`,
+                            `/solutions/coding/write/${problem.id}`,
                           )
                         }
                         key={index}
