@@ -48,7 +48,7 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
     const [validList, setValidList] = useState<boolean[]>([]);
     const currentPos = useRef<HTMLDivElement | null>(null);
     const isDark = useThemeStore().isDark;
-    const [markdown, setMarkdown] = useState('내용을 입력하세요.');
+    const [markdown, setMarkdown] = useState('');
 
     useEffect(() => {
       const editorInstance = editorRef.current?.getInstance();
@@ -146,7 +146,6 @@ export default forwardRef<CreateQuizHandle, CreateQuizProps>(
                 <Editor
                   key={isDark ? 'dark' : 'light'}
                   ref={editorRef}
-                  initialValue={markdown}
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}
