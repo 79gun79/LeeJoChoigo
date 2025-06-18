@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { followUser, unfollowUser, checkIsFollowing } from '../../api/userApi';
 import supabase from '../../utils/supabase';
+import { useFollowStore } from '../../stores/followStore';
 
 export default function FollowButton({
   targetUserId,
@@ -10,6 +11,7 @@ export default function FollowButton({
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [isOwnProfile, setIsOwnProfile] = useState<boolean>(false);
+  const { setFollow } = useFollowStore();
 
   useEffect(() => {
     const fetchFollowStatus = async () => {
@@ -48,8 +50,12 @@ export default function FollowButton({
       setLoading(true);
       if (isFollowing) {
         await unfollowUser(myId, targetUserId);
+
+        setFollow(targetUserId, false);
       } else {
         await followUser(myId, targetUserId);
+
+        setFollow(targetUserId, true);
       }
       setIsFollowing((prev) => !prev);
     } catch (e) {
