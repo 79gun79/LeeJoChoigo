@@ -266,6 +266,10 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
               type="text"
               placeholder="태그를 입력하세요"
               onKeyDown={(e) => {
+                if (e.nativeEvent.isComposing) {
+                  return;
+                }
+
                 if (e.key === 'Enter') {
                   e.preventDefault();
                   const value = e.currentTarget.value.trim();
