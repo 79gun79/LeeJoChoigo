@@ -1,17 +1,28 @@
 import { ArrowDownUp, ChevronDown } from 'lucide-react';
 import ProfileCommentCard from '../list/ProfileCommentCard';
 import ProfilePostCard from '../list/ProfilePostCard';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import NoList from '../ui/NoList';
-import type {
-  ProfileComments,
-  ProfilePosts,
-} from '../../pages/profile/Profile';
+import { useEffect, useRef, useState } from 'react';
 import {
-  fetchProfileComments,
-  fetchProfilePost,
+  fetchUserChannelComments,
+  fetchUserChannelLikes,
+  fetchUserChannelPosts,
+  fetchUserComments,
+  fetchUserLikes,
+  fetchUserPosts,
 } from '../../loader/profile.loader';
 import { useLocation } from 'react-router';
+import NoList from '../ui/NoList';
+import ProfileLikeCard from '../list/ProfileLikeCard';
+
+export type ProfilePosts = NonNullable<
+  Awaited<ReturnType<typeof fetchUserPosts>>
+>;
+export type ProfileComments = NonNullable<
+  Awaited<ReturnType<typeof fetchUserComments>>
+>;
+export type ProfileLikes = NonNullable<
+  Awaited<ReturnType<typeof fetchUserLikes>>
+>;
 
 export default function ProfileList({
   userId,
@@ -24,13 +35,11 @@ export default function ProfileList({
   const receivedvMenu = location.state?.menu || 0;
 
   const [isLoading, setIsLoading] = useState(true);
-  const [posts, setPosts] = useState<ProfilePosts | null>();
-  const [comments, setComments] = useState<ProfileComments | null>();
   const [isSelectActive, setIsSelectActive] = useState(false);
   const [selectFilterMenu, setSelectFilterMenu] = useState(receivedvMenu);
-  const [filterPosts, setFilterPosts] = useState<ProfilePosts | null>();
-  const [filterComments, setFilterComments] =
-    useState<ProfileComments | null>();
+  const [displayPosts, setDiaplayPosts] = useState<
+    ProfilePosts | ProfileComments | ProfileLikes
+  >();
   const filterModalRef = useRef<HTMLUListElement>(null);
 
   const filterMenu = [
@@ -40,100 +49,87 @@ export default function ProfileList({
     { title: '개발직군 풀이', id: 4 },
     { title: '질문게시판', id: 5 },
   ];
+
   useEffect(() => {
-    setSelectFilterMenu(receivedvMenu);
-  }, [receivedvMenu]);
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
+    setIsLoading(true);
+    const fetchDatas = async () => {
       try {
-        if (currentTab === 0) {
-          const posts = await fetchProfilePost(userId);
-          setPosts(posts);
-          // 탭변경시 전체글로 초기화
-          // setSelectFilterMenu(0);
+        let resultDatas: ProfilePosts | ProfileComments | ProfileLikes;
+        if (selectFilterMenu === 0) {
+          if (currentTab === 0) {
+            resultDatas = (await fetchUserPosts(userId)) || [];
+          } else if (currentTab === 1) {
+            resultDatas = (await fetchUserComments(userId)) || [];
+          } else {
+            resultDatas = (await fetchUserLikes(userId)) || [];
+          }
         } else {
-          const comments = await fetchProfileComments(userId);
-          setComments(comments);
-          // 탭변경시 전체글로 초기화
-          // setSelectFilterMenu(0);
+          if (currentTab === 0) {
+            resultDatas =
+              (await fetchUserChannelPosts(userId, selectFilterMenu)) || [];
+          } else if (currentTab === 1) {
+            resultDatas =
+              (await fetchUserChannelComments(userId, selectFilterMenu)) || [];
+          } else {
+            resultDatas =
+              (await fetchUserChannelLikes(userId, selectFilterMenu)) || [];
+          }
         }
+        setDiaplayPosts(resultDatas);
+        setIsLoading(false);
       } catch (error) {
         console.error('데이터를 불러오지 못했습니다.', error);
-      } finally {
-        setIsLoading(false);
       }
     };
-    fetchData();
-  }, [userId, currentTab]);
+
+    fetchDatas();
+  }, [selectFilterMenu, currentTab, userId]);
 
   // 정렬
   const sortHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (currentTab === 0) {
-      sortPost(e.target.value);
-    } else {
-      sortComment(e.target.value);
-    }
+    sortPost(e.target.value);
   };
+  // 정렬
   const sortPost = (type: string) => {
-    if (type === '최신순') {
-      const time = [...filterPosts!].sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      );
-      setFilterPosts(time);
-    } else if (type === '인기순') {
-      const popular = [...filterPosts!].sort(
-        (a, b) => b.like.length - a.like.length,
-      );
-      setFilterPosts(popular);
-    }
-  };
-  const sortComment = (type: string) => {
-    if (type === '최신순') {
-      const time = [...filterComments!].sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      );
-      setFilterComments(time);
-    }
-  };
-  // 범위선택
-  const filterPostHandler = useCallback(() => {
-    if (posts) {
-      if (selectFilterMenu === 0) {
-        setFilterPosts(posts);
-      } else {
-        const results = posts.filter((f) => {
-          if (selectFilterMenu === f.channel) {
-            return f;
-          }
-        });
-        setFilterPosts(results);
+    if (currentTab === 0) {
+      const copyPosts = [...displayPosts!] as ProfilePosts;
+      if (type === '최신순') {
+        const time = copyPosts.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        ) as ProfilePosts;
+        setDiaplayPosts(time);
+      } else if (type === '인기순') {
+        const popular = copyPosts.sort(
+          (a, b) => b.like.length - a.like.length,
+        ) as ProfilePosts;
+        setDiaplayPosts(popular);
+      }
+    } else if (currentTab === 1) {
+      const copyPosts = [...displayPosts!] as ProfileComments;
+      if (type === '최신순') {
+        const time = copyPosts.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        ) as ProfileComments;
+        setDiaplayPosts(time);
+      }
+    } else {
+      const copyPosts = [...displayPosts!] as ProfileLikes;
+      if (type === '최신순') {
+        const time = copyPosts.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        ) as ProfileLikes;
+        setDiaplayPosts(time);
+      } else if (type === '인기순') {
+        const popular = copyPosts.sort(
+          (a, b) => b.post.like_count - a.post.like_count,
+        ) as ProfileLikes;
+        setDiaplayPosts(popular);
       }
     }
-  }, [posts, selectFilterMenu, setFilterPosts]);
-  const filterCommentHandler = useCallback(() => {
-    if (comments) {
-      if (selectFilterMenu === 0) {
-        setFilterComments(comments);
-      } else {
-        const results = comments.filter((f) => {
-          if (selectFilterMenu === f.post.channel) {
-            return f;
-          }
-        });
-        setFilterComments(results);
-      }
-    }
-  }, [comments, selectFilterMenu, setFilterComments]);
-
-  useEffect(() => {
-    filterPostHandler();
-  }, [filterPostHandler]);
-  useEffect(() => {
-    filterCommentHandler();
-  }, [filterCommentHandler]);
+  };
 
   // 모달 외부 클릭시 닫힘
   useEffect(() => {
@@ -194,16 +190,50 @@ export default function ProfileList({
               onChange={sortHandler}
             >
               <option>최신순</option>
-              {currentTab === 0 && <option>인기순</option>}
+              {currentTab !== 1 && <option>인기순</option>}
             </select>
             <ArrowDownUp className="top0 absolute top-1/2 right-1 h-[12px] w-[12px] -translate-y-1/2 md:h-[16px] md:w-[16px]" />
           </div>
         </div>
         {/* 목록 */}
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          {currentTab === 0 ? (
-            isLoading ? (
-              Array.from({ length: 3 }).map((_, index) => (
+          {!isLoading ? (
+            displayPosts?.length !== 0 ? (
+              displayPosts?.map((data, index) => {
+                if (currentTab === 0) {
+                  return (
+                    <ProfilePostCard
+                      key={index}
+                      data={data as ProfilePosts[number]}
+                    />
+                  );
+                } else if (currentTab === 1) {
+                  return (
+                    <ProfileCommentCard
+                      key={index}
+                      data={data as ProfileComments[number]}
+                    />
+                  );
+                } else {
+                  if ('post' in data && data.post) {
+                    return (
+                      <ProfileLikeCard
+                        key={index}
+                        data={data as ProfileLikes[number]}
+                        profileUserId={userId}
+                      />
+                    );
+                  } else {
+                    return;
+                  }
+                }
+              })
+            ) : (
+              <NoList />
+            )
+          ) : (
+            Array.from({ length: displayPosts?.length || 5 }).map(
+              (_, index) => (
                 <div
                   key={index}
                   className="w-full rounded-sm border border-[#ccc]"
@@ -215,34 +245,8 @@ export default function ProfileList({
                     <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
                   </div>
                 </div>
-              ))
-            ) : filterPosts?.length !== 0 ? (
-              filterPosts?.map((data, index) => (
-                <ProfilePostCard key={index} data={data} />
-              ))
-            ) : (
-              <NoList />
+              ),
             )
-          ) : isLoading ? (
-            Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={index}
-                className="w-full rounded-sm border border-[#ccc]"
-              >
-                <div className="px-3 pt-3.5 pb-3 md:px-4 md:pt-4 md:pb-3.5">
-                  <div className="mb-2.5 h-3.5 w-2/3 bg-gray-200 md:h-4.5 lg:h-5.5"></div>
-                  <div className="mb-1 h-3 w-full bg-gray-200 md:h-4 lg:h-5"></div>
-                  <div className="mb-2.5 h-3 w-4/5 bg-gray-200 md:h-4 lg:h-5"></div>
-                  <div className="h-2.5 w-1/3 bg-gray-200 md:h-3.5 lg:h-4.5"></div>
-                </div>
-              </div>
-            ))
-          ) : filterComments?.length !== 0 ? (
-            filterComments?.map((data, index) => (
-              <ProfileCommentCard key={index} data={data} />
-            ))
-          ) : (
-            <NoList />
           )}
         </div>
       </div>

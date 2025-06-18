@@ -3,23 +3,14 @@ import { Settings } from 'lucide-react';
 import { useState } from 'react';
 import ProfileEdit from './ProfileEdit';
 import { useLoaderData, useNavigate } from 'react-router';
-import {
-  fetchProfileComments,
-  fetchProfilePost,
-  type fetchProfile,
-} from '../../loader/profile.loader';
+import { type fetchProfile } from '../../loader/profile.loader';
 import { useAuthStore } from '../../stores/authStore';
 import ProfileList from '../../components/profile/ProfileList';
 import FollowButton from '../../components/atoms/FollowButton';
 import FollowInfo from '../../components/atoms/FollowInfo';
 
 export type User = NonNullable<Awaited<ReturnType<typeof fetchProfile>>>;
-export type ProfilePosts = NonNullable<
-  Awaited<ReturnType<typeof fetchProfilePost>>
->;
-export type ProfileComments = NonNullable<
-  Awaited<ReturnType<typeof fetchProfileComments>>
->;
+
 export default function Profile() {
   const session = useAuthStore((state) => state.session);
   const user = useLoaderData<User>();
@@ -31,13 +22,17 @@ export default function Profile() {
     setIsSetting(false);
     document.body.classList.remove('overflow-hidden');
   };
-  const modalSaveHandle = () => {
+  const modalSaveHandle = async () => {
     setIsSetting(false);
     navigate(`/profile/${user.id}`, { replace: true });
     document.body.classList.remove('overflow-hidden');
   };
 
-  const tabData = [{ title: '작성게시글' }, { title: '작성댓글' }];
+  const tabData = [
+    { title: '작성게시글' },
+    { title: '작성댓글' },
+    { title: '좋아요' },
+  ];
 
   const [currentTab, setCurrentTab] = useState(0);
 
@@ -98,7 +93,7 @@ export default function Profile() {
                 className={`w-full border-b border-[var(--color-gray1)] py-1.5 text-center text-sm font-medium text-[var(--color-gray3)] md:text-base lg:text-lg ${currentTab === index && 'border-black text-black'}`}
               >
                 <button
-                  className="h-full w-full"
+                  className="h-full w-full cursor-pointer!"
                   onClick={() => setCurrentTab(index)}
                 >
                   {tab.title}

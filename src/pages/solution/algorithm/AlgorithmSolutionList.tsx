@@ -11,6 +11,7 @@ import { searchPosts } from '../../../api/searchApi';
 import Loading from '../../../components/ui/Loading';
 import Nopost from '../../../components/ui/Nopost';
 import TagItem from '../../../components/ui/TagItem';
+import TopButton from '../../../components/common/TopButton';
 
 export default function AlgorithmSolutionList() {
   const channel = useLoaderData<ChannelType>();
@@ -127,6 +128,7 @@ export default function AlgorithmSolutionList() {
             <Plus className="h-5 w-5 lg:h-7 lg:w-7" />
           </button> */}
         </div>
+        <TopButton />
       </div>
     </>
   );

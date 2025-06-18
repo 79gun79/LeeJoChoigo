@@ -13,6 +13,7 @@ import Loading from '../../../components/ui/Loading';
 import ListCard from '../../../components/list/ListCard';
 import Nopost from '../../../components/ui/Nopost';
 import { searchPosts } from '../../../api/searchApi';
+import TopButton from '../../../components/common/TopButton';
 
 export default function QuizProblemList() {
   const channel = useLoaderData<ChannelType>();
@@ -152,6 +153,7 @@ export default function QuizProblemList() {
             <Plus className="h-5 w-5 lg:h-7 lg:w-7" />
           </button>
         </div>
+        <TopButton />
       </div>
     </>
   );
