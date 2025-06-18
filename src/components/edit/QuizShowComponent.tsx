@@ -26,7 +26,7 @@ export default function QuizShowComponent({
       <div
         className={twMerge(
           'flex w-full flex-col rounded-sm border border-[#DEDEDE] p-[14px] md:p-4',
-          hasCreate ? 'gap-[14px]' : 'pb-0 md:pb-1',
+          isShow ? 'gap-[14px]' : 'pb-0 md:pb-1',
         )}
       >
         {isShow ? (

@@ -20,7 +20,7 @@ export default function QuizShowBox({
         <div className="bg-sub3 text-main flex h-5 w-5 items-center justify-center rounded-full text-sm font-semibold dark:text-white">
           {id}
         </div>
-        <label className="text-main w-full px-[10px] text-sm md:text-xs lg:text-sm">
+        <label className="text-main w-full px-[10px] text-xs md:text-sm">
           {value}
         </label>
       </div>
