@@ -240,6 +240,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
                 key={isDark ? 'dark' : 'light'}
                 ref={editorRef}
                 initialValue={markdown}
+                placeholder="내용을 입력하세요"
                 previewStyle="tab"
                 initialEditType="markdown"
                 useCommandShortcut={true}

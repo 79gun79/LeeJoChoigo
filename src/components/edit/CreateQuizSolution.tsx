@@ -1,4 +1,10 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import type { EditTextHandle, SolutionQuizProps } from './EditText.types';
 import { Editor } from '@toast-ui/react-editor';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
@@ -12,6 +18,14 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
   function CreateQuizSolution({ pTitle, tags, onAddTag, onRemoveTag }, ref) {
     const editorRef = useRef<Editor>(null);
     const titleRef = useRef<HTMLInputElement>(null);
+    const [markdown, setMarkdown] = useState('');
+
+    useEffect(() => {
+      const editorInstance = editorRef.current?.getInstance();
+      if (editorInstance) {
+        editorInstance.setMarkdown(markdown);
+      }
+    }, []);
 
     useImperativeHandle(ref, () => ({
       getPostData: () => {
@@ -49,11 +63,16 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
               <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
                 <Editor
                   ref={editorRef}
-                  initialValue="내용을 입력하세요"
+                  placeholder="내용을 입력하세요"
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}
                   plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+                  onChange={() => {
+                    const updated =
+                      editorRef.current?.getInstance().getMarkdown() || '';
+                    setMarkdown(updated);
+                  }}
                   hooks={{
                     addImageBlobHook: async (
                       blob: Blob,
