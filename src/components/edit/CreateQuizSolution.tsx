@@ -63,7 +63,6 @@ export default forwardRef<EditTextHandle, SolutionQuizProps>(
               <div className="mb-5 min-h-[300px] rounded-sm border border-[#ccc] text-xs md:text-sm lg:text-base">
                 <Editor
                   ref={editorRef}
-                  placeholder="내용을 입력하세요"
                   previewStyle="tab"
                   initialEditType="markdown"
                   useCommandShortcut={true}
