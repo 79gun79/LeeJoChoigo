@@ -76,6 +76,16 @@ export default function AlgorithmSolutionEdit() {
 
     const { title, content, imageUrl, imageFileName } = postData;
 
+    if (!title.trim()) {
+      notify('제목을 입력해주세요.', 'warning');
+      return;
+    }
+
+    if (!content.trim()) {
+      notify('내용을 입력해주세요.', 'warning');
+      return;
+    }
+
     const authorId = session?.user.id;
 
     if (!authorId) {
@@ -98,11 +108,11 @@ export default function AlgorithmSolutionEdit() {
         .eq('author', authorId);
 
       if (error) {
-        notify('수정 실패', 'error');
+        notify('게시글 등록 실패', 'error');
         return;
       }
 
-      notify('수정 성공', 'success');
+      notify('게시글 등록 성공', 'success');
     } else {
       if (params) {
         const userData = await getUser(session?.user.id as string);
