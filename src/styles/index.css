@@ -1,0 +1,124 @@
+@import 'tailwindcss';
+@import './font.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  /* Gray Scale */
+  --color-black: #000000;
+  --color-gray4: #464646;
+  --color-gray3: #aaaaaa;
+  --color-gray2: #c1c1c1;
+  --color-gray1: #e3e3e3;
+  --color-white: #ffffff;
+
+  /* Main Colors */
+  --color-main: #184d59;
+  --color-sub1: #1bbfbf;
+  --color-sub2: #25d9c7;
+  --color-sub3: #99f2e9;
+  --color-bg-white: #f2f2f2;
+
+  /* Etc */
+  --color-red-caution: #bb1c1c;
+  --color-green-info: #5da92e;
+}
+
+.dark {
+  /* Gray Scale - Dark Theme */
+  --color-black: #ffffff; /* 텍스트용 밝은 색상 */
+  --color-gray4: #e0e0e0; /* 밝은 회색 텍스트 */
+  --color-gray3: #aaaaaa;
+  --color-gray2: #555555;
+  --color-gray1: #2c2c2c; /* 입력창 배경 등 */
+  --color-white: #121212; /* 가장 어두운 배경 */
+
+  /* Main Colors - 어두운 배경에 어울리는 약간 더 선명한 톤 */
+  --color-main: #25d9c7; /* 밝은 청록 */
+  --color-sub1: #1bbfbf;
+  --color-sub2: #26e3d0;
+  --color-sub3: #99f2e9;
+  --color-bg-white: #1a1a1a; /* 전체 배경용 */
+
+  /* Etc */
+  --color-red-caution: #ff6b6b; /* 좀 더 밝은 경고색 */
+  --color-green-info: #a3e635; /* 눈에 잘 띄는 초록 */
+}
+
+button {
+  cursor: pointer;
+}
+
+html,
+body {
+  @apply bg-white text-black transition-colors duration-300;
+}
+
+@layer utilities {
+  .edit-input {
+    @apply w-full rounded-sm border border-[#ccc] px-2.5 py-2 text-xs disabled:bg-[var(--color-gray1)] disabled:text-[var(--color-gray3)] md:text-sm lg:text-base;
+  }
+  .problem-desc {
+    @apply w-full rounded-sm border border-[#ccc] px-3.5 py-4 text-xs md:text-sm lg:text-base;
+  }
+  .button-sm {
+    @apply hover:bg-main/80 bg-main flex items-center gap-1 rounded-sm px-2 py-1 text-[10px] text-white md:text-xs lg:text-sm;
+  }
+  .button-sm.gray {
+    @apply hover:bg-gray1 bg-[var(--color-bg-white)] text-[var(--color-gray4)];
+  }
+  .button-sm.gray2 {
+    @apply hover:bg-gray3 bg-gray4 text-white;
+  }
+  .button-lg {
+    @apply hover:bg-sub1 w-full cursor-pointer rounded-sm bg-[var(--color-main)] p-2.5 text-center text-xs text-white md:text-sm lg:text-base;
+  }
+  .button-lg.gray {
+    @apply hover:bg-gray1 bg-[var(--color-bg-white)] text-[var(--color-gray4)];
+  }
+  .button-quiz {
+    @apply bg-bg-white hover:bg-gray1 text-gray3 flex h-7 w-16 cursor-pointer rounded-sm p-[6px] text-xs;
+  }
+  .button-quiz.delete {
+    @apply bg-red-caution/50 text-red-caution w-7;
+  }
+  .button-quiz.plus {
+    @apply bg-sub1 text-white;
+  }
+
+  /* 메인 */
+  .content-title {
+    @apply text-base font-bold md:text-lg lg:text-2xl;
+  }
+  .content-title-sub {
+    @apply text-gray3 text-[10px] font-light md:text-xs lg:text-sm;
+  }
+  .icon-bg {
+    @apply bg-gray1 flex h-9 w-9 items-center justify-center rounded-full lg:h-12 lg:w-12;
+  }
+  .menu-button {
+    @apply hover:border-main relative z-1 flex w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-sm border border-[#ccc] px-2 py-3 transition-colors duration-500 md:py-4 lg:gap-5;
+  }
+  .menu-button-effect {
+    @apply bg-main absolute -bottom-1/2 -z-1 h-0 w-full origin-center rounded-full transition-all duration-800 ease-out group-hover:h-[200%] group-hover:w-[200%];
+  }
+
+  .hover-box:hover {
+    @apply shadow-[0_0_10px_rgba(0,0,0,0.15)] transition-shadow duration-400 ease-out;
+  }
+  .md-hover-none:hover {
+    @apply md:shadow-none md:transition-none;
+  }
+  .hover-box:hover .hover {
+    @apply underline;
+  }
+
+  .dark .menu-button {
+    @apply border-gray2;
+  }
+  .dark .border-\[\#ccc\] {
+    @apply border-gray2;
+  }
+  .dark .md\:border-\[\#ccc\] {
+    @apply border-gray2;
+  }
+}

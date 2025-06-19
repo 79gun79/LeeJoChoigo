@@ -1,0 +1,152 @@
+.markdown-body {
+  color: #24292f;
+  background-color: var(--color-white);
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+  margin-top: 1.3em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+  margin-top: 1.1em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+.markdown-body h4 {
+  font-size: 1.1em;
+  margin-top: 1em;
+  margin-bottom: 0.4em;
+  font-weight: 600;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+  margin-top: 1em;
+  margin-bottom: 0.3em;
+  font-weight: 600;
+}
+
+.markdown-body h6 {
+  font-size: 0.875em;
+  margin-top: 1em;
+  margin-bottom: 0.2em;
+  font-weight: 600;
+}
+
+.markdown-body p {
+  margin-bottom: 1em;
+}
+
+.markdown-body a {
+  color: #0969da;
+  text-decoration: underline;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+  margin-bottom: 1em;
+}
+
+.markdown-body ul {
+  list-style-type: disc;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+}
+
+.markdown-body li {
+  margin-bottom: 0.25em;
+}
+
+.markdown-body blockquote {
+  margin: 0.8em 0;
+  padding: 0.5em 1em;
+  color: #57606a;
+  background-color: #f6f8fa;
+  border-left: 4px solid #d0d7de;
+}
+
+/* 인라인 코드 */
+.markdown-body code {
+  font-family:
+    SFMono-Regular,
+    Consolas,
+    Liberation Mono,
+    Menlo,
+    monospace;
+  background-color: #f6f8fa;
+  color: #24292f;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+}
+
+/* 코드블록 */
+.markdown-body pre {
+  background-color: #f6f8fa;
+  color: #24292f;
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 1em;
+}
+
+/* 코드블록 내부 코드 */
+.markdown-body pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+/* 다크모드 */
+html.dark .markdown-body {
+  background-color: var(--color-white);
+  color: var(--color-gray4);
+}
+
+html.dark .markdown-body a {
+  color: #58a6ff;
+}
+
+html.dark .markdown-body blockquote {
+  color: #8b949e;
+  background-color: #161b22;
+  border-left-color: #30363d;
+}
+
+html.dark .markdown-body pre {
+  background-color: #161b22 !important;
+  color: #c9d1d9 !important;
+}
+
+html.dark .markdown-body code {
+  background-color: #161b22;
+  color: #c9d1d9;
+  text-shadow: none !important;
+}
+
+html.dark .markdown-body th {
+  background-color: #21262d;
+}
+
+html.dark .markdown-body th,
+html.dark .markdown-body td {
+  border-color: #30363d;
+}
