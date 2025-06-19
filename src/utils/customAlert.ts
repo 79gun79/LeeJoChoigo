@@ -1,9 +1,4 @@
-import {
-  Flip,
-  toast,
-  type ToastPosition,
-  // type ToastTransitionProps,
-} from 'react-toastify';
+import { Flip, toast, type ToastPosition } from 'react-toastify';
 
 type ToastType = 'info' | 'success' | 'warning' | 'error';
 
