@@ -49,8 +49,8 @@ React + TypeScript + Supabase를 활용한 데일리 학습 커뮤니티 제작.
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :-----------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: |
 |             <img src="https://github.com/user-attachments/assets/ddbd0e08-15cc-4fab-9d49-8c0d6d4c2b50" width="120px;" alt="재건"/>              |             <img src="https://github.com/user-attachments/assets/a1534e74-3a50-4495-882b-4db2009e9225" width="120px;" alt="준수"/>              |            <img src="https://github.com/user-attachments/assets/e980f0f5-f5e3-42b3-9da0-734c6562b116" width="120px;" alt="소정"/>            |             <img src="https://github.com/user-attachments/assets/319034a0-6ed1-40f3-87ae-db9b48190f9e" width="120px;" alt="정우"/>              |             <img src="https://github.com/user-attachments/assets/8aa0d79b-b264-4b82-a405-bf0a8c3ad12c" width="120px;" alt="연서"/>              |
 |               [이재건](https://github.com/79gun79)               |              [이준수](https://github.com/dlakrp123)              |           [조소정](https://github.com/chosojeong97)           |               [조정우](https://github.com/mafornp)               |             [최연서](https://github.com/CHOIYEONSEO)             |
-|                               팀장                               |                                퍼블리싱, 기능개발                                |                              디자인, 퍼블리싱, 기능개발                               |                               퍼블리싱, 기능개발                                |                                DB구축, 퍼블리싱, 기능개발                                |
-|                                ㅇ                                |                                ㅇ                                |                              ㅇ                               |                                ㅇ                                |                                ㅇ                                |
+|                               팀장                               |                                퍼블리싱, 기능개발                                |                              퍼블리싱, 기능개발                               |                               퍼블리싱, 기능개발                                |                                퍼블리싱, 기능개발                                |
+|                                디자인, 기능개발                                |                                다크 모드                                |                              전체 디자인                               |                                게시판 에디터                                |                                DB 구축 및 관리                               |
 
 <br>
 
@@ -227,19 +227,19 @@ React + TypeScript + Supabase를 활용한 데일리 학습 커뮤니티 제작.
 
 | 메인 화면                                         | 다크모드 화면                                     | 내 정보 화면                                      |
 | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- |
-| <img src="" alt="-화면" width="288" height="192"> | <img src="" alt="-화면" width="288" height="192"> | <img src="" alt="-화면" width="288" height="192"> |
+| <img src="https://github.com/user-attachments/assets/32a2a595-5299-46ed-a609-4b3ceb50e35b" alt="-화면" width="288" height="192"> | <img src="https://github.com/user-attachments/assets/0896a348-af68-4890-9859-d911d92f95b3" alt="-화면" width="288" height="192"> | <img src="https://github.com/user-attachments/assets/7fbf1c63-6953-4acf-9868-bc5dac683880" alt="-화면" width="288" height="192"> |
 
 ### 2) 게시글
 
 | 알고리즘 풀이                                     | 개발직군 풀이                                     | 게시글 작성                                       |
 | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- |
-| <img src="" alt="-화면" width="288" height="192"> | <img src="" alt="-화면" width="288" height="192"> | <img src="" alt="-화면" width="288" height="192"> |
+| <img src="https://github.com/user-attachments/assets/9d737d5d-9e74-4a7d-b8aa-b7e9168635a6" alt="-화면" width="288" height="192"> | <img src="https://github.com/user-attachments/assets/6d6f730e-547c-44d2-a3f1-775c28e8bd68" alt="-화면" width="288" height="192"> | <img src="https://github.com/user-attachments/assets/bc4d24bd-0b5b-40f5-b6d8-1d7ad2866524" alt="-화면" width="288" height="192"> |
 
 ### 3) 기타
 
 | 로그인 화면                                       | 태그검색 화면                                     | 404 화면                                          |
 | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- |
-| <img src="" alt="-화면" width="288" height="192"> | <img src="" alt="-화면" width="288" height="192"> | <img src="" alt="-화면" width="288" height="192"> |
+| <img src="https://github.com/user-attachments/assets/1ac7c316-2b0c-4f02-a727-d83404043283" alt="-화면" width="288" height="192"> | <img src="https://github.com/user-attachments/assets/7071acda-1a20-4ab6-857a-6dcda40ad729" alt="-화면" width="288" height="192"> | <img src="https://github.com/user-attachments/assets/162629ad-ae94-4e80-97a2-9406e0ba7d9a" alt="-화면" width="288" height="192"> |
 
 <br>
 
