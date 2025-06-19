@@ -2,7 +2,7 @@ import {
   Flip,
   toast,
   type ToastPosition,
-  type ToastTransitionProps,
+  // type ToastTransitionProps,
 } from 'react-toastify';
 
 type ToastType = 'info' | 'success' | 'warning' | 'error';
