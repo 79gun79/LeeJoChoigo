@@ -22,7 +22,7 @@ const dropdownVariants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { type: 'spring', stiffness: 500, damping: 20 },
+    transition: { type: 'spring' as const, stiffness: 500, damping: 20 },
   },
   exit: { opacity: 0, y: -10, scale: 0.98, transition: { duration: 0.15 } },
 };
