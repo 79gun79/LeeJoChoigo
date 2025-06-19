@@ -132,6 +132,7 @@ export const fetchUserLikes = async (userId: string) => {
         `,
       )
       .eq('user', userId)
+      .eq('post.is_yn', true)
       .order('created_at', { ascending: false });
 
     return likes;
@@ -155,6 +156,7 @@ export const fetchUserChannelLikes = async (
       )
       .eq('user', userId)
       .eq('post.channel', channel)
+      .eq('post.is_yn', true)
       .order('created_at', { ascending: false });
 
     return likes;
