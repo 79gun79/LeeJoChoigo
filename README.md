@@ -7,7 +7,7 @@
 
 🔗 [데일리 코테 바로가기](https://peaceful-manatee-287118.netlify.app/)
 
-<img src="./src/assets/images/dailyCote.svg" alt="로고이미지"/>
+<img src="./src/assets/images/dailyCote.svg" style='width: 160px; height: 160px;' alt="로고이미지"/>
 
 </div>
 
@@ -47,7 +47,7 @@ React + TypeScript + Supabase를 활용한 데일리 학습 커뮤니티 제작.
 
 | <img src="https://img.shields.io/badge/Project_Leader-FF5733" /> | <img src="https://img.shields.io/badge/Tech_Leader-%2300264e" /> | <img src="https://img.shields.io/badge/Design_Leader-blue" /> | <img src="https://img.shields.io/badge/Tech_Leader-%2300264e" /> | <img src="https://img.shields.io/badge/Tech_Leader-%2300264e" /> |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :-----------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: |
-|             <img src="" width="120px;" alt="재건"/>              |             <img src="" width="120px;" alt="준수"/>              |            <img src="" width="120px;" alt="소정"/>            |             <img src="" width="120px;" alt="정우"/>              |             <img src="" width="120px;" alt="연서"/>              |
+|             <img src="https://github.com/user-attachments/assets/ddbd0e08-15cc-4fab-9d49-8c0d6d4c2b50" width="120px;" alt="재건"/>              |             <img src="https://github.com/user-attachments/assets/a1534e74-3a50-4495-882b-4db2009e9225" width="120px;" alt="준수"/>              |            <img src="https://github.com/user-attachments/assets/e980f0f5-f5e3-42b3-9da0-734c6562b116" width="120px;" alt="소정"/>            |             <img src="https://github.com/user-attachments/assets/319034a0-6ed1-40f3-87ae-db9b48190f9e" width="120px;" alt="정우"/>              |             <img src="https://github.com/user-attachments/assets/8aa0d79b-b264-4b82-a405-bf0a8c3ad12c" width="120px;" alt="연서"/>              |
 |               [이재건](https://github.com/79gun79)               |              [이준수](https://github.com/dlakrp123)              |           [조소정](https://github.com/chosojeong97)           |               [조정우](https://github.com/mafornp)               |             [최연서](https://github.com/CHOIYEONSEO)             |
 |                               팀장                               |                                ㅇ                                |                              ㅇ                               |                                ㅇ                                |                                ㅇ                                |
 |                                ㅇ                                |                                ㅇ                                |                              ㅇ                               |                                ㅇ                                |                                ㅇ                                |
