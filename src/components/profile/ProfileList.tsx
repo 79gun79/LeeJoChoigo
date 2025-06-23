@@ -1,7 +1,7 @@
 import { ArrowDownUp, ChevronDown } from 'lucide-react';
 import ProfileCommentCard from '../list/ProfileCommentCard';
 import ProfilePostCard from '../list/ProfilePostCard';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   fetchUserChannelComments,
   fetchUserChannelLikes,
@@ -23,7 +23,7 @@ export type ProfileComments = NonNullable<
 export type ProfileLikes = NonNullable<
   Awaited<ReturnType<typeof fetchUserLikes>>
 >;
-
+type filterMenuType = { title: string; id: number }[];
 export default function ProfileList({
   userId,
   currentTab,
@@ -42,16 +42,36 @@ export default function ProfileList({
   >();
   const filterModalRef = useRef<HTMLUListElement>(null);
 
-  const filterMenu = [
-    { title: '전체', id: 0 },
-    { title: '개발직군 문제', id: 2 },
-    { title: '알고리즘 풀이', id: 3 },
-    { title: '개발직군 풀이', id: 4 },
-    { title: '질문게시판', id: 5 },
-  ];
+  const filterMenuDefault = useMemo(
+    () => [
+      { title: '전체', id: 0 },
+      { title: '개발직군 문제', id: 2 },
+      { title: '알고리즘 풀이', id: 3 },
+      { title: '개발직군 풀이', id: 4 },
+      { title: '질문게시판', id: 5 },
+    ],
+    [],
+  );
+  const [filterMenu, setFilterMenu] =
+    useState<filterMenuType>(filterMenuDefault);
+
+  useEffect(() => {
+    if (currentTab === 2) {
+      setFilterMenu(
+        [...filterMenuDefault, { title: '알고리즘 문제', id: 1 }].sort(
+          (a, b) => a.id - b.id,
+        ),
+      );
+    } else {
+      setFilterMenu(filterMenuDefault);
+    }
+  }, [currentTab, filterMenuDefault]);
 
   useEffect(() => {
     setIsLoading(true);
+    if (currentTab !== 2 && selectFilterMenu === 1) {
+      setSelectFilterMenu(0);
+    }
     const fetchDatas = async () => {
       try {
         let resultDatas: ProfilePosts | ProfileComments | ProfileLikes;
