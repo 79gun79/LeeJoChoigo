@@ -2,6 +2,7 @@ import { Outlet } from 'react-router';
 import Header from './Header';
 import IsLoginModal from '../components/modals/IsLoginModal';
 import { useModalStore } from '../stores/modalStore';
+import Footer from './Footer';
 
 export default function MainLayout() {
   const { isLogInOpen, setLogInModal } = useModalStore();
@@ -19,6 +20,7 @@ export default function MainLayout() {
           />
         )}
       </main>
+      <Footer />
     </>
   );
 }
