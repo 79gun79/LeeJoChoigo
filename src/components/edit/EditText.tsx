@@ -127,7 +127,7 @@ const EditText = forwardRef<EditTextHandle, EditTextProps>(function EditText(
     <>
       <div className="lg:grid lg:grid-cols-2 lg:gap-12">
         {problem && (
-          <div className="h-full w-full lg:grid lg:grid-rows-[auto_1fr] lg:pb-9">
+          <div className="">
             <div className="mb-2.5 flex justify-between text-sm md:text-base lg:text-lg">
               <p>{problem.title}</p>
               <button onClick={openPopup} className="button-sm">
